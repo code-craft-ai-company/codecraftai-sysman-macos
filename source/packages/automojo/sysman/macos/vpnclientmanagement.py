@@ -210,11 +210,31 @@ class MacosVPNClientManager(VPNClientManagementBase):
 
             :returns: A :class:`MacosVPNActionResult`.
         """
+        # Homebrew publishes only a single unversioned ``tailscale``
+        # formula; there is no ``tailscale@<version>`` formula, so a
+        # version pin cannot be honoured through Homebrew.  Callers that
+        # genuinely need a pinned version must use the signed-PKG
+        # install source, which substitutes the version into the
+        # download URL.
         if version is not None and len(version) > 0:
-            formula = "tailscale@{}".format(version)
-        else:
-            formula = "tailscale"
+            err_msg_lines = [
+                "Homebrew cannot install a pinned Tailscale version.",
+            ]
+            err_msg_lines.append(
+                "    REQUESTED_VERSION: {!r}".format(version),
+            )
+            err_msg_lines.append(
+                "    REASON: Homebrew has no 'tailscale@<version>' "
+                "formula.",
+            )
+            err_msg_lines.append(
+                "    RESOLUTION: set install_source to "
+                "InstallSource.PKG to pin a specific version.",
+            )
+            err_msg = os.linesep.join(err_msg_lines)
+            raise ValueError(err_msg)
 
+        formula = "tailscale"
         command = ["brew", "install", formula]
 
         dry = self._short_circuit_dry_run(

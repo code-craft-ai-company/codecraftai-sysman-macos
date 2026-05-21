@@ -282,6 +282,40 @@ def test_install_tailscale_brew_runs_brew_install():
     return
 
 
+def test_install_tailscale_brew_rejects_version_pin():
+    """
+        Regression: Homebrew has no ``tailscale@<version>`` formula,
+        so a version pin on the Homebrew install path must raise a
+        clear ``ValueError`` rather than attempting an install of a
+        non-existent formula.
+    """
+    runner = _MockCommandRunner()
+    runner.default_result = RunResult(exit_code=0, stdout="", stderr="")
+
+    config = MacosVPNClientManagerConfig(
+        install_source=InstallSource.HOMEBREW,
+    )
+    manager = MacosVPNClientManager(runner=runner, config=config)
+
+    raised = None
+    try:
+        manager.install_tailscale(
+            version="1.60.0", channel="stable", aspects=_aspects(),
+        )
+    except ValueError as err:
+        raised = err
+
+    testbase.assert_true(raised is not None)
+    testbase.assert_true("InstallSource.PKG" in str(raised))
+    # No formula install must have been attempted.
+    brew_install_calls = [
+        c for c in runner.calls
+        if c["args"][:2] == ["brew", "install"]
+    ]
+    testbase.assert_equal(len(brew_install_calls), 0)
+    return
+
+
 def test_install_tailscale_pkg_runs_curl_then_installer():
     """
         PKG install path runs ``mkdir -p`` + ``curl`` + ``installer``.
@@ -1051,6 +1085,12 @@ def test_property_install_tailscale_idempotent(
         For any generated input, a second ``install_tailscale`` after
         a successful first invocation must be ``SKIPPED``.
     """
+    # Homebrew has no versioned formula, so a version pin is not a
+    # valid Homebrew input; the idempotency property only applies to
+    # the unpinned Homebrew path.
+    if install_source == InstallSource.HOMEBREW:
+        version = None
+
     runner = _MockCommandRunner()
     runner.default_result = RunResult(exit_code=0, stdout="", stderr="")
 
@@ -1147,6 +1187,11 @@ def test_property_dry_run_never_invokes_runner(version, install_source, purge):
         With ``dry_run=True`` the runner is never invoked, regardless
         of generated inputs.
     """
+    # A version pin is not a valid Homebrew input; the dry-run
+    # property is exercised with the unpinned Homebrew path.
+    if install_source == InstallSource.HOMEBREW:
+        version = None
+
     runner = _MockCommandRunner()
     config = MacosVPNClientManagerConfig(
         install_source=install_source, dry_run=True,
