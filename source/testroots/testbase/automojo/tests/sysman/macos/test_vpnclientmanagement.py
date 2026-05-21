@@ -1167,3 +1167,71 @@ def test_property_dry_run_never_invokes_runner(version, install_source, purge):
 
     testbase.assert_equal(runner.calls, [])
     return
+
+
+# ----------------------------------------------------------------------
+# Audit regression tests — C3 (authkey redaction), S-H7 (elevation)
+# ----------------------------------------------------------------------
+
+
+def test_bring_up_redacts_authkey_in_command():
+    """
+        C3 regression: the Tailscale auth key must be redacted in the
+        returned ``MacosVPNActionResult.command``.
+    """
+    runner = _MockCommandRunner()
+    runner.results[("tailscale", "status", "--json")] = RunResult(
+        exit_code=0, stdout=json.dumps({"BackendState": "Stopped"}), stderr="",
+    )
+    config = MacosVPNClientManagerConfig(elevated=True)
+    manager = MacosVPNClientManager(runner=runner, config=config)
+
+    secret = "tskey-auth-SUPERSECRET"
+    result = manager.bring_up(
+        provider=VPNProvider.TAILSCALE,
+        authkey=secret,
+        hostname=None,
+        advertise_tags=None,
+        advertise_routes=None,
+        exit_node=False,
+        aspects=_aspects(),
+    )
+
+    testbase.assert_true(result.command is not None)
+    joined = " ".join(result.command)
+    testbase.assert_true(secret not in joined)
+    testbase.assert_true("--authkey=***" in joined)
+    return
+
+
+def test_bring_up_tailscale_requires_elevation_when_not_elevated():
+    """
+        S-H7 regression: ``launchctl bootstrap system`` without
+        elevation must return a clear FAILED elevation-required result
+        rather than dispatching the command.
+    """
+    runner = _MockCommandRunner()
+    runner.results[("tailscale", "status", "--json")] = RunResult(
+        exit_code=0, stdout=json.dumps({"BackendState": "Stopped"}), stderr="",
+    )
+    config = MacosVPNClientManagerConfig(elevated=False)
+    manager = MacosVPNClientManager(runner=runner, config=config)
+
+    result = manager.bring_up(
+        provider=VPNProvider.TAILSCALE,
+        authkey="tskey-auth-ABC",
+        hostname=None,
+        advertise_tags=None,
+        advertise_routes=None,
+        exit_node=False,
+        aspects=_aspects(),
+    )
+
+    testbase.assert_equal(result.status, MacosVPNActionStatus.FAILED)
+    testbase.assert_true("Elevation required" in (result.detail or ""))
+    bootstrap_calls = [
+        c for c in runner.calls
+        if c["args"][:3] == ["launchctl", "bootstrap", "system"]
+    ]
+    testbase.assert_equal(len(bootstrap_calls), 0)
+    return

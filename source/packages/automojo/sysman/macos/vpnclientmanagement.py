@@ -31,7 +31,6 @@ from automojo.sysman.common.vpnactionresult import VPNActionResult
 from automojo.sysman.common.vpnactionstatus import VPNActionStatus
 from automojo.sysman.common.vpnclientmanagementbase import (
     VPNClientManagementBase,
-    VERB_KIND_READ,
     VERB_KIND_WRITE,
 )
 from automojo.sysman.common.vpnclientmanagerconfig import VPNClientManagerConfig
@@ -595,6 +594,14 @@ class MacosVPNClientManager(VPNClientManagementBase):
             "launchctl", "bootstrap", "system",
             self._mac_config.tailscale_plist_path,
         ]
+        elevation_failure = self._require_elevation(
+            provider=VPNProvider.TAILSCALE,
+            command=bootstrap_command,
+            operation="bring_up tailscale (launchctl bootstrap)",
+        )
+        if elevation_failure is not None:
+            return elevation_failure
+
         bootstrap_result = self._dispatch_write(
             provider=VPNProvider.TAILSCALE,
             command=bootstrap_command,
@@ -655,6 +662,14 @@ class MacosVPNClientManager(VPNClientManagementBase):
                 command=bootstrap_command,
             )
             return skipped
+
+        elevation_failure = self._require_elevation(
+            provider=VPNProvider.TWINGATE,
+            command=bootstrap_command,
+            operation="bring_up twingate (launchctl bootstrap)",
+        )
+        if elevation_failure is not None:
+            return elevation_failure
 
         rtnval = self._dispatch_write(
             provider=VPNProvider.TWINGATE,
@@ -721,6 +736,15 @@ class MacosVPNClientManager(VPNClientManagementBase):
                 command=command,
             )
             return skipped
+
+        if provider == VPNProvider.TWINGATE:
+            elevation_failure = self._require_elevation(
+                provider=provider,
+                command=command,
+                operation="bring_down twingate (launchctl bootout)",
+            )
+            if elevation_failure is not None:
+                return elevation_failure
 
         rtnval = self._dispatch_write(
             provider=provider,
@@ -1383,6 +1407,53 @@ class MacosVPNClientManager(VPNClientManagementBase):
             return failed
 
         rtnval: Optional[VPNActionResult] = None
+        return rtnval
+
+    def _require_elevation(
+        self,
+        *,
+        provider: VPNProvider,
+        command: List[str],
+        operation: str,
+    ) -> Optional[VPNActionResult]:
+        """
+            Guard a system-domain ``launchctl`` operation that cannot
+            succeed without root.
+
+            ``launchctl bootstrap/bootout system ...`` always requires
+            elevation.  When the manager config has ``elevated=False``
+            this returns a clear ``FAILED`` result stating elevation is
+            required, rather than letting the operation fail later with
+            an opaque permission error.
+
+            :param provider: Provider tag for the result.
+            :param command: The argv that would have been executed.
+            :param operation: Human-readable operation name for the
+                              detail text.
+
+            :returns: A ``FAILED`` :class:`VPNActionResult` when
+                      elevation is missing; otherwise ``None``.
+        """
+        if bool(self._config.elevated) is True:
+            rtnval: Optional[VPNActionResult] = None
+            return rtnval
+
+        detail_lines = ["Elevation required for system-domain launchctl."]
+        detail_lines.append("    OPERATION: {}".format(operation))
+        detail_lines.append(
+            "    REMEDY: set MacosVPNClientManagerConfig.elevated=True"
+        )
+        detail = os.linesep.join(detail_lines)
+
+        rtnval = VPNActionResult(
+            status=VPNActionStatus.FAILED,
+            provider=provider,
+            detail=detail,
+            exit_code=None,
+            stdout=None,
+            stderr=None,
+            command=list(command),
+        )
         return rtnval
 
     def _wrap_run_result(
