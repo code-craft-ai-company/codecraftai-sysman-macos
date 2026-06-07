@@ -3,14 +3,14 @@
 ## Introduction
 
 The authentication management feature provides the
-`automojo-sysman-macos` package with the ability to manage the macOS
+`codecraftai-sysman-macos` package with the ability to manage the macOS
 authentication stack: per-service Pluggable Authentication Modules
 (PAM) files under `/etc/pam.d/` and a best-effort surface over the
 authorization database at `/etc/authorization` (an XML property list
 controlling rights and rules consumed by `Authorization Services`).
 It implements the cross-OS authentication-management contract defined
 at
-`automojo-sysman-common/specs/contracts/authentication-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/authentication-management/contract.md`
 for macOS.
 
 macOS authentication is a hybrid: its PAM stack lives in the same
@@ -24,7 +24,7 @@ database is exposed only as an out-of-scope marker.
 
 A maintenance coordinator running in an external package drives all
 operations by calling this feature's public verbs.  All commands are
-executed through the `automojo-interfaces` command-runner abstraction.
+executed through the `codecraftai-interfaces` command-runner abstraction.
 
 This feature complements — and does not duplicate — the SSH-daemon
 hardening surface owned by `3-ssh-server-configuration`, the

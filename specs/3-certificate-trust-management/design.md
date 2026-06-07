@@ -3,7 +3,7 @@
 ## Overview
 
 The certificate-trust-management feature is implemented as a single
-module, `automojo.sysman.macos.certificatetrustmanagement`, that
+module, `ccai.sysman.macos.certificatetrustmanagement`, that
 exposes a `MacosCertificateTrustManager` class.  This spec
 implements the certificate-trust-management contract for macOS by
 wrapping the `security` keychain CLI shipped with every modern macOS
@@ -40,7 +40,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │         MacosCertificateTrustManager                        │
-│  automojo.sysman.macos.certificatetrustmanagement           │
+│  ccai.sysman.macos.certificatetrustmanagement           │
 │                                                             │
 │  add_trusted_cert()       remove_trusted_cert()             │
 │  list_trusted_certs()     get_cert_details()                │
@@ -80,7 +80,7 @@ configuration.
 ### `MacosCertificateTrustManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/certificatetrustmanagement.py`
+`source/packages/ccai/sysman/macos/certificatetrustmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -366,7 +366,7 @@ base64-decoded; a decoding failure -> `FAILED`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── certificatetrustmanagement.py
     ├── MacosCertTrustManagerConfig
@@ -381,7 +381,7 @@ source/packages/automojo/sysman/macos/
         - _parse_openssl_cert_text
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_certificatetrustmanagement.py
 ```
 
@@ -427,8 +427,8 @@ source/testroots/testbase/
 ### Local Execution (Install Internal CA)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.certificatetrustmanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.certificatetrustmanagement import (
     MacosCertificateTrustManager,
     MacosCertTrustManagerConfig,
 )
@@ -468,7 +468,7 @@ result = manager.add_trusted_cert(
 ### SSH Execution
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
 
 runner = SSHCommandRunner(SSHRunnerConfig(
     host="mac.example.com",
@@ -497,7 +497,7 @@ The contract enumerates `set_store_enabled` and `verify_certificate`
 verbs.  macOS keychains do not expose enable / disable toggles —
 keychains are either present (and consulted) or removed entirely;
 `set_store_enabled` is therefore not implemented.  `verify_certificate`
-overlaps with `automojo-credentials` and is deferred per the RHEL
+overlaps with `codecraftai-credentials` and is deferred per the RHEL
 spec's task 21 follow-up.  Both verbs are intentionally NOT
 implemented in this wave.
 

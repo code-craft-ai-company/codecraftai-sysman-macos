@@ -3,7 +3,7 @@
 ## Overview
 
 The authentication management feature is implemented as a single
-module, `automojo.sysman.macos.authenticationmanagement`, exposing a
+module, `ccai.sysman.macos.authenticationmanagement`, exposing a
 `MacosAuthenticationManager` class that wraps the per-service files
 under `/etc/pam.d/` and a pure-Python PAM stack parser through the
 `ICommandRunner` abstraction.
@@ -91,7 +91,7 @@ mutation pattern documented above.
                              v
 +--------------------------------------------------------------+
 |            MacosAuthenticationManager                        |
-|  automojo.sysman.macos.authenticationmanagement              |
+|  ccai.sysman.macos.authenticationmanagement              |
 |                                                              |
 |  Reads:                                                      |
 |    get_auth_config(subsystem)                                |
@@ -131,7 +131,7 @@ compat only):
 
 ### `MacosAuthenticationManager`
 
-**Location:** `source/packages/automojo/sysman/macos/authenticationmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/authenticationmanagement.py`
 
 | Method | Verb kind | Tool | Elevation |
 |---|---|---|---|
@@ -397,11 +397,11 @@ No live system or root access required.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 └── authenticationmanagement.py        ← MacosAuthenticationManager + models
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_authenticationmanagement.py
 ```
 

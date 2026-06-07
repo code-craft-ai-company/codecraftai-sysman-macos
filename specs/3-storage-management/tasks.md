@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.storagemanagement` module.
+- [x] 1. Create the `ccai.sysman.macos.storagemanagement` module.
 
 - [x] 2. Define `MacosStorageActionStatus` (aliased to the shared
   `featurebase.ActionStatus`).
@@ -138,10 +138,10 @@ items (`[ ]`) identify remaining work.
 
 - [ ] 49. **Cross-OS contract conformance review**: verify
   `MacosStorageActionResult` field shapes match the cross-OS contract
-  at `automojo-sysman-common/specs/contracts/storage-management/contract.md`.
+  at `codecraftai-sysman-common/specs/contracts/storage-management/contract.md`.
 
-- [ ] 50. **automojo-* reuse check**: confirm that no other feature in
-  `automojo-sysman-macos` invokes `diskutil apfs` directly; all such
+- [ ] 50. **codecraftai-* reuse check**: confirm that no other feature in
+  `codecraftai-sysman-macos` invokes `diskutil apfs` directly; all such
   calls should go through `MacosStorageManager`.
 
 ## Spec deviations from this implementation

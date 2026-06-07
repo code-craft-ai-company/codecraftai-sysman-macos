@@ -2,13 +2,13 @@
 
 ## Introduction
 
-The storage management feature provides the `automojo-sysman-macos`
+The storage management feature provides the `codecraftai-sysman-macos`
 package with the ability to enumerate disks and volumes, create /
 delete / resize APFS volumes, manage APFS containers (the cross-OS
 contract's "pool"), add and remove physical disks from a container,
 and query detailed disk and volume metadata on macOS systems.  This
 spec implements the storage-management contract defined at
-`automojo-sysman-common/specs/contracts/storage-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/storage-management/contract.md`
 for macOS using the `diskutil` family (`diskutil list`, `diskutil
 info`, `diskutil apfs list / addVolume / deleteVolume / createContainer
 / deleteContainer / resizeContainer`) plus `plutil` to convert
@@ -20,7 +20,7 @@ feature does not decide *which* volumes should exist, *which* disks
 should back a container, or *what* size a volume should claim — it
 provides the capability to *manipulate APFS state* reliably,
 idempotently, and with full auditability.  All system commands are
-executed exclusively through the `automojo-interfaces` command-runner
+executed exclusively through the `codecraftai-interfaces` command-runner
 abstraction.
 
 Filesystem creation per se does not exist on macOS the way it does on

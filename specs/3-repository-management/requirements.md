@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The repository management feature provides the `automojo-sysman-macos`
+The repository management feature provides the `codecraftai-sysman-macos`
 package with the ability to manage Homebrew taps on macOS systems.
 This spec implements the repository-management contract defined at
-`automojo-sysman-common/specs/contracts/repository-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/repository-management/contract.md`
 for macOS using `brew tap`, `brew untap`, and `brew update`.
 
 A maintenance coordinator running in an external package drives all
@@ -13,7 +13,7 @@ operations by calling into this feature's public interfaces.  The
 feature does not decide *which* taps to configure — it provides the
 capability to *do it* reliably, idempotently, and with full
 auditability.  All system commands are executed exclusively through
-the `automojo-interfaces` command-runner abstraction.
+the `codecraftai-interfaces` command-runner abstraction.
 
 macOS's Homebrew tap model differs substantially from apt/dnf
 repositories:

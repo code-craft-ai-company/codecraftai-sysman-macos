@@ -3,10 +3,10 @@
 ## Overview
 
 The ssh-server-configuration feature is implemented as a single
-module, `automojo.sysman.macos.sshserverconfiguration`, that exposes a
+module, `ccai.sysman.macos.sshserverconfiguration`, that exposes a
 `MacosSshServerConfigurationManager` class.  This spec implements the
 ssh-server-configuration contract defined at
-`automojo-sysman-common/specs/contracts/ssh-server-configuration/contract.md`
+`codecraftai-sysman-common/specs/contracts/ssh-server-configuration/contract.md`
 for macOS using the stock OpenSSH server (Remote Login) shipped with
 the operating system.
 
@@ -38,7 +38,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │         MacosSshServerConfigurationManager                  │
-│  automojo.sysman.macos.sshserverconfiguration               │
+│  ccai.sysman.macos.sshserverconfiguration               │
 │                                                             │
 │  get_sshd_setting()       set_sshd_setting()                │
 │  remove_sshd_setting()    list_sshd_settings()              │
@@ -81,7 +81,7 @@ configuration.
 ### `MacosSshServerConfigurationManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/sshserverconfiguration.py`
+`source/packages/ccai/sysman/macos/sshserverconfiguration.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -170,7 +170,7 @@ class MacosSshQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -533,14 +533,14 @@ is invoked with `elevated=True` for the mutating command.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── sshserverconfiguration.py   ← MacosSshServerConfigurationManager,
                                    config, models, exceptions, parser
                                    helpers
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_sshserverconfiguration.py
 ```
 
@@ -551,11 +551,11 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner,
     LocalRunnerConfig,
 )
-from automojo.sysman.macos.sshserverconfiguration import (
+from ccai.sysman.macos.sshserverconfiguration import (
     MacosSshServerConfigurationManager,
     MacosSshServerConfigurationManagerConfig,
 )
@@ -577,16 +577,16 @@ if test_result.status.name == "SUCCESS":
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     SSHCommandRunner,
     SSHRunnerConfig,
 )
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     PersistenceAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.sshserverconfiguration import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.sshserverconfiguration import (
     MacosSshServerConfigurationManager,
     MacosSshServerConfigurationManagerConfig,
 )

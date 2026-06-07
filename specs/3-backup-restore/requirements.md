@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The backup-restore feature provides the `automojo-sysman-macos` package with
+The backup-restore feature provides the `codecraftai-sysman-macos` package with
 the ability to define, persist, run, list, restore, and verify backup jobs on
 macOS hosts. macOS ships a first-party backup framework (Time Machine, driven
 by the `tmutil` CLI) that occupies the dominant share of operator workflows;
@@ -17,7 +17,7 @@ A maintenance coordinator uses this feature to capture known-good snapshots
 of specified paths before destructive or risky changes, to restore from those
 snapshots on demand, and to verify the integrity of an archive. All system
 commands (`tmutil`, `rsync`, `restic`, `tar`, `tee`, `cat`, `ls`, `rm`) are
-executed through the `automojo-interfaces` command-runner abstraction. All
+executed through the `codecraftai-interfaces` command-runner abstraction. All
 mutating operations respect dry-run mode.
 
 This feature does not perform APFS snapshot capture, FileVault key escrow, or
@@ -42,7 +42,7 @@ correct backend tool without re-supplying its parameters.
 
 1. WHEN the coordinator supplies a `MacosBackupJobSpec` THE SYSTEM SHALL
    serialise the spec to JSON and write it to
-   `/var/db/automojo/backups/jobs/<job_id>.json` via `tee` with the JSON
+   `/var/db/ccai/backups/jobs/<job_id>.json` via `tee` with the JSON
    payload supplied on stdin.
 2. WHEN the spec's `kind=TIME_MACHINE` THE SYSTEM SHALL ALSO invoke
    `tmutil setdestination <destination>` so that Time Machine knows the
@@ -70,7 +70,7 @@ defined backup job so that the host stops carrying its declarative footprint.
 #### Acceptance Criteria
 
 1. WHEN the coordinator supplies a `job_id` THE SYSTEM SHALL invoke
-   `rm -f /var/db/automojo/backups/jobs/<job_id>.json` through the runner
+   `rm -f /var/db/ccai/backups/jobs/<job_id>.json` through the runner
    with `elevated=True`.
 2. WHEN the persisted spec carries `kind=TIME_MACHINE` THE SYSTEM SHALL
    ALSO invoke `tmutil removedestination <destination>` so the
@@ -121,7 +121,7 @@ host's backup footprint.
 #### Acceptance Criteria
 
 1. WHEN the coordinator requests the list THE SYSTEM SHALL invoke
-   `ls -1 /var/db/automojo/backups/jobs` through the runner with
+   `ls -1 /var/db/ccai/backups/jobs` through the runner with
    `elevated=False`.
 2. THE SYSTEM SHALL filter the directory listing to entries whose suffix
    is `.json`, derive each `job_id` by stripping the suffix, and read each

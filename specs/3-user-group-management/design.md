@@ -3,9 +3,9 @@
 ## Overview
 
 The user and group management feature is implemented as a single module,
-`automojo.sysman.macos.usergroupmanagement`, that exposes a `MacosUserGroupManager`
+`ccai.sysman.macos.usergroupmanagement`, that exposes a `MacosUserGroupManager`
 class.  This spec implements the user-group-management contract defined at
-`automojo-sysman-common/specs/contracts/user-group-management/contract.md` for
+`codecraftai-sysman-common/specs/contracts/user-group-management/contract.md` for
 macOS using the native Directory Services tooling — `sysadminctl` for user lifecycle
 and password reset, `dscl` for granular property updates and directory enumeration,
 `dseditgroup` for group lifecycle and membership, and `pwpolicy` for lock-state
@@ -43,7 +43,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosUserGroupManager                            │
-│  automojo.sysman.macos.usergroupmanagement                  │
+│  ccai.sysman.macos.usergroupmanagement                  │
 │                                                             │
 │  create_user()    delete_user()    modify_user()            │
 │  get_user()       list_users()     set_password()           │
@@ -85,7 +85,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 
 ### `MacosUserGroupManager`
 
-**Location:** `source/packages/automojo/sysman/macos/usergroupmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/usergroupmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -201,7 +201,7 @@ class MacosUserGroupQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -612,12 +612,12 @@ password.  Persistence aspects therefore only ever record the sanitised argv.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── usergroupmanagement.py        ← MacosUserGroupManager, config, models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_usergroupmanagement.py
 ```
 
@@ -628,8 +628,8 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.usergroupmanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.usergroupmanagement import (
     MacosUserGroupManager,
     MacosUserGroupManagerConfig,
     MacosUserSpec,
@@ -674,13 +674,13 @@ print(f"locked: {user_info.locked}")
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, RetryAspect, TimeoutAspect,
     PersistenceAspectConfig, RetryAspectConfig, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.usergroupmanagement import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.usergroupmanagement import (
     MacosUserGroupManager, MacosUserGroupManagerConfig,
 )
 

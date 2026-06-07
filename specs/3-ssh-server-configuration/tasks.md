@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.sshserverconfiguration`
+- [x] 1. Create the `ccai.sysman.macos.sshserverconfiguration`
   module
 
 - [x] 2. Define `MacosSshActionStatus` alias of the shared

@@ -3,10 +3,10 @@
 ## Overview
 
 The configuration management feature is implemented as a single module,
-`automojo.sysman.macos.configurationmanagement`, that exposes a
+`ccai.sysman.macos.configurationmanagement`, that exposes a
 `MacosConfigurationManager` class.  This spec implements the
 configuration-management contract defined at
-`automojo-sysman-common/specs/contracts/configuration-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/configuration-management/contract.md`
 for macOS using Apple's `defaults` and `plutil` CLIs for plist-backed settings
 and the `IFileOperator` abstraction for plain-text files under `/etc/`.
 
@@ -41,7 +41,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │        MacosConfigurationManager                            │
-│  automojo.sysman.macos.configurationmanagement              │
+│  ccai.sysman.macos.configurationmanagement              │
 │                                                             │
 │  read_setting()     write_setting()                         │
 │  remove_setting()   list_settings()                         │
@@ -81,7 +81,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 
 ### `MacosConfigurationManager`
 
-**Location:** `source/packages/automojo/sysman/macos/configurationmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/configurationmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -296,7 +296,7 @@ regex.
 ## Backup Naming
 
 - File sources: `<source>.bak.<YYYYMMDDTHHMMSS>`.
-- Plist sources: `/var/backups/automojo/<domain>.<YYYYMMDDTHHMMSS>.plist`.
+- Plist sources: `/var/backups/ccai/<domain>.<YYYYMMDDTHHMMSS>.plist`.
 
 `_restore_route(backup_path)` pattern-matches the path to decide between
 `defaults import` and `cp -p`.
@@ -424,7 +424,7 @@ diff the stdout against the desired content.
 ### Property 21: `backup_configuration` Plist Export
 *For any* plist source, `backup_configuration` should invoke
 `defaults export <domain> <backup_path>` where `<backup_path>` is under
-`/var/backups/automojo/`.
+`/var/backups/ccai/`.
 **Validates: Requirements 8.2**
 
 ### Property 22: `backup_configuration` File Copy
@@ -477,13 +477,13 @@ invoked with `elevated=True`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── configurationmanagement.py   ← MacosConfigurationManager, config, models,
                                     exceptions, ValidatorRegistry
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_configurationmanagement.py
 ```
 
@@ -494,9 +494,9 @@ source/testroots/testbase/
 ### Local Execution
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileoperators import LocalFileOperator
-from automojo.sysman.macos.configurationmanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileoperators import LocalFileOperator
+from ccai.sysman.macos.configurationmanagement import (
     MacosConfigurationManager,
     MacosConfigurationManagerConfig,
 )
@@ -540,15 +540,15 @@ print(f"Reload: {reload_result.status}")
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, PersistenceAspectConfig,
     RetryAspect, RetryAspectConfig,
     TimeoutAspect, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.fileoperators import SSHFileOperator
-from automojo.sysman.macos.configurationmanagement import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.fileoperators import SSHFileOperator
+from ccai.sysman.macos.configurationmanagement import (
     MacosConfigurationManager, MacosConfigurationManagerConfig,
 )
 
@@ -598,7 +598,7 @@ print(result.command)  # would invoke defaults write
 5. `list_settings` plist test uses a representative `defaults read` output with
    nested dicts; the parser must flatten to dotted keys and preserve order.
 6. `backup_configuration` plist path test monkey-patches `datetime.utcnow` and
-   asserts the computed backup path under `/var/backups/automojo/`.
+   asserts the computed backup path under `/var/backups/ccai/`.
 7. Plist refusal tests for `set_permissions` / `set_ownership` assert no runner
    call occurred and `status=FAILED` with a descriptive `detail`.
 8. Dry-run matrix test iterates every write verb and asserts no mutating
@@ -618,7 +618,7 @@ print(result.command)  # would invoke defaults write
 | Configuration source (file) | Absolute path under `/etc/` |
 | Reload mechanism | `launchctl kickstart -k <domain>/<service>` |
 | File backup naming | `<source>.bak.<YYYYMMDDTHHMMSS>` |
-| Plist backup naming | `/var/backups/automojo/<domain>.<YYYYMMDDTHHMMSS>.plist` |
+| Plist backup naming | `/var/backups/ccai/<domain>.<YYYYMMDDTHHMMSS>.plist` |
 
 ---
 

@@ -3,15 +3,15 @@
 ## Introduction
 
 The bootloader-management feature provides the
-`automojo-sysman-macos` package with the ability to manage the
+`codecraftai-sysman-macos` package with the ability to manage the
 **OS-level bootloader configuration layer** on macOS.  It implements
 the cross-OS contract defined at
-`automojo-sysman-common/specs/contracts/bootloader-management/contract.md`.
+`codecraftai-sysman-common/specs/contracts/bootloader-management/contract.md`.
 
 ### What this feature is NOT
 
 This feature is **distinct from `boot-management`** (the UEFI
-firmware boot-entry feature in `automojo-sysman-uefi`).  On Apple
+firmware boot-entry feature in `codecraftai-sysman-uefi`).  On Apple
 Silicon there is no UEFI surface at all; on Intel Macs the firmware
 boot entry is owned by Apple's iBoot rather than user-space tools.
 This feature addresses the **OS-level bless / NVRAM-boot-args layer
@@ -55,7 +55,7 @@ systemd-boot does.  The native primitives are:
 A maintenance coordinator running in an external package drives all
 operations by calling into this feature's public interface.  All
 system commands (`bless`, `nvram`) are executed through the
-`automojo-interfaces` command-runner abstraction.  All mutating
+`codecraftai-interfaces` command-runner abstraction.  All mutating
 operations respect dry-run mode.
 
 ---

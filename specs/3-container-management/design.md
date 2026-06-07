@@ -31,7 +31,7 @@ matter for volume mounts.
 ## Overview
 
 The container-management feature is implemented as a single module,
-`automojo.sysman.macos.containermanagement`, that exposes a
+`ccai.sysman.macos.containermanagement`, that exposes a
 `MacosContainerManager` class.  The coordinator instantiates
 `MacosContainerManager` and calls its methods to perform discrete
 container engine actions: image pull / remove / list, container
@@ -72,7 +72,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosContainerManager                            │
-│  automojo.sysman.macos.containermanagement                  │
+│  ccai.sysman.macos.containermanagement                  │
 │                                                             │
 │  pull_image()           remove_image()                      │
 │  list_images()                                              │
@@ -100,7 +100,7 @@ configuration.
 ### `MacosContainerManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/containermanagement.py`
+`source/packages/ccai/sysman/macos/containermanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -531,13 +531,13 @@ NEVER be invoked with `elevated=True`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 ├── featurebase.py
 ├── containermanagement.py    ← MacosContainerManager + types
 └── storagemanagement.py
 
-source/testroots/testbase/automojo/tests/sysman/macos/
+source/testroots/testbase/ccai/tests/sysman/macos/
 └── test_containermanagement.py
 ```
 
@@ -548,11 +548,11 @@ source/testroots/testbase/automojo/tests/sysman/macos/
 ### Local Execution (Default — Docker Desktop)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner,
     LocalRunnerConfig,
 )
-from automojo.sysman.macos.containermanagement import (
+from ccai.sysman.macos.containermanagement import (
     MacosContainerEngine,
     MacosContainerManager,
     MacosContainerManagerConfig,

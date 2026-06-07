@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.configurationmanagement`
+- [x] 1. Create the `ccai.sysman.macos.configurationmanagement`
   module
 
 - [x] 2. Define `MacosConfigActionStatus` enum (aliased from
@@ -167,10 +167,10 @@ items (`[ ]`) identify remaining work.
 
 - [ ] 52. **Cross-OS contract conformance review**: verify that the
   shipping dataclasses match the abstract names in
-  `automojo-sysman-common/specs/contracts/configuration-management/contract.md`
+  `codecraftai-sysman-common/specs/contracts/configuration-management/contract.md`
   and that the validator registry is consistent with the macOS row.
 
-- [ ] 53. **automojo-sysman-macos reuse check**: confirm that every
+- [ ] 53. **codecraftai-sysman-macos reuse check**: confirm that every
   other feature which touches `/Library/Preferences/` or `/etc/`
   delegates to `MacosConfigurationManager` rather than invoking
   `defaults` or writing files directly.

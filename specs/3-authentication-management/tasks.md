@@ -5,13 +5,13 @@
 ### 1. Module Skeleton
 
 - [ ] Create
-  `source/packages/automojo/sysman/macos/authenticationmanagement.py`.
+  `source/packages/ccai/sysman/macos/authenticationmanagement.py`.
 - [ ] Add module-level constants for `cat`, `tee`, `ls`, the
   default `/etc/pam.d` directory, and the default
   `/etc/authorization` plist path.
 - [ ] Import `ActionStatus`, `BaseFeatureManager`,
   `FeatureActionResult`, `FeatureConfig` from
-  `automojo.sysman.macos.featurebase`.
+  `ccai.sysman.macos.featurebase`.
 
 ---
 
@@ -83,7 +83,7 @@
 ### 8. Tests
 
 - [ ] Create
-  `source/testroots/testbase/automojo/tests/sysman/macos/test_authenticationmanagement.py`.
+  `source/testroots/testbase/ccai/tests/sysman/macos/test_authenticationmanagement.py`.
 - [ ] Add the `_MockCommandRunner` shape.
 - [ ] `test_get_auth_config_parses_cat_output`.
 - [ ] `test_get_auth_config_raises_subsystem_not_found_when_missing`.

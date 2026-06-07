@@ -6,7 +6,7 @@ items (`[ ]`) identify follow-ups deferred to a later iteration.
 ## Module and Models
 
 - [x] 1. Create the
-  `automojo.sysman.macos.precisiontimemanagement` module.
+  `ccai.sysman.macos.precisiontimemanagement` module.
 
 - [x] 2. Define `MacosPrecisionTimeActionStatus` (alias of
   `ActionStatus`).

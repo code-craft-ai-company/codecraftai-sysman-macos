@@ -3,7 +3,7 @@
 ## Introduction
 
 The filesystem-quotas feature provides the
-`automojo-sysman-macos` package with the ability to manage disk
+`codecraftai-sysman-macos` package with the ability to manage disk
 quotas on macOS systems for the legacy HFS+ filesystem family
 through the BSD-flavoured `quota` tooling: `quotacheck`,
 `quotaon`, `quotaoff`, `setquota`, `quota`, and `repquota`. It
@@ -15,7 +15,7 @@ A maintenance coordinator uses this feature to declare and
 enforce per-principal disk-usage policy on a mountpoint, to
 report the current posture of that mountpoint, and to confirm
 whether quota enforcement is currently active. Every system
-command is dispatched through the `automojo-interfaces`
+command is dispatched through the `codecraftai-interfaces`
 `ICommandRunner` abstraction so the manager works identically
 under local and SSH execution. All mutating operations honour
 dry-run.

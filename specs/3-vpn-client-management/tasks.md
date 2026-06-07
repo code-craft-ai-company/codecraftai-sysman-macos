@@ -2,7 +2,7 @@
 
 ## Module and Types
 
-- [x] 1. Create the `automojo.sysman.macos.vpnclientmanagement` module.
+- [x] 1. Create the `ccai.sysman.macos.vpnclientmanagement` module.
 
 - [x] 2. Re-export `MacosVPNActionStatus`, `MacosVPNActionResult`,
   `MacosVPNClientStatus`, `MacosVPNClientQueryError` from the shared base

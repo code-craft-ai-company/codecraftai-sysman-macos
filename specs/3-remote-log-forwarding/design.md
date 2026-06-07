@@ -4,16 +4,16 @@
 
 The macOS remote-log-forwarding feature is implemented as a
 single module,
-`automojo.sysman.macos.remotelogforwarding`, exposing a
+`ccai.sysman.macos.remotelogforwarding`, exposing a
 `MacosRemoteLogForwardingManager` class that manages
 sentinel-bracketed forwarder blocks inside the legacy
 `/etc/syslog.conf` file.  Every verb is dispatched through the
 `ICommandRunner` abstraction.
 
 The cross-OS contract for this feature lives in
-`automojo-sysman-common/specs/contracts/remote-log-forwarding/contract.md`.
+`codecraftai-sysman-common/specs/contracts/remote-log-forwarding/contract.md`.
 The RHEL canonical implementation lives in
-`automojo-sysman-linux-redhat/specs/3-remote-log-forwarding/`.
+`codecraftai-sysman-linux-redhat/specs/3-remote-log-forwarding/`.
 
 ---
 
@@ -148,10 +148,10 @@ so that the parser can find the block to update without
 disturbing operator-authored entries:
 
 ```
-# >>> automojo-fwd:<id> >>>
+# >>> codecraftai-fwd:<id> >>>
 # <selector> @<host>:<port>
 *.* @host.example.com:514
-# <<< automojo-fwd:<id> <<<
+# <<< codecraftai-fwd:<id> <<<
 ```
 
 The first comment line carries the rendered selector / target as
@@ -160,7 +160,7 @@ actionable directive.  When the block is disabled, every action
 line is prefixed with ``# `` and the leading comment header is
 left intact.
 
-The sentinel prefix (`automojo-fwd`) is configurable through
+The sentinel prefix (`codecraftai-fwd`) is configurable through
 `MacosForwarderManagerConfig.prefix` so that operators can run
 multiple managed instances side-by-side; in practice the default
 is sufficient.
@@ -174,7 +174,7 @@ is sufficient.
 class MacosForwarderManagerConfig(FeatureConfig):
     syslog_conf: str = "/etc/syslog.conf"
     syslogd_label: str = "system/com.apple.syslogd"
-    prefix: str = "automojo-fwd"
+    prefix: str = "codecraftai-fwd"
 ```
 
 `dry_run` and `elevated` are inherited from `FeatureConfig`.
@@ -249,10 +249,10 @@ so that the idempotency comparison works.
 ### Plain UDP
 
 ```
-# >>> automojo-fwd:collector1 >>>
+# >>> codecraftai-fwd:collector1 >>>
 # *.* @logs.example.com:514
 *.* @logs.example.com:514
-# <<< automojo-fwd:collector1 <<<
+# <<< codecraftai-fwd:collector1 <<<
 ```
 
 ### TCP / TLS specs (downgrade)
@@ -332,7 +332,7 @@ while making the limitation explicit.
 1. Build the test message ID:
    `forwarder-test-<int(time.time())>`.
 2. Dispatch
-   `logger -t automojo-test 'forwarder-test-<timestamp>'`
+   `logger -t codecraftai-test 'forwarder-test-<timestamp>'`
    without elevation.
 3. Wrap the runner result into `MacosForwarderTestResult`.
 4. Never raises on dispatch failure.

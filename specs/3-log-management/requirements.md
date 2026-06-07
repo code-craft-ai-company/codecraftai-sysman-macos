@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The log management feature provides the `automojo-sysman-macos` package with the
+The log management feature provides the `codecraftai-sysman-macos` package with the
 ability to inspect, tail, rotate, truncate, and configure rotation of logs on macOS
 systems.  This spec implements the log-management contract defined at
-`automojo-sysman-common/specs/contracts/log-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/log-management/contract.md` for macOS
 using the unified-logging `log` CLI (`log show`, `log stream`, `log config`),
 BSD-style rotation via `newsyslog`, and plain-file truncation via the `IFileOperator`.
 
@@ -13,7 +13,7 @@ A maintenance coordinator running in an external package drives all operations b
 calling into this feature's public interfaces.  The feature does not decide *which*
 logs to retrieve or rotate — it provides the capability to *do it* reliably,
 idempotently, and with full auditability.  All system commands are executed exclusively
-through the `automojo-interfaces` command-runner abstraction, and all rotation
+through the `codecraftai-interfaces` command-runner abstraction, and all rotation
 configuration file I/O is delegated to the `IFileOperator` abstraction.  No
 `subprocess`, no direct `open`, and no direct `pathlib` calls are made inside this
 module, enabling dry-run simulation, auditing, and test mocking without requiring a

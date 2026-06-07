@@ -12,11 +12,11 @@ import json
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.securitycompliance import (
+from ccai.sysman.macos.securitycompliance import (
     MacosBaselineInfo,
     MacosSecurityComplianceActionStatus,
     MacosSecurityComplianceManager,
@@ -305,7 +305,7 @@ def test_get_baseline_returns_none_when_file_missing():
     """
     runner = _MockCommandRunner()
     runner.results[(
-        "cat", "/var/lib/automojo/compliance/current_baseline.json",
+        "cat", "/var/lib/ccai/compliance/current_baseline.json",
     )] = RunResult(exit_code=1, stdout="", stderr="No such file")
     manager = MacosSecurityComplianceManager(
         runner=runner,
@@ -327,7 +327,7 @@ def test_get_baseline_decodes_existing_json():
     }) + "\n"
     runner = _MockCommandRunner()
     runner.results[(
-        "cat", "/var/lib/automojo/compliance/current_baseline.json",
+        "cat", "/var/lib/ccai/compliance/current_baseline.json",
     )] = RunResult(exit_code=0, stdout=body, stderr="")
     manager = MacosSecurityComplianceManager(
         runner=runner,
@@ -348,7 +348,7 @@ def test_set_baseline_writes_via_tee_when_content_differs():
     """
     runner = _MockCommandRunner()
     runner.results[(
-        "cat", "/var/lib/automojo/compliance/current_baseline.json",
+        "cat", "/var/lib/ccai/compliance/current_baseline.json",
     )] = RunResult(exit_code=1, stdout="", stderr="")
     runner.default_result = RunResult(
         exit_code=0, stdout="", stderr="",
@@ -393,7 +393,7 @@ def test_set_baseline_skipped_when_content_matches():
 
     # Write once to capture the rendered body.
     runner.results[(
-        "cat", "/var/lib/automojo/compliance/current_baseline.json",
+        "cat", "/var/lib/ccai/compliance/current_baseline.json",
     )] = RunResult(exit_code=1, stdout="", stderr="")
     manager_one = MacosSecurityComplianceManager(
         runner=runner,
@@ -410,7 +410,7 @@ def test_set_baseline_skipped_when_content_matches():
     # Now seed the rendered body and re-run.
     runner_two = _MockCommandRunner()
     runner_two.results[(
-        "cat", "/var/lib/automojo/compliance/current_baseline.json",
+        "cat", "/var/lib/ccai/compliance/current_baseline.json",
     )] = RunResult(exit_code=0, stdout=rendered, stderr="")
     manager_two = MacosSecurityComplianceManager(
         runner=runner_two,
@@ -464,7 +464,7 @@ def test_set_baseline_elevates_when_configured():
     """
     runner = _MockCommandRunner()
     runner.results[(
-        "cat", "/var/lib/automojo/compliance/current_baseline.json",
+        "cat", "/var/lib/ccai/compliance/current_baseline.json",
     )] = RunResult(exit_code=1, stdout="", stderr="")
     runner.default_result = RunResult(
         exit_code=0, stdout="", stderr="",

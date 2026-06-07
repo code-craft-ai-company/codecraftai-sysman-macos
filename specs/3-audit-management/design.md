@@ -3,10 +3,10 @@
 ## Overview
 
 The audit-management feature is implemented as a single module,
-`automojo.sysman.macos.auditmanagement`, that exposes a
+`ccai.sysman.macos.auditmanagement`, that exposes a
 `MacosAuditManager` class.  This spec implements the
 audit-management contract defined at
-`automojo-sysman-common/specs/contracts/audit-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/audit-management/contract.md`
 for macOS using `audit` (control), `praudit` (decode), and
 `launchctl` (daemon lifecycle).  Rule storage is the
 `/etc/security/audit_control` file (the `flags` line) and
@@ -99,7 +99,7 @@ any token), but the table is exposed via the module's
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosAuditManager                                │
-│  automojo.sysman.macos.auditmanagement                      │
+│  ccai.sysman.macos.auditmanagement                      │
 │                                                             │
 │  add_rule()             remove_rule()                       │
 │  list_rules()           enable_auditing()                   │
@@ -134,7 +134,7 @@ any token), but the table is exposed via the module's
 ### `MacosAuditManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/auditmanagement.py`
+`source/packages/ccai/sysman/macos/auditmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|

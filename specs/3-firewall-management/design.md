@@ -3,23 +3,23 @@
 ## Overview
 
 The firewall management feature is implemented as a single module,
-`automojo.sysman.macos.firewallmanagement`, that exposes a `MacosFirewallManager` class.
+`ccai.sysman.macos.firewallmanagement`, that exposes a `MacosFirewallManager` class.
 This spec implements the firewall-management contract defined at
-`automojo-sysman-common/specs/contracts/firewall-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/firewall-management/contract.md` for macOS
 using `pf` (Packet Filter) via the `pfctl` CLI together with an `IFileOperator` for
-managing anchor rule files at `/etc/pf.anchors/automojo.<zone>` and, where needed,
+managing anchor rule files at `/etc/pf.anchors/ccai.<zone>` and, where needed,
 `/etc/pf.conf`.  The coordinator instantiates `MacosFirewallManager` and calls its
 methods to perform discrete maintenance actions against pf.
 
-All state queries used for idempotency guards go through `pfctl -a automojo.<zone> -sr`
+All state queries used for idempotency guards go through `pfctl -a ccai.<zone> -sr`
 and are parsed in pure Python into a `MacosZoneInfo`.  Anchor file content changes go
 through the `IFileOperator`.  System command invocations go through an `ICommandRunner`.
 No direct `subprocess` calls and no direct filesystem writes are made inside the
 module.
 
 pf rules are declarative: the anchor files on disk are the durable state.  After a
-batch of anchor-file changes the manager invokes `pfctl -a automojo.<zone> -f
-/etc/pf.anchors/automojo.<zone>` to reload that anchor into the running packet filter;
+batch of anchor-file changes the manager invokes `pfctl -a ccai.<zone> -f
+/etc/pf.anchors/ccai.<zone>` to reload that anchor into the running packet filter;
 the coordinator may additionally call `reload()` which re-reads `/etc/pf.conf`.
 
 The feature works identically whether commands execute locally (via `LocalCommandRunner`)
@@ -46,7 +46,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosFirewallManager                             │
-│  automojo.sysman.macos.firewallmanagement                   │
+│  ccai.sysman.macos.firewallmanagement                   │
 │                                                             │
 │  add_service()      remove_service()                        │
 │  add_port()         remove_port()                           │
@@ -75,7 +75,7 @@ Local…       SSH…         LocalFileOp / SSHFileOp
 
 ### `MacosFirewallManager`
 
-**Location:** `source/packages/automojo/sysman/macos/firewallmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/firewallmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -87,8 +87,8 @@ Local…       SSH…         LocalFileOp / SSHFileOp
 | `remove_rich_rule` | `(rule, zone) → MacosFirewallActionResult` | Remove matching line from anchor file, reload anchor |
 | `set_default_zone` | `(zone) → MacosFirewallActionResult` | Ensure anchor directive ordering in `/etc/pf.conf`, then `pfctl -f /etc/pf.conf` |
 | `reload` | `() → MacosFirewallActionResult` | `pfctl -f /etc/pf.conf` |
-| `query_zone` | `(zone) → MacosZoneInfo` | Parse `pfctl -a automojo.<zone> -sr` |
-| `query_all_zones` | `() → list[MacosZoneInfo]` | `pfctl -sA`, filter `automojo.*`, per-anchor `query_zone` |
+| `query_zone` | `(zone) → MacosZoneInfo` | Parse `pfctl -a ccai.<zone> -sr` |
+| `query_all_zones` | `() → list[MacosZoneInfo]` | `pfctl -sA`, filter `ccai.*`, per-anchor `query_zone` |
 | `query_state` | `() → MacosFirewallState` | Parse `pfctl -si` + `pfctl -sA` |
 
 ### `MacosFirewallManagerConfig`
@@ -97,7 +97,7 @@ Local…       SSH…         LocalFileOp / SSHFileOp
 |---|---|---|---|
 | `dry_run` | `bool` | `False` | When `True`, no commands or file writes are executed |
 | `elevated` | `bool` | `False` | When `True`, write commands AND file writes pass `elevated=True` |
-| `anchor_file_prefix` | `str` | `"/etc/pf.anchors/automojo."` | Path prefix where per-zone anchor files live |
+| `anchor_file_prefix` | `str` | `"/etc/pf.anchors/ccai."` | Path prefix where per-zone anchor files live |
 | `pf_conf_path` | `str` | `"/etc/pf.conf"` | Location of the main pf configuration |
 
 ---
@@ -129,18 +129,18 @@ class MacosFirewallActionResult:
 ```python
 @dataclass
 class MacosZoneInfo:
-    zone: str                   # anchor name without the "automojo." prefix
+    zone: str                   # anchor name without the "ccai." prefix
     services: list[str]
     ports: list[str]            # each entry is "<port>/<protocol>"
     rich_rules: list[str]
     interfaces: list[str]       # populated from "on <ifname>" rule clauses
     sources: list[str]          # populated from "from <addr>" rule clauses
-    is_default: bool            # True when this is the first automojo.* anchor in /etc/pf.conf
+    is_default: bool            # True when this is the first ccai.* anchor in /etc/pf.conf
 
 @dataclass
 class MacosFirewallState:
     running: bool
-    default_zone: str           # first automojo.* anchor name, or ""
+    default_zone: str           # first ccai.* anchor name, or ""
 
 class MacosFirewallQueryError(Exception):
     """Raised when a pfctl query fails."""
@@ -150,7 +150,7 @@ class MacosFirewallQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -162,7 +162,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `IFileOperator` (from `automojo-interfaces`)
+### `IFileOperator` (from `codecraftai-interfaces`)
 
 ```python
 class IFileOperator(Protocol):
@@ -198,16 +198,16 @@ OS-specific fields" clause.
 
 On macOS the abstract `zone` parameter maps to a pf anchor name.  The manager manages
 a single anchor file per zone at `<anchor_file_prefix><zone>` (default
-`/etc/pf.anchors/automojo.<zone>`).  The main `/etc/pf.conf` is expected to reference
+`/etc/pf.anchors/ccai.<zone>`).  The main `/etc/pf.conf` is expected to reference
 the anchor via the pair of lines:
 
 ```
-anchor "automojo.<zone>"
-load anchor "automojo.<zone>" from "/etc/pf.anchors/automojo.<zone>"
+anchor "ccai.<zone>"
+load anchor "ccai.<zone>" from "/etc/pf.anchors/ccai.<zone>"
 ```
 
 `set_default_zone(zone)` ensures that the specified anchor's directive appears first
-among automojo-prefixed anchors in `/etc/pf.conf`, because pf evaluates rules in
+among codecraftai-prefixed anchors in `/etc/pf.conf`, because pf evaluates rules in
 declaration order.
 
 ---
@@ -218,12 +218,12 @@ declaration order.
 
 | Operation | File operation | pfctl command |
 |---|---|---|
-| Add service | Append `pass in quick proto <proto> from any to any port <port>` to `/etc/pf.anchors/automojo.<zone>` | `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` |
-| Remove service | Remove matching line from anchor file | `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` |
-| Add port | Append `pass in quick proto <proto> from any to any port <port>` | `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` |
-| Remove port | Remove matching line | `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` |
-| Add rich rule | Append raw rule line verbatim | `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` |
-| Remove rich rule | Remove matching line (whitespace-normalised) | `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` |
+| Add service | Append `pass in quick proto <proto> from any to any port <port>` to `/etc/pf.anchors/ccai.<zone>` | `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` |
+| Remove service | Remove matching line from anchor file | `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` |
+| Add port | Append `pass in quick proto <proto> from any to any port <port>` | `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` |
+| Remove port | Remove matching line | `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` |
+| Add rich rule | Append raw rule line verbatim | `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` |
+| Remove rich rule | Remove matching line (whitespace-normalised) | `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` |
 | Set default zone | Reorder anchor directives in `/etc/pf.conf` | `pfctl -f /etc/pf.conf` |
 | Reload | (no file op) | `pfctl -f /etc/pf.conf` |
 
@@ -233,7 +233,7 @@ All write commands and file writes pass `elevated=True` when the config enables 
 
 | Operation | Command |
 |---|---|
-| Query one zone | `pfctl -a automojo.<zone> -sr` |
+| Query one zone | `pfctl -a ccai.<zone> -sr` |
 | List anchors | `pfctl -sA` |
 | Query running state | `pfctl -si` |
 
@@ -244,9 +244,9 @@ account, `pfctl` queries typically fail; the manager translates that into a
 
 ---
 
-## `pfctl -a automojo.<zone> -sr` Output Parsing
+## `pfctl -a ccai.<zone> -sr` Output Parsing
 
-`pfctl -a automojo.<zone> -sr` produces output in the following format:
+`pfctl -a ccai.<zone> -sr` produces output in the following format:
 
 ```
 pass in quick proto tcp from any to any port = 22
@@ -285,12 +285,12 @@ ordering through the file operator when called directly.
 `pfctl -sA` lists anchors one per line, e.g.:
 
 ```
-  automojo.public
-  automojo.internal
+  ccai.public
+  ccai.internal
   com.apple/250.ApplicationFirewall
 ```
 
-The parser filters to lines beginning (after strip) with `automojo.` and strips the
+The parser filters to lines beginning (after strip) with `ccai.` and strips the
 prefix to obtain the zone name.
 
 ---
@@ -310,7 +310,7 @@ lines to avoid requiring `pfctl` to be runnable at idempotency-check time.
 | `remove_port()` | Line not in anchor file | anchor file contents |
 | `add_rich_rule()` | Normalised line already in anchor file | anchor file contents |
 | `remove_rich_rule()` | Normalised line not in anchor file | anchor file contents |
-| `set_default_zone()` | Target anchor is first automojo directive | `/etc/pf.conf` contents |
+| `set_default_zone()` | Target anchor is first ccai directive | `/etc/pf.conf` contents |
 
 `reload()` has no idempotency guard — it is always executed when not in dry-run mode.
 
@@ -353,13 +353,13 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 
 ### Property 2: Service Addition File Mutation
 
-*For any* resolved `(port, protocol)` and zone name, `add_service()` should append `pass in quick proto <protocol> from any to any port <port>` to `/etc/pf.anchors/automojo.<zone>` via the file operator.
+*For any* resolved `(port, protocol)` and zone name, `add_service()` should append `pass in quick proto <protocol> from any to any port <port>` to `/etc/pf.anchors/ccai.<zone>` via the file operator.
 
 **Validates: Requirements 1.1**
 
 ### Property 3: Service Addition Reload
 
-*For any* successful anchor-file append, `add_service()` should then invoke `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` via the command runner.
+*For any* successful anchor-file append, `add_service()` should then invoke `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` via the command runner.
 
 **Validates: Requirements 1.1, 1.4**
 
@@ -371,7 +371,7 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 
 ### Property 5: Service Removal Command Construction
 
-*For any* service name and zone, `remove_service()` should remove the matching line from the anchor file and reload the anchor via `pfctl -a automojo.<zone> -f <anchor_file>`.
+*For any* service name and zone, `remove_service()` should remove the matching line from the anchor file and reload the anchor via `pfctl -a ccai.<zone> -f <anchor_file>`.
 
 **Validates: Requirements 2.1**
 
@@ -431,13 +431,13 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 
 ### Property 15: Default Zone Directive Reordering
 
-*For any* zone name, `set_default_zone()` should ensure `anchor "automojo.<zone>"` and the matching `load anchor` directive appear first among `automojo.*` anchors in `/etc/pf.conf`, rewriting the file if necessary.
+*For any* zone name, `set_default_zone()` should ensure `anchor "ccai.<zone>"` and the matching `load anchor` directive appear first among `ccai.*` anchors in `/etc/pf.conf`, rewriting the file if necessary.
 
 **Validates: Requirements 7.1**
 
 ### Property 16: Default Zone Idempotency
 
-*For any* zone already first among `automojo.*` anchors in `/etc/pf.conf`, `set_default_zone()` should return `SKIPPED` without mutating the file.
+*For any* zone already first among `ccai.*` anchors in `/etc/pf.conf`, `set_default_zone()` should return `SKIPPED` without mutating the file.
 
 **Validates: Requirements 7.2**
 
@@ -449,13 +449,13 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 
 ### Property 18: Zone Query Command Construction
 
-*For any* call to `query_zone(zone)`, the system should invoke `pfctl -a automojo.<zone> -sr` via the command runner without elevation.
+*For any* call to `query_zone(zone)`, the system should invoke `pfctl -a ccai.<zone> -sr` via the command runner without elevation.
 
 **Validates: Requirements 9.1**
 
 ### Property 19: Zone Query Result Parsing
 
-*For any* successful `pfctl -a automojo.<zone> -sr` output, `query_zone()` should return a `MacosZoneInfo` with correctly parsed services, ports, rich_rules, interfaces, and sources lists.
+*For any* successful `pfctl -a ccai.<zone> -sr` output, `query_zone()` should return a `MacosZoneInfo` with correctly parsed services, ports, rich_rules, interfaces, and sources lists.
 
 **Validates: Requirements 9.2**
 
@@ -467,7 +467,7 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 
 ### Property 21: Query All Zones Enumeration
 
-*For any* call to `query_all_zones()`, the system should call `pfctl -sA`, filter the result to anchors prefixed with `automojo.`, and return one `MacosZoneInfo` per anchor.
+*For any* call to `query_all_zones()`, the system should call `pfctl -sA`, filter the result to anchors prefixed with `ccai.`, and return one `MacosZoneInfo` per anchor.
 
 **Validates: Requirements 10.1, 10.2**
 
@@ -479,7 +479,7 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 
 ### Property 23: Firewall State Default Zone Parsing
 
-*For any* `pfctl -sA` output, when `running=True`, `query_state()` should set `default_zone` to the first `automojo.*` anchor with the prefix stripped, or `""` if none exist.
+*For any* `pfctl -sA` output, when `running=True`, `query_state()` should set `default_zone` to the first `ccai.*` anchor with the prefix stripped, or `""` if none exist.
 
 **Validates: Requirements 11.3**
 
@@ -518,13 +518,13 @@ surfaced as `MacosFirewallActionResult` with `status=FAILED`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 ├── firewallmanagement.py         ← MacosFirewallManager, config, models, exceptions
 └── _services_table.py            ← bundled (service → port, protocol) mapping
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_firewallmanagement.py
 ```
 
@@ -535,9 +535,9 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileops import LocalFileOperator, LocalFileOperatorConfig
-from automojo.sysman.macos.firewallmanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileops import LocalFileOperator, LocalFileOperatorConfig
+from ccai.sysman.macos.firewallmanagement import (
     MacosFirewallManager,
     MacosFirewallManagerConfig,
 )
@@ -552,7 +552,7 @@ fw_mgr = MacosFirewallManager(
     config=config,
 )
 
-# Add services to a zone (anchor automojo.public)
+# Add services to a zone (anchor ccai.public)
 result = fw_mgr.add_service(service="ssh", zone="public")
 print(f"Add service: {result.status}")
 
@@ -581,9 +581,9 @@ print(f"Ports: {zone_info.ports}")
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.fileops import SSHFileOperator, SSHFileOperatorConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.fileops import SSHFileOperator, SSHFileOperatorConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     RetryAspect,
     TimeoutAspect,
@@ -591,8 +591,8 @@ from automojo.sysman.macos.aspects import (
     RetryAspectConfig,
     TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.firewallmanagement import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.firewallmanagement import (
     MacosFirewallManager,
     MacosFirewallManagerConfig,
 )
@@ -623,7 +623,7 @@ fw_mgr.reload()
 
 state = fw_mgr.query_state()
 print(f"pf running: {state.running}")
-print(f"Default automojo anchor: {state.default_zone}")
+print(f"Default ccai anchor: {state.default_zone}")
 ```
 
 ### Dry-Run Mode
@@ -639,7 +639,7 @@ fw_mgr = MacosFirewallManager(
 
 result = fw_mgr.remove_service(service="ssh", zone="public")
 assert result.status == MacosFirewallActionStatus.DRY_RUN
-print("Would have removed ssh from automojo.public anchor")
+print("Would have removed ssh from ccai.public anchor")
 ```
 
 ---
@@ -648,7 +648,7 @@ print("Would have removed ssh from automojo.public anchor")
 
 - All tests use a `MockCommandRunner` keyed on command args prefix and a
   `MockFileOperator` keyed on path.
-- `pfctl -a automojo.<zone> -sr` mock responses drive all idempotency guards for
+- `pfctl -a ccai.<zone> -sr` mock responses drive all idempotency guards for
   service, port, and rich rule methods — together with anchor-file contents loaded
   into the `MockFileOperator`.
 - `pfctl -sA` mock responses drive `query_all_zones()` enumeration tests.

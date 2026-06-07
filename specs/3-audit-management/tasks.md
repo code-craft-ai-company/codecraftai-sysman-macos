@@ -5,11 +5,11 @@ Unchecked items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.auditmanagement`
+- [x] 1. Create the `ccai.sysman.macos.auditmanagement`
   module.
 
 - [x] 2. Define `MacosAuditActionStatus` enum (re-exported alias of
-  `automojo.sysman.macos.featurebase.ActionStatus`).
+  `ccai.sysman.macos.featurebase.ActionStatus`).
 
 - [x] 3. Define `MacosAuditManagerConfig` dataclass (`dry_run`,
   `elevated`, `audit_control`, `audit_user`, `audit_log_dir`,
@@ -142,7 +142,7 @@ Unchecked items (`[ ]`) identify remaining work.
 
 - [ ] 53. **Cross-OS contract conformance review**: verify that
   the shipping dataclasses match the abstract names in
-  `automojo-sysman-common/specs/contracts/audit-management/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/audit-management/contract.md`.
 
 - [ ] 54. **Coordinator wiring**: confirm that the maintenance
   coordinator routes through `MacosAuditManager` rather than

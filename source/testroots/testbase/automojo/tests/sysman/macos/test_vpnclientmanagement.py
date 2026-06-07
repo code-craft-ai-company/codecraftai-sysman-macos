@@ -14,15 +14,15 @@ from typing import Callable, Optional
 
 from hypothesis import given, settings, strategies as st
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.aspects.aspects import Aspects
+from ccai.aspects.aspects import Aspects
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.common.vpnprovider import VPNProvider
+from ccai.sysman.common.vpnprovider import VPNProvider
 
-from automojo.sysman.macos.vpnclientmanagement import (
+from ccai.sysman.macos.vpnclientmanagement import (
     InstallSource,
     MacosVPNActionStatus,
     MacosVPNClientManager,
@@ -403,7 +403,7 @@ def test_install_tailscale_failed_on_installer_error():
     runner.default_result = RunResult(exit_code=0, stdout="", stderr="")
     runner.results[
         ("installer", "-pkg",
-         "/var/tmp/automojo/vpn-pkgs/Tailscale.pkg",
+         "/var/tmp/ccai/vpn-pkgs/Tailscale.pkg",
          "-target", "/")
     ] = RunResult(exit_code=1, stdout="", stderr="installer failed")
 

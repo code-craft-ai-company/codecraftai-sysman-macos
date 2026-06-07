@@ -3,7 +3,7 @@
 ## Introduction
 
 The dns-server-management feature provides the
-`automojo-sysman-macos` package with the ability to declare,
+`codecraftai-sysman-macos` package with the ability to declare,
 audit, and reload BIND-9 zones on macOS hosts.  It is the
 cross-OS counterpart to the RHEL-canonical
 `3-dns-server-management` feature.
@@ -26,7 +26,7 @@ silently picking the wrong tree when both layouts are present.
 All system commands (`rndc reconfig`, `rndc reload <zone>`,
 `rndc zonestatus <zone>`, `named-checkconf`,
 `named-checkzone`, `tee`, `rm`, `cat`, `test -e`) are
-dispatched through the `automojo-interfaces` `ICommandRunner`
+dispatched through the `codecraftai-interfaces` `ICommandRunner`
 abstraction.  All mutating operations honour dry-run mode and
 config-driven elevation.
 
@@ -37,7 +37,7 @@ host's `/etc/resolv.conf` shadow file plus the `scutil` /
 
 The reference implementation for shape, idempotency, dry-run,
 and result mapping lives in
-`automojo-sysman-linux-redhat/specs/3-dns-server-management/`.
+`codecraftai-sysman-linux-redhat/specs/3-dns-server-management/`.
 
 ---
 

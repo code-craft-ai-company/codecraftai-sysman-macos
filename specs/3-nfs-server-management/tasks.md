@@ -5,7 +5,7 @@ All tasks are unchecked — new feature.
 ## Module and Models
 
 - [ ] 1. Create
-  ``source/packages/automojo/sysman/macos/nfsservermanagement.py``.
+  ``source/packages/ccai/sysman/macos/nfsservermanagement.py``.
 - [ ] 2. Define module-level constants (``_CAT``, ``_TEE``,
   ``_NFSD``, ``_SHOWMOUNT``, default exports path, default service
   label, default options, wildcard-expansion tokens).
@@ -83,7 +83,7 @@ All tasks are unchecked — new feature.
 ## Tests
 
 - [ ] 28. Create
-  ``source/testroots/testbase/automojo/tests/sysman/macos/test_nfsservermanagement.py``.
+  ``source/testroots/testbase/ccai/tests/sysman/macos/test_nfsservermanagement.py``.
 - [ ] 29. Add ``test_add_export_invokes_nfsd``.
 - [ ] 30. Add ``test_add_export_skipped_when_present``.
 - [ ] 31. Add ``test_add_export_dry_run``.

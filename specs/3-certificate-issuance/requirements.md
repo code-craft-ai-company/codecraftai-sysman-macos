@@ -3,17 +3,17 @@
 ## Introduction
 
 The certificate-issuance feature provides the
-`automojo-sysman-macos` package with the ability to *issue*,
+`codecraftai-sysman-macos` package with the ability to *issue*,
 *renew*, *revoke*, *export*, *import*, *get*, and *list* X.509
 certificates on macOS hosts.  This spec implements the
 certificate-issuance contract defined at
-`automojo-sysman-common/specs/contracts/certificate-issuance/contract.md`
+`codecraftai-sysman-common/specs/contracts/certificate-issuance/contract.md`
 for macOS.
 
 A maintenance coordinator drives all operations by calling into this
 feature's public interfaces.  All system commands (`security`,
 `openssl`, `cat`, `tee`, `cmp`) are executed exclusively through the
-`automojo-interfaces` command-runner abstraction.  No `subprocess`,
+`codecraftai-interfaces` command-runner abstraction.  No `subprocess`,
 no direct `open`, and no direct `pathlib` calls are made inside this
 module.
 
@@ -259,7 +259,7 @@ threshold) to live on a single config dataclass.
 1. THE SYSTEM SHALL expose
    `MacosCertIssuanceManagerConfig(FeatureConfig)` with fields:
    `keychain: str = "/Library/Keychains/System.keychain"`,
-   `cert_dir: str = "/etc/automojo/certs"`,
+   `cert_dir: str = "/etc/ccai/certs"`,
    `security_cli: str = "security"`,
    `openssl_cli: str = "openssl"`,
    `renew_threshold_days: int = 30`.

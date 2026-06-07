@@ -9,7 +9,7 @@ idempotent where the verb's nature permits; reads never elevate.
 ## Module and Models
 
 - [x] 1. Create the
-  `automojo.sysman.macos.processmanagement` module.
+  `ccai.sysman.macos.processmanagement` module.
 
 - [x] 2. Define `MacosProcessActionStatus` (alias of the package's
   shared `ActionStatus`: `SUCCESS / FAILED / SKIPPED / DRY_RUN`).
@@ -176,7 +176,7 @@ idempotent where the verb's nature permits; reads never elevate.
   `ProcessManager` facade can wrap `MacosProcessManager` uniformly
   with the Linux pilots.
 
-- [ ] 46. **automojo-* reuse check**: confirm that no other macOS
+- [ ] 46. **codecraftai-* reuse check**: confirm that no other macOS
   Layer 3 feature re-implements `ps` parsing that should delegate
   to `MacosProcessManager.list_processes` /
   `MacosProcessManager.get_process`.

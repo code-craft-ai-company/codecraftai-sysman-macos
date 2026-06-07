@@ -7,13 +7,13 @@ design documents.
 
 ## Module Skeleton
 
-- [ ] T1. Create `source/packages/automojo/sysman/macos/backuprestore.py`
+- [ ] T1. Create `source/packages/ccai/sysman/macos/backuprestore.py`
       with the module docstring describing the verb-to-tool mapping, the
       Time-Machine constraint notes, and the schedule-delegation note.
 - [ ] T2. Add the module-level constants for the backend tool names
       (`_TMUTIL`, `_RSYNC`, `_RESTIC`, `_TAR`), the helper tools
       (`_TEE`, `_CAT`, `_RM`, `_LS`, `_TEST`), and the default job
-      directory path (`_DEFAULT_JOB_DIR = "/var/db/automojo/backups/jobs"`).
+      directory path (`_DEFAULT_JOB_DIR = "/var/db/ccai/backups/jobs"`).
 - [ ] T3. Add the `MacosBackupActionStatus = ActionStatus` re-export.
 
 ---
@@ -80,7 +80,7 @@ design documents.
 ## Tests
 
 - [ ] T26. Create
-      `source/testroots/testbase/automojo/tests/sysman/macos/test_backuprestore.py`
+      `source/testroots/testbase/ccai/tests/sysman/macos/test_backuprestore.py`
       with a `_MockCommandRunner` matching the prior-wave pattern.
 - [ ] T27. `test_create_backup_job_persists_spec` (also asserts
       `tmutil setdestination` for TIME_MACHINE specs).
@@ -107,7 +107,7 @@ design documents.
 ## Documentation
 
 - [ ] T44. Update the package-level `Agents.md` entry for
-      `automojo-sysman-macos` to point at the
+      `codecraftai-sysman-macos` to point at the
       `specs/3-backup-restore/` directory.
 - [ ] T45. Note in the manager's module docstring that schedule
       wiring is delegated to `scheduled-tasks`, that the

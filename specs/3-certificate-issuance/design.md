@@ -3,10 +3,10 @@
 ## Overview
 
 The certificate-issuance feature is implemented as a single module,
-`automojo.sysman.macos.certificateissuance`, that exposes a
+`ccai.sysman.macos.certificateissuance`, that exposes a
 `MacosCertificateIssuanceManager` class.  This spec implements the
 certificate-issuance contract defined at
-`automojo-sysman-common/specs/contracts/certificate-issuance/contract.md`
+`codecraftai-sysman-common/specs/contracts/certificate-issuance/contract.md`
 for macOS using the `security` keychain CLI plus `openssl` for
 CSR generation and self-signing.
 
@@ -43,7 +43,7 @@ The feature works identically whether commands execute locally
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │       MacosCertificateIssuanceManager                       │
-│  automojo.sysman.macos.certificateissuance                  │
+│  ccai.sysman.macos.certificateissuance                  │
 │                                                             │
 │  request_certificate()    renew_certificate()               │
 │  revoke_certificate()     get_certificate()                 │
@@ -65,7 +65,7 @@ The feature works identically whether commands execute locally
 ### `MacosCertificateIssuanceManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/certificateissuance.py`
+`source/packages/ccai/sysman/macos/certificateissuance.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -84,7 +84,7 @@ The feature works identically whether commands execute locally
 | `dry_run` | `bool` | `False` | When `True`, writes short-circuit. |
 | `elevated` | `bool` | `False` | When `True`, mutating commands pass `elevated=True`. |
 | `keychain` | `str` | `"/Library/Keychains/System.keychain"` | Target keychain. |
-| `cert_dir` | `str` | `"/etc/automojo/certs"` | Where openssl-side material (key, csr, cert) is staged. |
+| `cert_dir` | `str` | `"/etc/ccai/certs"` | Where openssl-side material (key, csr, cert) is staged. |
 | `security_cli` | `str` | `"security"` | Command name for `security`. |
 | `openssl_cli` | `str` | `"openssl"` | Command name for `openssl`. |
 | `renew_threshold_days` | `int` | `30` | Skip threshold for request / renew. |
@@ -149,7 +149,7 @@ class MacosCertificateRequestSpec:
 @dataclass
 class MacosCertIssuanceManagerConfig(FeatureConfig):
     keychain: str = "/Library/Keychains/System.keychain"
-    cert_dir: str = "/etc/automojo/certs"
+    cert_dir: str = "/etc/ccai/certs"
     security_cli: str = "security"
     openssl_cli: str = "openssl"
     renew_threshold_days: int = 30
@@ -273,7 +273,7 @@ SHALL be `FAILED` with `exit_code`, `stdout`, `stderr`, and
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -337,7 +337,7 @@ destination paths.  Match -> `SKIPPED`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── certificateissuance.py
     ├── MacosCertIssuanceActionStatus       (alias to ActionStatus)
@@ -357,7 +357,7 @@ source/packages/automojo/sysman/macos/
         - _sanitise_security_passphrases
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_certificateissuance.py
 ```
 
@@ -398,7 +398,7 @@ source/testroots/testbase/
 ## Spec-vs-Contract Drift
 
 The contract enumerates `Credential` parameters on every write
-verb.  The macOS pilot does not yet thread `automojo-credentials`
+verb.  The macOS pilot does not yet thread `codecraftai-credentials`
 through the public surface — keychain unlock prompts, when needed,
 flow as separate `security unlock-keychain` calls outside this
 manager.  Threading is deferred to the cross-package follow-up.

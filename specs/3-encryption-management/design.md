@@ -36,7 +36,7 @@ call and dispatches the right tool.
 ## Overview
 
 The encryption-management feature is implemented as a single module,
-`automojo.sysman.macos.encryptionmanagement`, that exposes a
+`ccai.sysman.macos.encryptionmanagement`, that exposes a
 `MacosEncryptionManager` class.  The coordinator instantiates
 `MacosEncryptionManager` and calls its methods to perform discrete
 encryption actions: enable / disable encryption, query status, list
@@ -69,7 +69,7 @@ for details on local/SSH execution, reliability tracking, and
 aspect configuration.  See `3-storage-management` for partitioning
 and `3-filesystem-management` for mount points.  The cross-OS
 contract is at
-`automojo-sysman-common/specs/contracts/encryption-management/contract.md`.
+`codecraftai-sysman-common/specs/contracts/encryption-management/contract.md`.
 
 ---
 
@@ -88,7 +88,7 @@ contract is at
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosEncryptionManager                           │
-│  automojo.sysman.macos.encryptionmanagement                 │
+│  ccai.sysman.macos.encryptionmanagement                 │
 │                                                             │
 │  enable_encryption()       disable_encryption()             │
 │  get_encryption_status()                                    │
@@ -120,7 +120,7 @@ contract is at
 ### `MacosEncryptionManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/encryptionmanagement.py`
+`source/packages/ccai/sysman/macos/encryptionmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -445,11 +445,11 @@ Dry-run allows: `get_encryption_status`, `list_encrypted_volumes`
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 └── encryptionmanagement.py
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_encryptionmanagement.py
 ```
 
@@ -464,4 +464,4 @@ source/testroots/testbase/
 | Boot-time unlock (SecureToken / FileVault) | macOS native flow | Implicit — the bootloader unlocks the boot volume before this feature runs; this feature never re-unlocks the boot volume |
 | MDM / institutional recovery key | macOS native MDM channel | Reserved as macOS extension |
 | Sealed System Volume cryptography | macOS base system | Out of scope — this feature does NOT touch the sealed system volume |
-| Credential / passphrase routing | `automojo-credentials` | Caller passes the passphrase string into the verbs; bytes flow on `stdin` to the runner |
+| Credential / passphrase routing | `codecraftai-credentials` | Caller passes the passphrase string into the verbs; bytes flow on `stdin` to the runner |

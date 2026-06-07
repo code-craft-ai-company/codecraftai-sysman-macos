@@ -3,11 +3,11 @@
 ## Introduction
 
 The virtualization-management feature provides the
-`automojo-sysman-macos` package with the ability to manage local
+`codecraftai-sysman-macos` package with the ability to manage local
 virtual machines on macOS hosts via Homebrew-installed QEMU and
 libvirt (`virsh`, `virt-install`).  This spec implements the
 cross-OS virtualization-management contract defined at
-`automojo-sysman-common/specs/contracts/virtualization-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/virtualization-management/contract.md`
 for macOS.
 
 A maintenance coordinator running in an external package drives every
@@ -16,7 +16,7 @@ feature does not decide *which* VMs should exist, *what shape* their
 disks should take, or *when* snapshots should be created — it
 provides the capability to manipulate libvirt domain state reliably,
 idempotently, and with full auditability.  All system commands are
-executed exclusively through the `automojo-interfaces` command-runner
+executed exclusively through the `codecraftai-interfaces` command-runner
 abstraction.
 
 Apple's Virtualization framework, HyperKit, Hyper-V, and any

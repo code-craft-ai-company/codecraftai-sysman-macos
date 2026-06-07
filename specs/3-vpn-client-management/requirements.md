@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The vpn-client-management feature provides the `automojo-sysman-macos` package
+The vpn-client-management feature provides the `codecraftai-sysman-macos` package
 with the ability to install, configure, and lifecycle the **Tailscale** client
 and the **Twingate Connector** on macOS hosts. This spec implements the
 vpn-client-management contract defined at
-`automojo-sysman-common/specs/contracts/vpn-client-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/vpn-client-management/contract.md`
 for macOS using either the Homebrew formula `tailscale` or the signed `.pkg`
 from Tailscale, and the signed `.pkg` distribution from Twingate. Service
 lifecycle is controlled via `launchctl`.

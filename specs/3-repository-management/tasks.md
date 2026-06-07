@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.repositorymanagement`
+- [x] 1. Create the `ccai.sysman.macos.repositorymanagement`
   module
 
 - [x] 2. Define `MacosRepositoryActionStatus` enum (SUCCESS / FAILED /

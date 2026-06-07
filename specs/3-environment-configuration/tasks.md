@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.environmentconfiguration`
+- [x] 1. Create the `ccai.sysman.macos.environmentconfiguration`
   module
 
 - [x] 2. Define `MacosEnvActionStatus` (aliased from
@@ -47,8 +47,8 @@ items (`[ ]`) identify remaining work.
   sentinel-block content (`_parse_block_exports`,
   `_set_block_export`, `_remove_block_export`,
   `_find_block`).  Sentinel pair:
-  `# --- automojo system env start ---` /
-  `# --- automojo system env end ---`.
+  `# --- ccai system env start ---` /
+  `# --- ccai system env end ---`.
 
 - [x] 10. Implement `_resolve_user(username)` helper returning
   `(uid, home)` with `MacosEnvQueryError` on unknown.  Uses
@@ -68,7 +68,7 @@ items (`[ ]`) identify remaining work.
 - [x] 13. Implement `set_system_env(name, value)` with `launchctl
   setenv` (runtime) and `/etc/zshenv` sentinel-block write
   (persistence).  **Deviation:** the spec also mentioned an
-  `/etc/paths.d/automojo` drop-in for `PATH`; that special-case is
+  `/etc/paths.d/ccai` drop-in for `PATH`; that special-case is
   out of scope for the pilot — `PATH` is treated like any other
   variable.
 
@@ -168,10 +168,10 @@ items (`[ ]`) identify remaining work.
 
 - [ ] 48. **Cross-OS contract conformance review**: verify that the
   shipping dataclasses match the abstract names in
-  `automojo-sysman-common/specs/contracts/environment-configuration/contract.md`
+  `codecraftai-sysman-common/specs/contracts/environment-configuration/contract.md`
   and that the scope-mapping rows are consistent.
 
-- [ ] 49. **automojo-sysman-macos reuse check**: confirm that
+- [ ] 49. **codecraftai-sysman-macos reuse check**: confirm that
   features which need environment variables delegate to
   `MacosEnvironmentConfigurationManager` rather than invoking
   `launchctl` directly.

@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.encryptionmanagement`
+- [x] 1. Create the `ccai.sysman.macos.encryptionmanagement`
   module.
 
 - [x] 2. Define `MacosEncryptionActionStatus` (aliased to the shared
@@ -150,8 +150,8 @@ items (`[ ]`) identify remaining work.
   `MacosEncryptionActionResult` field shapes match the cross-OS
   contract.
 
-- [ ] 56. **automojo-* reuse check**: confirm that no other
-  feature in `automojo-sysman-macos` invokes `fdesetup` or
+- [ ] 56. **codecraftai-* reuse check**: confirm that no other
+  feature in `codecraftai-sysman-macos` invokes `fdesetup` or
   `diskutil apfs` directly; all such calls should go through
   `MacosEncryptionManager`.
 

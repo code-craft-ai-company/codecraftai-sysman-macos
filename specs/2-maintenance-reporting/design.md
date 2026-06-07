@@ -3,10 +3,10 @@
 ## Overview
 
 The maintenance-reporting feature is implemented as a single module,
-`automojo.sysman.macos.maintenancereporting`, that exposes a
+`ccai.sysman.macos.maintenancereporting`, that exposes a
 `MacosMaintenanceReport` class.  This spec implements the maintenance-reporting
 contract defined at
-`automojo-sysman-common/specs/contracts/maintenance-reporting/contract.md` for
+`codecraftai-sysman-common/specs/contracts/maintenance-reporting/contract.md` for
 macOS using pure Python accumulation of action records and a single I/O egress point
 — `emit_report(path, format)` — that delegates to `IFileOperator`.
 
@@ -17,7 +17,7 @@ formats: JSON (standard library `json`), plain text (string formatting), YAML (v
 `PyYAML`), and Markdown (string formatting).  When `PyYAML` is not importable the
 reporter surfaces a typed failure on `emit_report(path, YAML)` rather than raising.
 
-macOS's default session output base is `/var/log/automojo/maintenance/<session_id>/`.
+macOS's default session output base is `/var/log/ccai/maintenance/<session_id>/`.
 Writing under `/var/log` on macOS requires the caller's process to either already be
 root or to have the file operator configured with `elevated=True`.  The reporter
 never embeds elevation policy; the caller configures the file operator with whatever
@@ -45,7 +45,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │          MacosMaintenanceReport                             │
-│  automojo.sysman.macos.maintenancereporting                 │
+│  ccai.sysman.macos.maintenancereporting                 │
 │                                                             │
 │  begin_session()    add_action()                            │
 │  record_query()     record_error()                          │
@@ -86,7 +86,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 
 ### `MacosMaintenanceReport`
 
-**Location:** `source/packages/automojo/sysman/macos/maintenancereporting.py`
+**Location:** `source/packages/ccai/sysman/macos/maintenancereporting.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -108,7 +108,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `dry_run` | `bool` | `False` | When `True`, `emit_report` never writes |
-| `output_base` | `str` | `"/var/log/automojo/maintenance"` | Base directory for default session paths |
+| `output_base` | `str` | `"/var/log/ccai/maintenance"` | Base directory for default session paths |
 | `default_json_indent` | `int \| None` | `2` | Indent used by `to_json` and JSON emission |
 
 ---
@@ -174,7 +174,7 @@ class MacosMaintenanceSession:
 
 ## Interfaces
 
-### `IFileOperator` (from `automojo-interfaces`)
+### `IFileOperator` (from `codecraftai-interfaces`)
 
 ```python
 class IFileOperator(Protocol):
@@ -194,12 +194,12 @@ class IFileOperator(Protocol):
 
 | Situation | Path |
 |---|---|
-| Default base | `/var/log/automojo/maintenance/` |
-| Per-session directory | `/var/log/automojo/maintenance/<session_id>/` |
-| JSON report | `/var/log/automojo/maintenance/<session_id>/report.json` |
-| Text report | `/var/log/automojo/maintenance/<session_id>/report.txt` |
-| YAML report | `/var/log/automojo/maintenance/<session_id>/report.yaml` |
-| Markdown report | `/var/log/automojo/maintenance/<session_id>/report.md` |
+| Default base | `/var/log/ccai/maintenance/` |
+| Per-session directory | `/var/log/ccai/maintenance/<session_id>/` |
+| JSON report | `/var/log/ccai/maintenance/<session_id>/report.json` |
+| Text report | `/var/log/ccai/maintenance/<session_id>/report.txt` |
+| YAML report | `/var/log/ccai/maintenance/<session_id>/report.yaml` |
+| Markdown report | `/var/log/ccai/maintenance/<session_id>/report.md` |
 
 The default base is overrideable via `MacosMaintenanceReportConfig.output_base`.  On
 macOS, `/var/log` is writable only by `root` or users with explicit TCC /
@@ -216,7 +216,7 @@ for elevated writes.  Remote writes use `MacosSSHFileOperator`, which uploads vi
 SFTP and then repositions the file to its final path with `sudo install -m 0644` on
 the remote host.  macOS's System Integrity Protection blocks writes to certain
 directories (e.g., `/System`, `/usr` outside `/usr/local`) regardless of root; the
-chosen default base `/var/log/automojo/maintenance` is outside SIP-protected paths
+chosen default base `/var/log/ccai/maintenance` is outside SIP-protected paths
 and is writable under `sudo`.
 
 ---
@@ -580,7 +580,7 @@ member, the result has `success=False` and the file operator is not invoked.
 ### Property 30: Default Session Path Shape
 
 *For any* `default_session_path(session_id)` call, the returned string equals
-`/var/log/automojo/maintenance/<session_id>/` (or the overridden base followed by
+`/var/log/ccai/maintenance/<session_id>/` (or the overridden base followed by
 `session_id` with a trailing slash).
 
 **Validates: Requirements 8.1, 8.3**
@@ -603,12 +603,12 @@ member, the result has `success=False` and the file operator is not invoked.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── maintenancereporting.py      ← MacosMaintenanceReport, models, config, enums
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_maintenancereporting.py
 ```
 
@@ -619,11 +619,11 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.fileoperators import (
+from ccai.sysman.macos.fileoperators import (
     MacosLocalFileOperator,
     MacosLocalFileOperatorConfig,
 )
-from automojo.sysman.macos.maintenancereporting import (
+from ccai.sysman.macos.maintenancereporting import (
     MacosMaintenanceReport,
     MacosMaintenanceReportConfig,
     MacosActionRecord,
@@ -659,11 +659,11 @@ if result.success:
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.fileoperators import (
+from ccai.sysman.macos.fileoperators import (
     MacosSSHFileOperator,
     MacosSSHFileOperatorConfig,
 )
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     RetryAspect,
     TimeoutAspect,
@@ -671,7 +671,7 @@ from automojo.sysman.macos.aspects import (
     RetryAspectConfig,
     TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.storage import SQLiteStorage
 
 fileop = MacosSSHFileOperator(
     MacosSSHFileOperatorConfig(host="mac-ci-01", username="ci"),
@@ -688,7 +688,7 @@ report.begin_session(run_id="ssh-001", host="mac-ci-01", description=None)
 report.record_error(feature="service-management", operation="bootstrap",
                     error="Input/output error")
 report.end_session()
-report.emit_report(path="/var/log/automojo/maintenance/ssh-001/report.yaml",
+report.emit_report(path="/var/log/ccai/maintenance/ssh-001/report.yaml",
                    format=MacosReportFormat.YAML)
 ```
 

@@ -54,7 +54,7 @@ rights vocabulary, not a partition.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/aclmanagement.py
+source/packages/ccai/sysman/macos/aclmanagement.py
 ```
 
 Contents (top-to-bottom):
@@ -446,7 +446,7 @@ exposes:
   delivered by a follow-up `3-acl-management-recursive` spec.
 
 Cross-OS callers that need the contract's names will see them in
-the `automojo-interfaces` adapter layer when that layer
+the `codecraftai-interfaces` adapter layer when that layer
 materialises; the per-OS managers favour names that align with
 the rest of their package.
 

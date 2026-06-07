@@ -5,11 +5,11 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.kernelparameters` module
+- [x] 1. Create the `ccai.sysman.macos.kernelparameters` module
 
 - [x] 2. Define `MacosKernelParameterActionStatus` enum (SUCCESS /
   FAILED / SKIPPED / DRY_RUN) — aliased from
-  `automojo.sysman.macos.featurebase.ActionStatus`
+  `ccai.sysman.macos.featurebase.ActionStatus`
 
 - [x] 3. Define `MacosKernelParameterManagerConfig` dataclass
   (dry_run, elevated, sysctl_conf_path).  Note: deviates from the

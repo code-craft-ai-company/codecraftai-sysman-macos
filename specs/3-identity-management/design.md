@@ -3,10 +3,10 @@
 ## Overview
 
 The identity management feature is implemented as a single module,
-`automojo.sysman.macos.identitymanagement`, that exposes a
+`ccai.sysman.macos.identitymanagement`, that exposes a
 `MacosIdentityManager` class.  This spec implements the cross-OS
 identity-management contract defined at
-`automojo-sysman-common/specs/contracts/identity-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/identity-management/contract.md`
 for macOS using `dsconfigad` (AD bind / unbind / status), `dscl`
 (Directory Services reads through the canonical `/Search` node),
 `dscacheutil` (NSS cache flush), and `killall -HUP mDNSResponder`
@@ -34,10 +34,10 @@ remotely over SSH.
 - `3-user-group-management` for local-account operations.
 - `3-certificate-trust-management` for the enterprise-CA anchors
   required by LDAPS / Kerberos-over-TLS setups.
-- `automojo-sysman-linux-redhat/specs/3-identity-management/` for
+- `codecraftai-sysman-linux-redhat/specs/3-identity-management/` for
   the FreeIPA / SSSD / realmd reference implementation that
   motivated this cross-OS contract.
-- `automojo-sysman-linux-ubuntu/specs/3-identity-management/` for
+- `codecraftai-sysman-linux-ubuntu/specs/3-identity-management/` for
   the Ubuntu sibling implementation using `realm` + `sssctl`.
 
 ---
@@ -56,7 +56,7 @@ remotely over SSH.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosIdentityManager                             │
-│  automojo.sysman.macos.identitymanagement                   │
+│  ccai.sysman.macos.identitymanagement                   │
 │                                                             │
 │  Writes:                                                    │
 │    join_realm()    leave_realm()    sync_users()            │
@@ -86,7 +86,7 @@ remotely over SSH.
 
 ### `MacosIdentityManager`
 
-**Location:** `source/packages/automojo/sysman/macos/identitymanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/identitymanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -397,11 +397,11 @@ No live AD / Open Directory service required.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 └── identitymanagement.py
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_identitymanagement.py
 ```
 

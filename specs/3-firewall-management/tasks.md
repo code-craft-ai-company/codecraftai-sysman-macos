@@ -5,13 +5,13 @@ items (`[ ]`) identify remaining work.
 
 > **Pilot note:** macOS pf has no first-class zone concept.  This
 > implementation maps each contract `zone` to a per-anchor file under
-> `/etc/pf.anchors/automojo.<zone>` and sets the active zone by
+> `/etc/pf.anchors/ccai.<zone>` and sets the active zone by
 > rewriting `/etc/pf.conf` so that anchor is loaded first.  See
 > Follow-up #34 for the cross-OS contract conformance review.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.firewallmanagement` module
+- [x] 1. Create the `ccai.sysman.macos.firewallmanagement` module
 
 - [x] 2. Define `MacosFirewallActionStatus` enum (aliased to the
   shared `ActionStatus`)
@@ -48,10 +48,10 @@ items (`[ ]`) identify remaining work.
   whitespace-normalised idempotency matching
 
 - [x] 10. Implement `set_default_zone(zone)` that ensures
-  `/etc/pf.conf` declares `automojo.<zone>` as the FIRST automojo
+  `/etc/pf.conf` declares `ccai.<zone>` as the FIRST ccai
   anchor, rewrites pf-conf, and reloads via `pfctl -f`.
   *Pilot deviation from the design:* idempotency compares the *first
-  automojo zone* in pf-conf to the requested zone rather than full
+  ccai zone* in pf-conf to the requested zone rather than full
   rendered-body equality.  This avoids spurious rewrites when the
   user's pf-conf has comment / whitespace differences that would not
   affect pf semantics.
@@ -59,11 +59,11 @@ items (`[ ]`) identify remaining work.
 - [x] 11. Implement `reload()` dispatching `pfctl -f /etc/pf.conf`
 
 - [x] 12. Implement `query_zone(zone)` parsing
-  `pfctl -a automojo.<zone> -sr` into a `MacosZoneInfo` with
+  `pfctl -a ccai.<zone> -sr` into a `MacosZoneInfo` with
   ports / services back-resolution against the bundled table
 
 - [x] 13. Implement `query_all_zones()` enumerating
-  `automojo.*` anchors via `pfctl -sA` and querying each
+  `ccai.*` anchors via `pfctl -sA` and querying each
 
 - [x] 14. Implement `query_state()` reading `pfctl -si` and the
   default zone from `/etc/pf.conf`
@@ -115,7 +115,7 @@ items (`[ ]`) identify remaining work.
 - [x] 34. `test_reload_dispatches_pfctl_f`
 - [x] 35. `test_query_zone_parses_pass_rules_and_back_resolves_services`
 - [x] 36. `test_query_zone_raises_query_error_on_failure`
-- [x] 37. `test_query_all_zones_filters_to_automojo_anchors`
+- [x] 37. `test_query_all_zones_filters_to_ccai_anchors`
 - [x] 38. `test_query_state_reports_running_when_pfctl_si_enabled`
 - [x] 39. `test_query_state_reports_inactive_when_status_disabled`
 - [x] 40. `test_add_service_dry_run_short_circuits`
@@ -133,7 +133,7 @@ items (`[ ]`) identify remaining work.
   dedicated test.
 
 - [ ] 45. Pf-conf preservation test — `set_default_zone` should
-  preserve non-automojo anchor / scrub directives verbatim.  The
+  preserve non-ccai anchor / scrub directives verbatim.  The
   source code does this but a dedicated assertion is deferred.
 
 ## Follow-ups
@@ -141,7 +141,7 @@ items (`[ ]`) identify remaining work.
 - [ ] 46. **Cross-OS contract conformance review**: verify that
   `MacosFirewallActionResult`, `MacosZoneInfo`, and
   `MacosFirewallState` shapes match the abstract contract in
-  `automojo-sysman-common/specs/contracts/firewall-management/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/firewall-management/contract.md`.
   Notable deviations: the macOS pilot's `MacosZoneInfo.interfaces`
   and `MacosZoneInfo.sources` are always empty (pf has no per-anchor
   concept of either); the contract row may need to mark these

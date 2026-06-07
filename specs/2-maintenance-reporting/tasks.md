@@ -5,7 +5,7 @@ identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.maintenancereporting` module
+- [x] 1. Create the `ccai.sysman.macos.maintenancereporting` module
 
 - [x] 2. Define `MacosActionStatus` and `MacosReportFormat` enums
 
@@ -78,7 +78,7 @@ identify remaining work.
 ## Tests — Implemented
 
 (Test names below are mapped to the actual test functions in
-`source/testroots/testbase/automojo/tests/sysman/macos/test_maintenancereporting.py`.
+`source/testroots/testbase/ccai/tests/sysman/macos/test_maintenancereporting.py`.
 Where the original test name describes a sibling behaviour, the equivalent
 covered test is noted in parentheses.)
 
@@ -126,6 +126,6 @@ covered test is noted in parentheses.)
   the same result shapes, including the `record_query` alias.
 
 - [ ] 45. **Default-base documentation**: confirm that the chosen default base
-  `/var/log/automojo/maintenance` is outside System Integrity Protection paths and
+  `/var/log/ccai/maintenance` is outside System Integrity Protection paths and
   document the required `sudo` policy or TCC grants for CI agents that need to
   write reports without an interactive login.

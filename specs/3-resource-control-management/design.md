@@ -25,8 +25,8 @@ declared state; the kernel-side resource policy is whatever
 
 | Concept                   | Ubuntu (cgroups v2 + systemd)                | macOS (this package)                              | Windows                                        |
 |---------------------------|----------------------------------------------|---------------------------------------------------|------------------------------------------------|
-| Group container           | systemd `<name>.slice`                       | launchd label `automojo-rc-<name>`                | logical record at `<group_dir>\<name>.json`    |
-| On-disk representation    | `/etc/systemd/system/<name>.slice`           | `/Library/LaunchDaemons/automojo-rc-<name>.plist` | `<group_dir>\<name>.json`                      |
+| Group container           | systemd `<name>.slice`                       | launchd label `codecraftai-rc-<name>`                | logical record at `<group_dir>\<name>.json`    |
+| On-disk representation    | `/etc/systemd/system/<name>.slice`           | `/Library/LaunchDaemons/codecraftai-rc-<name>.plist` | `<group_dir>\<name>.json`                      |
 | Kernel substrate          | cgroups v2 at `/sys/fs/cgroup/<name>.slice/` | **none**                                          | Job Objects (in-memory, kernel)                |
 | CPU ceiling tool          | `systemctl set-property CPUQuota=N%`         | **NOT SUPPORTED** (`taskpolicy -c utility -p <pid>` is best-effort QoS only) | per-PID `PriorityClass` + `ProcessorAffinity`  |
 | Memory ceiling tool       | `systemctl set-property MemoryMax=N`         | launchd `HardResourceLimits.RLIMIT_AS`            | NOT SUPPORTED via PowerShell                   |
@@ -127,8 +127,8 @@ hierarchy.
                 launchctl / tee / cat / ls / rm / taskpolicy
                             │
                             ▼
-            /Library/LaunchDaemons/automojo-rc-<name>.plist
-            launchd domain system/automojo-rc-<name>
+            /Library/LaunchDaemons/codecraftai-rc-<name>.plist
+            launchd domain system/codecraftai-rc-<name>
 ```
 
 ---
@@ -162,7 +162,7 @@ MacosResourceControlActionStatus = ActionStatus
 @dataclass
 class MacosResourceControlManagerConfig(FeatureConfig):
     plist_dir: str = "/Library/LaunchDaemons"
-    label_prefix: str = "automojo-rc-"
+    label_prefix: str = "codecraftai-rc-"
 
 @dataclass
 class MacosResourceControlActionResult(FeatureActionResult):
@@ -246,7 +246,7 @@ The rendered plist body has shape:
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>automojo-rc-<name></string>
+  <string>codecraftai-rc-<name></string>
   <key>HardResourceLimits</key>
   <dict>
     <key>RLIMIT_AS</key>
@@ -463,7 +463,7 @@ stand-alone module-level pure functions.
 ## Test plan
 
 - 14+ pytest functions in
-  `source/testroots/testbase/automojo/tests/sysman/macos/test_resourcecontrolmanagement.py`.
+  `source/testroots/testbase/ccai/tests/sysman/macos/test_resourcecontrolmanagement.py`.
 - Coverage:
 
 | Test                                                  | Covers                                                  |

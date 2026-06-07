@@ -6,7 +6,7 @@ items (`[ ]`) identify remaining work.
 ## Module and Models
 
 - [x] 1. Create the `kdumpmanagement` module under
-  `source/packages/automojo/sysman/macos/`.
+  `source/packages/ccai/sysman/macos/`.
 
 - [x] 2. Alias `MacosKdumpActionStatus = ActionStatus`.
 

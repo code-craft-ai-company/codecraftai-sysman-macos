@@ -3,7 +3,7 @@
 ## Overview
 
 The kdump-management feature on macOS is implemented as a single
-module, `automojo.sysman.macos.kdumpmanagement`, that exposes a
+module, `ccai.sysman.macos.kdumpmanagement`, that exposes a
 `MacosKdumpManager` class. The class is a contract-conforming
 **skeleton** because the cross-OS kdump-management contract is
 **Linux-primary**: macOS has no kdump equivalent and several verbs
@@ -80,7 +80,7 @@ It is shared across all three unsupported-write stubs.
                        v
 +-------------------------------------------------------------+
 |            MacosKdumpManager                                |
-|  automojo.sysman.macos.kdumpmanagement                      |
+|  ccai.sysman.macos.kdumpmanagement                      |
 |                                                             |
 |  enable_kdump()              -> always FAILED (synthetic)   |
 |  disable_kdump()             -> always FAILED (synthetic)   |
@@ -108,7 +108,7 @@ The unsupported-write stubs do not invoke the runner at all; their
 ### `MacosKdumpManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/kdumpmanagement.py`
+`source/packages/ccai/sysman/macos/kdumpmanagement.py`
 
 The primary public class. Constructed with an `ICommandRunner` and a
 `MacosKdumpManagerConfig`.
@@ -365,12 +365,12 @@ All other failures surface as
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 +-- __init__.py
 +-- kdumpmanagement.py            <- MacosKdumpManager + models
 
 source/testroots/testbase/
-+-- automojo/tests/sysman/macos/
++-- ccai/tests/sysman/macos/
     +-- test_kdumpmanagement.py   <- unit tests using a MockCommandRunner
 ```
 
@@ -420,10 +420,10 @@ Total: 14 tests.
 ### Local Execution
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner, LocalRunnerConfig,
 )
-from automojo.sysman.macos.kdumpmanagement import (
+from ccai.sysman.macos.kdumpmanagement import (
     MacosKdumpManager, MacosKdumpManagerConfig,
 )
 

@@ -10,11 +10,11 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.resourcecontrolmanagement import (
+from ccai.sysman.macos.resourcecontrolmanagement import (
     MacosIoLimitSpec,
     MacosResourceControlActionResult,
     MacosResourceControlActionStatus,
@@ -125,7 +125,7 @@ def _path_for(name: str) -> str:
     """
         :returns: Default plist path for ``name``.
     """
-    rtnval = "/Library/LaunchDaemons/automojo-rc-{}.plist".format(name)
+    rtnval = "/Library/LaunchDaemons/codecraftai-rc-{}.plist".format(name)
     return rtnval
 
 
@@ -164,7 +164,7 @@ def test_create_group_invokes_launchctl():
 
     # Body landed on tee stdin.
     body = mutating[0]["stdin"]
-    testbase.assert_equal("automojo-rc-batch" in body, True)
+    testbase.assert_equal("codecraftai-rc-batch" in body, True)
     testbase.assert_equal("RLIMIT_AS" in body, True)
     testbase.assert_equal("1073741824" in body, True)
     return
@@ -179,7 +179,7 @@ def test_create_group_skipped_when_present():
     plist_path = _path_for("batch")
 
     spec = MacosResourceGroupSpec(name="batch", memory_bytes=1073741824)
-    body = _render_plist_body(spec=spec, label_prefix="automojo-rc-")
+    body = _render_plist_body(spec=spec, label_prefix="codecraftai-rc-")
     _seed_cat(runner, path=plist_path, body=body)
 
     manager = MacosResourceControlManager(runner=runner)
@@ -239,7 +239,7 @@ def test_delete_group_invokes_launchctl():
     testbase.assert_equal(len(mutating), 2)
     testbase.assert_equal(
         mutating[0]["args"],
-        ["launchctl", "bootout", "system/automojo-rc-batch"],
+        ["launchctl", "bootout", "system/codecraftai-rc-batch"],
     )
     testbase.assert_equal(mutating[1]["args"], ["rm", "-f", plist_path])
     return
@@ -303,7 +303,7 @@ def test_set_memory_limit_invokes_tee():
     plist_path = _path_for("batch")
 
     existing_spec = MacosResourceGroupSpec(name="batch", memory_bytes=536870912)
-    existing_body = _render_plist_body(spec=existing_spec, label_prefix="automojo-rc-")
+    existing_body = _render_plist_body(spec=existing_spec, label_prefix="codecraftai-rc-")
     _seed_cat(runner, path=plist_path, body=existing_body)
 
     manager = MacosResourceControlManager(runner=runner)
@@ -319,7 +319,7 @@ def test_set_memory_limit_invokes_tee():
     testbase.assert_equal(mutating[0]["args"], ["tee", plist_path])
     testbase.assert_equal(
         mutating[1]["args"],
-        ["launchctl", "bootout", "system/automojo-rc-batch"],
+        ["launchctl", "bootout", "system/codecraftai-rc-batch"],
     )
     testbase.assert_equal(
         mutating[2]["args"],
@@ -341,7 +341,7 @@ def test_set_memory_limit_skipped_when_match():
     plist_path = _path_for("batch")
 
     spec = MacosResourceGroupSpec(name="batch", memory_bytes=1073741824)
-    body = _render_plist_body(spec=spec, label_prefix="automojo-rc-")
+    body = _render_plist_body(spec=spec, label_prefix="codecraftai-rc-")
     _seed_cat(runner, path=plist_path, body=body)
 
     manager = MacosResourceControlManager(runner=runner)
@@ -398,7 +398,7 @@ def test_attach_process_invokes_taskpolicy():
         name="batch", memory_bytes=536870912, attached_pids=[111],
     )
     existing_body = _render_plist_body(
-        spec=existing_spec, label_prefix="automojo-rc-",
+        spec=existing_spec, label_prefix="codecraftai-rc-",
     )
     _seed_cat(runner, path=plist_path, body=existing_body)
 
@@ -441,7 +441,7 @@ def test_attach_process_skipped_when_present():
         name="batch", memory_bytes=536870912, attached_pids=[111, 222],
     )
     existing_body = _render_plist_body(
-        spec=existing_spec, label_prefix="automojo-rc-",
+        spec=existing_spec, label_prefix="codecraftai-rc-",
     )
     _seed_cat(runner, path=plist_path, body=existing_body)
 
@@ -469,7 +469,7 @@ def test_detach_process_invokes_taskpolicy():
         name="batch", memory_bytes=536870912, attached_pids=[111, 222],
     )
     existing_body = _render_plist_body(
-        spec=existing_spec, label_prefix="automojo-rc-",
+        spec=existing_spec, label_prefix="codecraftai-rc-",
     )
     _seed_cat(runner, path=plist_path, body=existing_body)
 
@@ -513,8 +513,8 @@ def test_list_groups_returns_list():
     runner.results[("ls", "-1", "/Library/LaunchDaemons")] = RunResult(
         exit_code=0,
         stdout=(
-            "automojo-rc-batch.plist\n"
-            "automojo-rc-worker.plist\n"
+            "codecraftai-rc-batch.plist\n"
+            "codecraftai-rc-worker.plist\n"
             "com.apple.someother.plist\n"
         ),
         stderr="",
@@ -526,11 +526,11 @@ def test_list_groups_returns_list():
     worker_spec = MacosResourceGroupSpec(name="worker")
     _seed_cat(
         runner, path=_path_for("batch"),
-        body=_render_plist_body(spec=batch_spec, label_prefix="automojo-rc-"),
+        body=_render_plist_body(spec=batch_spec, label_prefix="codecraftai-rc-"),
     )
     _seed_cat(
         runner, path=_path_for("worker"),
-        body=_render_plist_body(spec=worker_spec, label_prefix="automojo-rc-"),
+        body=_render_plist_body(spec=worker_spec, label_prefix="codecraftai-rc-"),
     )
 
     manager = MacosResourceControlManager(runner=runner)
@@ -567,7 +567,7 @@ def test_get_group_usage_parses_top_output():
         name="batch", memory_bytes=536870912, attached_pids=[111, 222],
     )
     existing_body = _render_plist_body(
-        spec=existing_spec, label_prefix="automojo-rc-",
+        spec=existing_spec, label_prefix="codecraftai-rc-",
     )
     _seed_cat(runner, path=plist_path, body=existing_body)
 
@@ -720,7 +720,7 @@ def test_parse_plist_helpers():
     spec = MacosResourceGroupSpec(
         name="batch", memory_bytes=2147483648, attached_pids=[10, 20, 30],
     )
-    body = _render_plist_body(spec=spec, label_prefix="automojo-rc-")
+    body = _render_plist_body(spec=spec, label_prefix="codecraftai-rc-")
 
     parsed_mem = _parse_plist_memory_bytes(body=body)
     testbase.assert_equal(parsed_mem, 2147483648)

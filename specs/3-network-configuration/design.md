@@ -3,10 +3,10 @@
 ## Overview
 
 The network configuration feature is implemented as a single module,
-`automojo.sysman.macos.networkconfiguration`, that exposes a
+`ccai.sysman.macos.networkconfiguration`, that exposes a
 `MacosNetworkConfigurationManager` class.  This spec implements the
 network-configuration contract defined at
-`automojo-sysman-common/specs/contracts/network-configuration/contract.md` for
+`codecraftai-sysman-common/specs/contracts/network-configuration/contract.md` for
 macOS using `networksetup` as the primary persistent surface (it writes to the
 System Configuration framework, which `configd` persists on its own), `ifconfig`
 and BSD `route`/`netstat -rn` for runtime state, and `scutil` for the three
@@ -39,7 +39,7 @@ for details on local/SSH execution, reliability tracking, and aspect configurati
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │      MacosNetworkConfigurationManager                       │
-│  automojo.sysman.macos.networkconfiguration                 │
+│  ccai.sysman.macos.networkconfiguration                 │
 │                                                             │
 │  get_interfaces()    get_interface()                        │
 │  configure_interface()                                      │
@@ -76,7 +76,7 @@ for details on local/SSH execution, reliability tracking, and aspect configurati
 
 ### `MacosNetworkConfigurationManager`
 
-**Location:** `source/packages/automojo/sysman/macos/networkconfiguration.py`
+**Location:** `source/packages/ccai/sysman/macos/networkconfiguration.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -505,13 +505,13 @@ stdout, stderr, and a `message` identifying the failing `scutil` surface for
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── networkconfiguration.py     ← MacosNetworkConfigurationManager, config,
                                    models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_networkconfiguration.py
 ```
 
@@ -522,8 +522,8 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.networkconfiguration import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.networkconfiguration import (
     MacosNetworkConfigurationManager,
     MacosNetworkConfigurationManagerConfig,
 )
@@ -549,13 +549,13 @@ for iface in net_mgr.get_interfaces():
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, RetryAspect, TimeoutAspect,
     PersistenceAspectConfig, RetryAspectConfig, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.networkconfiguration import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.networkconfiguration import (
     MacosNetworkConfigurationManager, MacosNetworkConfigurationManagerConfig,
 )
 
@@ -636,7 +636,7 @@ print(result.command)
 
 macOS has no `/etc/rc.local` equivalent and `route` writes are runtime-only.  A
 future extension will render a launchd plist (for example
-`/Library/LaunchDaemons/com.automojo.route.<label>.plist`) that invokes `route
+`/Library/LaunchDaemons/com.ccai.route.<label>.plist`) that invokes `route
 add` at boot, via the same `IFileOperator` + `launchctl bootstrap` pattern as
 the filesystem-management spec's persistence extension.  This extension is
 deferred; when added it will live behind its own feature flag.

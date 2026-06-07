@@ -5,7 +5,7 @@ All tasks below are unchecked at start; tick them in order.
 ## Module and Models
 
 - [ ] 1. Create
-  `source/packages/automojo/sysman/macos/virtualizationmanagement.py`
+  `source/packages/ccai/sysman/macos/virtualizationmanagement.py`
   with the module docstring covering backend selection, virsh
   discovery, connection-URI rules, elevation policy, and stop
   semantics.
@@ -108,7 +108,7 @@ All tasks below are unchecked at start; tick them in order.
 ## Tests
 
 - [ ] 33. Create
-  `source/testroots/testbase/automojo/tests/sysman/macos/test_virtualizationmanagement.py`.
+  `source/testroots/testbase/ccai/tests/sysman/macos/test_virtualizationmanagement.py`.
 
 - [ ] 34. Tests for `list_vms` / `list_snapshots` parsers and
   unknown-VM `get_vm_info`.

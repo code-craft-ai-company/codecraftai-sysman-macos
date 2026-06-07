@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The firewall management feature provides the `automojo-sysman-macos` package with the
+The firewall management feature provides the `codecraftai-sysman-macos` package with the
 ability to manage `pf` (Packet Filter) on macOS systems via the `pfctl` CLI.  This spec
 implements the firewall-management contract defined at
-`automojo-sysman-common/specs/contracts/firewall-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/firewall-management/contract.md` for macOS
 using `pf` via `pfctl` together with an `IFileOperator` for managing pf anchor rule
 files.  It includes adding and removing services, ports, and rich rules within pf
 anchors, querying anchor state, and reloading the pf configuration to apply permanent
@@ -15,10 +15,10 @@ A maintenance coordinator running in an external package drives all operations b
 into this feature's public interfaces.  The feature does not decide *what* firewall
 rules to apply — it provides the capability to *do it* reliably, idempotently, and with
 full auditability.  All system commands are executed exclusively through the
-`automojo-interfaces` command-runner abstraction, and all anchor file manipulation is
-performed through the `automojo-interfaces` file-operator abstraction.  On macOS the
+`codecraftai-interfaces` command-runner abstraction, and all anchor file manipulation is
+performed through the `codecraftai-interfaces` file-operator abstraction.  On macOS the
 abstract `zone` parameter maps to a pf anchor name; by convention the implementation
-maintains files at `/etc/pf.anchors/automojo.<zone>`.
+maintains files at `/etc/pf.anchors/ccai.<zone>`.
 
 ---
 
@@ -34,8 +34,8 @@ anchor, so that traffic for that service is permitted through the firewall.
 1. WHEN the coordinator provides a service name and a zone name THE SYSTEM SHALL resolve
    the service name to a `(port, protocol)` pair via a bundled services table, append a
    `pass in quick proto <protocol> from any to any port <port>` line to the anchor file
-   `/etc/pf.anchors/automojo.<zone>` via the file operator, and invoke
-   `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>` via the command runner.
+   `/etc/pf.anchors/ccai.<zone>` via the file operator, and invoke
+   `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>` via the command runner.
 2. WHEN the service name cannot be resolved via the bundled services table THE SYSTEM
    SHALL return a `MacosFirewallActionResult` with status `FAILED` and a `detail`
    explaining the unknown service.
@@ -62,8 +62,8 @@ firewall.
 
 1. WHEN the coordinator provides a service name and a zone name THE SYSTEM SHALL resolve
    the service to `(port, protocol)`, remove the matching `pass in quick proto
-   <protocol> ... port <port>` line from `/etc/pf.anchors/automojo.<zone>`, and invoke
-   `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>`.
+   <protocol> ... port <port>` line from `/etc/pf.anchors/ccai.<zone>`, and invoke
+   `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>`.
 2. WHEN the service name cannot be resolved THE SYSTEM SHALL return a
    `MacosFirewallActionResult` with status `FAILED`.
 3. WHEN the matching rule is not present in the anchor file THE SYSTEM SHALL skip
@@ -87,8 +87,8 @@ without requiring a named service.
 
 1. WHEN the coordinator provides a port number, protocol, and zone name THE SYSTEM
    SHALL append `pass in quick proto <protocol> from any to any port <port>` to the
-   anchor file `/etc/pf.anchors/automojo.<zone>` and invoke
-   `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>`.
+   anchor file `/etc/pf.anchors/ccai.<zone>` and invoke
+   `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>`.
 2. WHEN the corresponding rule is already present in the anchor file THE SYSTEM SHALL
    skip execution and return a `MacosFirewallActionResult` with status `SKIPPED`.
 3. WHEN the command succeeds THE SYSTEM SHALL return a `MacosFirewallActionResult` with
@@ -109,8 +109,8 @@ protocol in a pf anchor, so that traffic on that port is no longer permitted.
 
 1. WHEN the coordinator provides a port number, protocol, and zone name THE SYSTEM
    SHALL remove the matching `pass in quick proto <protocol> ... port <port>` line from
-   `/etc/pf.anchors/automojo.<zone>` and invoke
-   `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>`.
+   `/etc/pf.anchors/ccai.<zone>` and invoke
+   `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>`.
 2. WHEN the matching rule is not present in the anchor file THE SYSTEM SHALL skip
    execution and return a `MacosFirewallActionResult` with status `SKIPPED`.
 3. WHEN the command succeeds THE SYSTEM SHALL return a `MacosFirewallActionResult` with
@@ -131,8 +131,8 @@ service or port can be enforced.
 #### Acceptance Criteria
 
 1. WHEN the coordinator provides a raw pf rule string and a zone name THE SYSTEM SHALL
-   append the rule verbatim as a new line to `/etc/pf.anchors/automojo.<zone>` and
-   invoke `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>`.
+   append the rule verbatim as a new line to `/etc/pf.anchors/ccai.<zone>` and
+   invoke `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>`.
 2. WHEN an identical rule (after whitespace normalisation) is already present in the
    anchor file THE SYSTEM SHALL skip execution and return a `MacosFirewallActionResult`
    with status `SKIPPED`.
@@ -153,9 +153,9 @@ from an anchor, so that a previously applied complex traffic rule is revoked.
 #### Acceptance Criteria
 
 1. WHEN the coordinator provides a raw pf rule string and a zone name THE SYSTEM SHALL
-   remove the matching line from `/etc/pf.anchors/automojo.<zone>` (whitespace
+   remove the matching line from `/etc/pf.anchors/ccai.<zone>` (whitespace
    normalised) and invoke
-   `pfctl -a automojo.<zone> -f /etc/pf.anchors/automojo.<zone>`.
+   `pfctl -a ccai.<zone> -f /etc/pf.anchors/ccai.<zone>`.
 2. WHEN the rule is not present in the anchor file THE SYSTEM SHALL skip execution and
    return a `MacosFirewallActionResult` with status `SKIPPED`.
 3. WHEN the command succeeds THE SYSTEM SHALL return a `MacosFirewallActionResult` with
@@ -170,17 +170,17 @@ from an anchor, so that a previously applied complex traffic rule is revoked.
 ### Requirement 7: Set the Default Zone
 
 **User Story:** As a maintenance coordinator, I want to designate a pf anchor as the
-default (first-loaded) automojo anchor, so that its rules take precedence over other
-automojo anchors.
+default (first-loaded) ccai anchor, so that its rules take precedence over other
+ccai anchors.
 
 #### Acceptance Criteria
 
 1. WHEN the coordinator provides a zone name THE SYSTEM SHALL read `/etc/pf.conf` via
-   the file operator and ensure `anchor "automojo.<zone>"` and
-   `load anchor "automojo.<zone>" from "/etc/pf.anchors/automojo.<zone>"` appear first
-   among the `automojo.*` anchors, rewriting `/etc/pf.conf` if needed, then invoke
+   the file operator and ensure `anchor "ccai.<zone>"` and
+   `load anchor "ccai.<zone>" from "/etc/pf.anchors/ccai.<zone>"` appear first
+   among the `ccai.*` anchors, rewriting `/etc/pf.conf` if needed, then invoke
    `pfctl -f /etc/pf.conf`.
-2. WHEN the specified anchor is already the first `automojo.*` anchor in `/etc/pf.conf`
+2. WHEN the specified anchor is already the first `ccai.*` anchor in `/etc/pf.conf`
    THE SYSTEM SHALL skip execution and return a `MacosFirewallActionResult` with status
    `SKIPPED`.
 3. WHEN the command succeeds THE SYSTEM SHALL return a `MacosFirewallActionResult` with
@@ -219,7 +219,7 @@ decisions about what changes are needed without taking any action.
 #### Acceptance Criteria
 
 1. WHEN the coordinator provides a zone name THE SYSTEM SHALL invoke
-   `pfctl -a automojo.<zone> -sr` via the command runner without elevation.
+   `pfctl -a ccai.<zone> -sr` via the command runner without elevation.
 2. WHEN the command succeeds THE SYSTEM SHALL parse each `pass` / `block` / `match`
    rule line into `MacosZoneInfo.ports`, `MacosZoneInfo.services` (reverse-looked-up
    from the bundled services table), and `MacosZoneInfo.rich_rules`, populating
@@ -234,15 +234,15 @@ decisions about what changes are needed without taking any action.
 ### Requirement 10: Query All Zones
 
 **User Story:** As a maintenance coordinator, I want to retrieve a summary of all
-automojo-managed pf anchors, so that I can audit the overall firewall configuration.
+codecraftai-managed pf anchors, so that I can audit the overall firewall configuration.
 
 #### Acceptance Criteria
 
 1. WHEN the coordinator requests all zones THE SYSTEM SHALL invoke `pfctl -sA` via the
-   command runner, filter the output to anchors whose name starts with `automojo.`,
+   command runner, filter the output to anchors whose name starts with `ccai.`,
    and invoke `query_zone` for each.
 2. WHEN every per-anchor query succeeds THE SYSTEM SHALL return a list of
-   `MacosZoneInfo` records, one per automojo anchor, each populated with services,
+   `MacosZoneInfo` records, one per ccai anchor, each populated with services,
    ports, and rich_rules.
 3. WHEN any per-anchor query fails THE SYSTEM SHALL raise a `MacosFirewallQueryError`
    with the exit code and captured stderr.
@@ -254,7 +254,7 @@ automojo-managed pf anchors, so that I can audit the overall firewall configurat
 ### Requirement 11: Query PF State
 
 **User Story:** As a maintenance coordinator, I want to query whether pf is enabled
-and what the current default (first automojo) anchor is, so that I can verify the
+and what the current default (first ccai) anchor is, so that I can verify the
 firewall is active before applying rule changes.
 
 #### Acceptance Criteria
@@ -264,7 +264,7 @@ firewall is active before applying rule changes.
 2. WHEN `pfctl -si` output contains `Status: Enabled` THE SYSTEM SHALL set `running=True`;
    otherwise `running=False`.
 3. WHEN `running=True` THE SYSTEM SHALL set `default_zone` to the first anchor name from
-   `pfctl -sA` that starts with `automojo.`, stripped of that prefix; or `""` if none
+   `pfctl -sA` that starts with `ccai.`, stripped of that prefix; or `""` if none
    exist.
 4. WHEN `pfctl -si` exits non-zero THE SYSTEM SHALL return a `MacosFirewallState` with
    `running=False` and `default_zone=""` per the contract's firewall-not-running rule.

@@ -3,10 +3,10 @@
 ## Introduction
 
 This spec implements the hardware-inventory contract defined at
-`automojo-sysman-common/specs/contracts/hardware-inventory/contract.md` for
+`codecraftai-sysman-common/specs/contracts/hardware-inventory/contract.md` for
 macOS using `system_profiler`, `sysctl`, `networksetup`, and `nvram`.
 
-The hardware-inventory feature provides the `automojo-sysman-macos` package
+The hardware-inventory feature provides the `codecraftai-sysman-macos` package
 with the ability to query, classify, and aggregate hardware and platform identity
 information on macOS systems: hardware identity, CPU topology, memory (aggregate
 plus per-DIMM detail where the platform exposes it), storage volumes, network
@@ -14,7 +14,7 @@ link-layer hardware, PCI devices, USB devices, and firmware identity.
 
 A maintenance coordinator drives every operation by calling into this feature's
 public interfaces.  All system commands are executed exclusively through the
-`automojo-interfaces` command-runner abstraction, enabling auditing, tracing, and
+`codecraftai-interfaces` command-runner abstraction, enabling auditing, tracing, and
 test mocking without requiring a live macOS host.
 
 This feature is **strictly read-only**.  Every verb is inherently idempotent and

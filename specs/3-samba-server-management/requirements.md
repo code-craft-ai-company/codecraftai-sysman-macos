@@ -3,7 +3,7 @@
 ## Introduction
 
 The samba-server-management feature provides the
-`automojo-sysman-macos` package with the ability to manage the
+`codecraftai-sysman-macos` package with the ability to manage the
 SMB-share surface on macOS hosts.  macOS ships its own ``smbd``
 daemon as part of the base operating system, exposed under launchd
 as ``com.apple.smbd``.  Unlike the Samba project's binary on
@@ -14,14 +14,14 @@ which protocols expose a directory).
 
 This spec implements the cross-OS samba-server-management contract
 defined at
-``automojo-sysman-common/specs/contracts/samba-server-management/contract.md``
+``codecraftai-sysman-common/specs/contracts/samba-server-management/contract.md``
 for macOS, scoped to ``smbd`` and the ``sharing`` CLI.
 
 A maintenance coordinator running in an external package drives all
 operations by calling into this feature's public interfaces.  All
 system commands (``sharing``, ``launchctl``, ``dscl``, optionally
 ``pdbedit``) are executed exclusively through the
-``automojo-interfaces`` command-runner abstraction.  No
+``codecraftai-interfaces`` command-runner abstraction.  No
 ``subprocess``, no direct ``open``, and no direct ``pathlib`` calls
 are made inside this module.
 

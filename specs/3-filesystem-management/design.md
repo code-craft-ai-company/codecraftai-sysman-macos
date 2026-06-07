@@ -3,10 +3,10 @@
 ## Overview
 
 The filesystem management feature is implemented as a single module,
-`automojo.sysman.macos.filesystemmanagement`, that exposes a
+`ccai.sysman.macos.filesystemmanagement`, that exposes a
 `MacosFilesystemManager` class.  This spec implements the filesystem-management
 contract defined at
-`automojo-sysman-common/specs/contracts/filesystem-management/contract.md` for
+`codecraftai-sysman-common/specs/contracts/filesystem-management/contract.md` for
 macOS using the BSD toolchain (`mount`, `umount`, `stat -f`, `df`, `mkdir`, `rm`,
 `ln`, `chmod`, `chown`), macOS's `diskutil` for lazy unmounts, and an
 `IFileOperator` for transactional edits to `/etc/fstab`.
@@ -44,7 +44,7 @@ for details on local/SSH execution, reliability tracking, and aspect configurati
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosFilesystemManager                           │
-│  automojo.sysman.macos.filesystemmanagement                 │
+│  ccai.sysman.macos.filesystemmanagement                 │
 │                                                             │
 │  mount()              unmount()                             │
 │  add_fstab_entry()    remove_fstab_entry()                  │
@@ -77,7 +77,7 @@ for details on local/SSH execution, reliability tracking, and aspect configurati
 
 ### `MacosFilesystemManager`
 
-**Location:** `source/packages/automojo/sysman/macos/filesystemmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/filesystemmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -175,7 +175,7 @@ class MacosFilesystemQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -187,7 +187,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `IFileOperator` (from `automojo-interfaces`)
+### `IFileOperator` (from `codecraftai-interfaces`)
 
 ```python
 class IFileOperator(Protocol):
@@ -530,12 +530,12 @@ stdout, and stderr.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── filesystemmanagement.py      ← MacosFilesystemManager, config, models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_filesystemmanagement.py
 ```
 
@@ -546,9 +546,9 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileoperators import LocalFileOperator
-from automojo.sysman.macos.filesystemmanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileoperators import LocalFileOperator
+from ccai.sysman.macos.filesystemmanagement import (
     MacosFilesystemManager,
     MacosFilesystemManagerConfig,
     MacosFstabEntry,
@@ -591,14 +591,14 @@ print(f"{info.path_type} mode={info.mode}")
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.fileoperators import SSHFileOperator
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.fileoperators import SSHFileOperator
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, RetryAspect, TimeoutAspect,
     PersistenceAspectConfig, RetryAspectConfig, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.filesystemmanagement import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.filesystemmanagement import (
     MacosFilesystemManager, MacosFilesystemManagerConfig,
 )
 
@@ -694,7 +694,7 @@ OS-specific extension (not required for contract conformance) provides a
 
 1. Renders a launchd plist with a `ProgramArguments` block invoking `mount` with
    the entry's parameters.
-2. Writes the plist to `/Library/LaunchDaemons/com.automojo.mount.<label>.plist`
+2. Writes the plist to `/Library/LaunchDaemons/com.ccai.mount.<label>.plist`
    via the `IFileOperator` with `elevated=True`.
 3. Dispatches `launchctl bootstrap system <path>` through the command runner.
 

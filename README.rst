@@ -1,8 +1,8 @@
 =============================
-Automation Mojo Sysman macOS
+Code Craft AI Sysman macOS
 =============================
 
-The ``automojo-sysman-macos`` package provides system-management primitives for macOS hosts, parallel to what ``automojo-sysman-linux-redhat`` provides for Red Hat Enterprise Linux. It implements the cross-OS contracts published by ``automojo-sysman-common`` over the standard macOS admin toolchain — Homebrew, ``launchctl``, ``networksetup``, the macOS application firewall (``pf``), ``defaults``, ``log show``, and friends — exposed through the same ``ICommandRunner`` / ``IFileOperator`` abstractions and ``Aspects``-style behaviour parameters used elsewhere in the suite.
+The ``codecraftai-sysman-macos`` package provides system-management primitives for macOS hosts, parallel to what ``codecraftai-sysman-linux-redhat`` provides for Red Hat Enterprise Linux. It implements the cross-OS contracts published by ``codecraftai-sysman-common`` over the standard macOS admin toolchain — Homebrew, ``launchctl``, ``networksetup``, the macOS application firewall (``pf``), ``defaults``, ``log show``, and friends — exposed through the same ``ICommandRunner`` / ``IFileOperator`` abstractions and ``Aspects``-style behaviour parameters used elsewhere in the suite.
 
 Status
 ======
@@ -14,8 +14,8 @@ Repository Structure
 
 - ``development/`` - Runtime environment scripts.
 - ``repository-setup/`` - Repository homing and setup scripts.
-- ``source/packages/automojo/sysman/macos/`` - Implementation modules.
-- ``source/testroots/testbase/automojo/tests/sysman/macos/`` - testbase test suite.
+- ``source/packages/ccai/sysman/macos/`` - Implementation modules.
+- ``source/testroots/testbase/ccai/tests/sysman/macos/`` - testbase test suite.
 - ``specs/`` - Feature specifications organised by phase and domain area.
 - ``userguide/`` - Standards, conventions, and documentation.
 
@@ -44,7 +44,7 @@ Activate the virtual environment and run the testbase suite:
 
    source .venv/bin/activate
    testbase testing run --root source/testroots/testbase \
-       --includes=testbase.automojo.tests.sysman.macos \
+       --includes=testbase.ccai.tests.sysman.macos \
        --output=./.output
 
 Standards and Conventions
@@ -58,4 +58,4 @@ Additional Resources
 ====================
 
 - User guide entry point: ``userguide/userguide.rst``
-- Cross-OS contracts: ``../automojo-sysman-common/specs/contracts/``
+- Cross-OS contracts: ``../codecraftai-sysman-common/specs/contracts/``

@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.packagemanagement` module
+- [x] 1. Create the `ccai.sysman.macos.packagemanagement` module
 
 - [x] 2. Define `MacosPackageActionStatus` enum (SUCCESS / FAILED /
   SKIPPED / DRY_RUN)
@@ -176,7 +176,7 @@ items (`[ ]`) identify remaining work.
 - [ ] 61. **Cross-OS contract conformance review**: verify the
   `MacosPackageActionResult` / `MacosPackageInfo` field shapes match
   the cross-OS contract at
-  `automojo-sysman-common/specs/contracts/package-management/contract.md`
+  `codecraftai-sysman-common/specs/contracts/package-management/contract.md`
   and that the `brew_user` / no-elevation deviation is surfaced
   loudly in the contract's macOS row.
 
@@ -191,6 +191,6 @@ items (`[ ]`) identify remaining work.
 - [ ] 64. **Mac App Store extension plan**: scope whether the
   `mas` integration belongs in this module or a companion manager.
 
-- [ ] 65. **automojo-* reuse check**: confirm no other feature in
-  `automojo-sysman-macos` invokes `brew` directly; all such calls
+- [ ] 65. **codecraftai-* reuse check**: confirm no other feature in
+  `codecraftai-sysman-macos` invokes `brew` directly; all such calls
   should go through `MacosPackageManager`.

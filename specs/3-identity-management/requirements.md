@@ -3,11 +3,11 @@
 ## Introduction
 
 The identity management feature provides the
-`automojo-sysman-macos` package with the ability to bind a macOS host
+`codecraftai-sysman-macos` package with the ability to bind a macOS host
 to a Microsoft Active Directory (AD) realm and resolve directory-
 backed users and groups against the local Directory Services search
 path.  This spec implements the cross-OS contract defined at
-`automojo-sysman-common/specs/contracts/identity-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/identity-management/contract.md`
 for macOS using `dsconfigad` (AD bind / unbind / status), `dscl`
 (Directory Services reads through the `/Search` node), and
 `dscacheutil` plus a `killall -HUP mDNSResponder` kick (cache
@@ -18,7 +18,7 @@ feature's public surface.  The feature does not decide *which* realm
 the host should bind to — it provides the capability to *manipulate
 realm membership and inspect directory state* reliably, idempotently,
 and with full auditability.  Every system command is executed
-exclusively through the `automojo-interfaces` command-runner
+exclusively through the `codecraftai-interfaces` command-runner
 abstraction, enabling dry-run simulation, auditing, and test mocking
 without requiring a live system.  Administrator passwords land on
 the runner-bound argv (because `dsconfigad` accepts the password on

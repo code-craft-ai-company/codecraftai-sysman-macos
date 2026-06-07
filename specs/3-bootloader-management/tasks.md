@@ -6,7 +6,7 @@ items (`[ ]`) identify remaining work.
 ## Module and Models
 
 - [x] 1. Create the `bootloadermanagement` module under
-  `source/packages/automojo/sysman/macos/`.
+  `source/packages/ccai/sysman/macos/`.
 
 - [x] 2. Alias `MacosBootloaderActionStatus = ActionStatus`.
 

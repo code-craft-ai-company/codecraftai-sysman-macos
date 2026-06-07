@@ -8,7 +8,7 @@ on the wave-5.3 branch.
 
 ## Implementation tasks
 
-- [x] Stub the `automojo/sysman/macos/resourcecontrolmanagement.py`
+- [x] Stub the `ccai/sysman/macos/resourcecontrolmanagement.py`
   module with the public surface defined in `design.md`.
 - [x] Implement the `MacosResourceControlActionStatus`,
   `MacosResourceControlActionResult`,
@@ -50,7 +50,7 @@ on the wave-5.3 branch.
 ## Test tasks
 
 - [x] Land
-  `source/testroots/testbase/automojo/tests/sysman/macos/test_resourcecontrolmanagement.py`
+  `source/testroots/testbase/ccai/tests/sysman/macos/test_resourcecontrolmanagement.py`
   with at least 14 pytest functions.
 - [x] `test_create_group_invokes_launchctl` — `tee` + `launchctl
   bootstrap`.

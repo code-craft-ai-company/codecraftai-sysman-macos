@@ -9,7 +9,7 @@ best-effort directory listing of `/System/Library/Keyboard Layouts/`,
 dispatched through the injected `ICommandRunner`. The module imports
 no `subprocess`, opens no files, and consumes no `IFileOperator`.
 
-The module sits in `automojo.sysman.macos.localizationmanagement` and
+The module sits in `ccai.sysman.macos.localizationmanagement` and
 exports the following OS-prefixed surface:
 
 | Type | Role |
@@ -52,7 +52,7 @@ the per-OS verb table.
 ```
 
 `MacosLocalizationManager` extends `BaseFeatureManager` from
-`automojo.sysman.macos.featurebase`. The localization module exposes
+`ccai.sysman.macos.featurebase`. The localization module exposes
 its own `_dispatch_localization_write` helper instead of calling
 `_dispatch` directly so the result dataclass's per-feature fields
 (`setting`, `previous_value`, `requires_reboot`) are populated

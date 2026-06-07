@@ -3,7 +3,7 @@
 ## Overview
 
 The macOS samba-server-management feature is implemented as a single
-module, ``automojo.sysman.macos.sambaservermanagement``, exposing a
+module, ``ccai.sysman.macos.sambaservermanagement``, exposing a
 ``MacosSambaServerManager`` class that wraps macOS's SMB-share
 surface (the ``sharing`` CLI, ``launchctl kickstart`` of
 ``com.apple.smbd``, and the ``dscl . /SharePoints/...`` namespace)
@@ -14,9 +14,9 @@ Follows the standard manager pattern; delegates daemon lifecycle to
 ``3-user-group-management``.
 
 **See Also:**
-- ``automojo-sysman-common/specs/contracts/samba-server-management/contract.md``
+- ``codecraftai-sysman-common/specs/contracts/samba-server-management/contract.md``
   — the cross-OS abstract contract.
-- ``automojo-sysman-linux-ubuntu/specs/3-samba-server-management/``
+- ``codecraftai-sysman-linux-ubuntu/specs/3-samba-server-management/``
   — Ubuntu's implementation, which uses the Samba project's
   ``smb.conf`` / ``smbpasswd`` / ``pdbedit`` toolchain.
 - ``3-service-management`` — ``com.apple.smbd`` LaunchDaemon

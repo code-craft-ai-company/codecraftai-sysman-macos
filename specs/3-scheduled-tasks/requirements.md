@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The scheduled-tasks feature provides the `automojo-sysman-macos` package
+The scheduled-tasks feature provides the `codecraftai-sysman-macos` package
 with the ability to manage periodic and calendar-triggered task execution
 on macOS systems.  This spec implements the scheduled-tasks contract
 defined at
-`automojo-sysman-common/specs/contracts/scheduled-tasks/contract.md`
+`codecraftai-sysman-common/specs/contracts/scheduled-tasks/contract.md`
 for macOS using **launchd** as the scheduling backend.  System-scope
 tasks are written as `/Library/LaunchDaemons/<label>.plist`; user-scope
 tasks are written as `~<user>/Library/LaunchAgents/<label>.plist`.
@@ -16,9 +16,9 @@ A maintenance coordinator running in an external package drives all
 operations by calling into this feature's public interfaces.  The feature
 does not decide *which* tasks to schedule — it provides the capability to
 *do it* reliably, idempotently, and with full auditability.  All system
-commands are executed exclusively through the `automojo-interfaces`
+commands are executed exclusively through the `codecraftai-interfaces`
 command-runner abstraction, and all plist file writes/deletes are
-executed through the `automojo-interfaces` file-operator abstraction,
+executed through the `codecraftai-interfaces` file-operator abstraction,
 enabling dry-run simulation, auditing, and test mocking without requiring
 a live system.
 
