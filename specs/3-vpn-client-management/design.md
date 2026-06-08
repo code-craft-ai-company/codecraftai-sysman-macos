@@ -3,9 +3,9 @@
 ## Overview
 
 The vpn-client-management feature is implemented as a single module,
-`automojo.sysman.macos.vpnclientmanagement`, that exposes a
+`ccai.sysman.macos.vpnclientmanagement`, that exposes a
 `MacosVPNClientManager` class subclassing `VPNClientManagementBase` from
-`automojo-sysman-common`. The manager installs and lifecycles **Tailscale**
+`codecraftai-sysman-common`. The manager installs and lifecycles **Tailscale**
 via either the Homebrew formula or the signed `.pkg`, and the **Twingate
 Connector** via the signed `.pkg`. Service lifecycle is controlled with
 `launchctl bootstrap` / `bootout` against the `/Library/LaunchDaemons/`
@@ -16,13 +16,13 @@ All commands route through `ICommandRunner` — `brew`, `curl`, `installer`,
 Twingate config file. No direct subprocess use, no direct filesystem writes.
 
 **See Also:**
-- [vpn-client-management contract](../../../automojo-sysman-common/specs/contracts/vpn-client-management/contract.md)
-- [vpn-client-management-base](../../../automojo-sysman-common/specs/vpn-client-management-base/design.md)
+- [vpn-client-management contract](../../../codecraftai-sysman-common/specs/contracts/vpn-client-management/contract.md)
+- [vpn-client-management-base](../../../codecraftai-sysman-common/specs/vpn-client-management-base/design.md)
 - [1-command-execution](../1-command-execution/design.md)
 - [2-maintenance-reporting](../2-maintenance-reporting/design.md)
 - [3-package-management](../3-package-management/design.md) — `brew`
 - [3-service-management](../3-service-management/design.md) — `launchctl`
-- [Ubuntu sibling impl](../../../automojo-sysman-linux-ubuntu/specs/3-vpn-client-management/design.md)
+- [Ubuntu sibling impl](../../../codecraftai-sysman-linux-ubuntu/specs/3-vpn-client-management/design.md)
 
 ---
 
@@ -39,7 +39,7 @@ Twingate config file. No direct subprocess use, no direct filesystem writes.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosVPNClientManager                            │
-│  automojo.sysman.macos.vpnclientmanagement                  │
+│  ccai.sysman.macos.vpnclientmanagement                  │
 │  inherits VPNClientManagementBase                           │
 │                                                             │
 │  install_tailscale()  install_twingate_connector()          │
@@ -67,7 +67,7 @@ Twingate config file. No direct subprocess use, no direct filesystem writes.
 
 ### `MacosVPNClientManager`
 
-**Location:** `source/packages/automojo/sysman/macos/vpnclientmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/vpnclientmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -91,7 +91,7 @@ Extends `VPNClientManagerConfig`:
 | `tailscale_plist_path` | `str` | `"/Library/LaunchDaemons/com.tailscale.tailscaled.plist"` | launchd plist |
 | `twingate_plist_path` | `str` | `"/Library/LaunchDaemons/com.twingate.connector.plist"` | launchd plist |
 | `twingate_config_path` | `str` | `"/Library/Application Support/Twingate/connector.conf"` | Twingate config |
-| `pkg_cache_dir` | `str` | `"/var/tmp/automojo/vpn-pkgs"` | Where downloaded `.pkg` files are staged |
+| `pkg_cache_dir` | `str` | `"/var/tmp/ccai/vpn-pkgs"` | Where downloaded `.pkg` files are staged |
 
 ### `InstallSource` (enum)
 
@@ -188,12 +188,12 @@ MacosVPNClientQueryError = VPNClientQueryError
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── vpnclientmanagement.py     ← MacosVPNClientManager, config, aliases
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_vpnclientmanagement.py
 ```
 
@@ -201,8 +201,8 @@ source/testroots/testbase/
 
 ## See Also
 
-- [vpn-client-management contract](../../../automojo-sysman-common/specs/contracts/vpn-client-management/contract.md)
-- [vpn-client-management-base](../../../automojo-sysman-common/specs/vpn-client-management-base/design.md)
+- [vpn-client-management contract](../../../codecraftai-sysman-common/specs/contracts/vpn-client-management/contract.md)
+- [vpn-client-management-base](../../../codecraftai-sysman-common/specs/vpn-client-management-base/design.md)
 - [3-firewall-management](../3-firewall-management/design.md) — sibling sysman feature pattern
 - [3-service-management](../3-service-management/design.md) — `launchctl` reused
 

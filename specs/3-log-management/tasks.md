@@ -5,11 +5,11 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.logmanagement` module
+- [x] 1. Create the `ccai.sysman.macos.logmanagement` module
 
 - [x] 2. Define `MacosLogActionStatus` enum (SUCCESS / FAILED / SKIPPED
   / DRY_RUN), aliased to the shared `ActionStatus` from
-  `automojo.sysman.macos.featurebase`
+  `ccai.sysman.macos.featurebase`
 
 - [x] 3. Define `MacosLogManagerConfig` dataclass (`dry_run`,
   `elevated`, `newsyslog_d`, `default_window`).
@@ -147,7 +147,7 @@ items (`[ ]`) identify remaining work.
 
 - [ ] 44. **Cross-OS contract conformance review**: verify that the
   shipping dataclasses match the abstract names in
-  `automojo-sysman-common/specs/contracts/log-management/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/log-management/contract.md`.
   Notable deviations: `query_disk_usage` is unimplemented;
   `MacosLogDiskUsage` is therefore absent.
 

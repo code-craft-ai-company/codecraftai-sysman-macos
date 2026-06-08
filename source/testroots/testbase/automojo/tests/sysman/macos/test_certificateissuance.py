@@ -14,11 +14,11 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.certificateissuance import (
+from ccai.sysman.macos.certificateissuance import (
     MacosCertIssuanceActionStatus,
     MacosCertIssuanceManagerConfig,
     MacosCertIssuanceQueryError,
@@ -758,8 +758,8 @@ def test_failed_command_surfaces_stderr():
         "openssl", "req",
         "-newkey", "rsa:2048",
         "-nodes",
-        "-keyout", "/etc/automojo/certs/web.key",
-        "-out", "/etc/automojo/certs/web.csr",
+        "-keyout", "/etc/ccai/certs/web.key",
+        "-out", "/etc/ccai/certs/web.csr",
         "-subj", "/CN=example.com",
     )] = RunResult(
         exit_code=2, stdout="", stderr="bad subject",

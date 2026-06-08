@@ -4,7 +4,7 @@
 
 The mail-transport-management feature is implemented as a single
 module,
-`automojo.sysman.macos.mailtransportmanagement`, exposing a
+`ccai.sysman.macos.mailtransportmanagement`, exposing a
 `MacosMailTransportManager` class that wraps `postconf`,
 `postqueue`, `mailq`, `newaliases`, and `sendmail` through the
 `ICommandRunner` abstraction.  It also reads and writes

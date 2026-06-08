@@ -9,11 +9,11 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.kernelparameters import (
+from ccai.sysman.macos.kernelparameters import (
     MacosKernelParameterActionStatus,
     MacosKernelParameterManager,
     MacosKernelParameterManagerConfig,
@@ -348,7 +348,7 @@ def test_set_persistent_skipped_when_file_and_runtime_match():
     )
     runner.results[("cat", "/etc/sysctl.conf")] = RunResult(
         exit_code=0,
-        stdout="# managed by automojo-sysman-macos\nkern.maxproc=2048\n",
+        stdout="# managed by codecraftai-sysman-macos\nkern.maxproc=2048\n",
         stderr="",
     )
 
@@ -416,7 +416,7 @@ def test_set_persistent_creates_file_when_absent():
     ]
     testbase.assert_equal(len(tee_calls), 1)
     payload = tee_calls[0]["stdin"]
-    testbase.assert_true("# managed by automojo-sysman-macos" in payload)
+    testbase.assert_true("# managed by codecraftai-sysman-macos" in payload)
     testbase.assert_true("kern.maxproc=2048" in payload)
     return
 

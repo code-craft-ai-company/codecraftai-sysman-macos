@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The environment configuration feature provides the `automojo-sysman-macos`
+The environment configuration feature provides the `codecraftai-sysman-macos`
 package with the ability to set, unset, and query system-wide and per-user
 environment variables on macOS.  This spec implements the
 environment-configuration contract defined at
-`automojo-sysman-common/specs/contracts/environment-configuration/contract.md`
+`codecraftai-sysman-common/specs/contracts/environment-configuration/contract.md`
 for macOS using `launchctl setenv` / `launchctl unsetenv` for runtime values,
 `/etc/launchd.conf` (legacy) and `/etc/paths.d/*` for persistent system-scope
 hints, and per-user `~/.zshenv` for user-scope persistence.
@@ -23,7 +23,7 @@ The abstract `EnvScope` on macOS maps to:
 
 - **SYSTEM**: `launchctl setenv NAME VALUE` (runtime, system domain) PLUS
   `/etc/launchd.conf` (persistence, deprecated but still honoured on
-  Sequoia/Sonoma bootstraps) PLUS `/etc/paths.d/automojo` when the variable is
+  Sequoia/Sonoma bootstraps) PLUS `/etc/paths.d/ccai` when the variable is
   `PATH` specifically.
 - **USER**: `launchctl asuser <uid> launchctl setenv NAME VALUE` (runtime,
   user domain) PLUS `~<user>/.zshenv` (persistence, zsh is the default shell).
@@ -44,7 +44,7 @@ service and every login.
    invoke `launchctl setenv <name> <value>` via the command runner AND write
    the variable as a `setenv <name> "<value>"` line in `/etc/launchd.conf`.
 2. WHEN `name == "PATH"` THE SYSTEM SHALL additionally write the value (one
-   entry per line) to `/etc/paths.d/automojo` via `IFileOperator.write_text`.
+   entry per line) to `/etc/paths.d/ccai` via `IFileOperator.write_text`.
 3. WHEN both the runtime value (queried via `launchctl getenv <name>`) AND
    the persisted value already match THE SYSTEM SHALL return `status=SKIPPED`.
 4. WHEN `/etc/launchd.conf` does not exist THE SYSTEM SHALL create it with the
@@ -72,7 +72,7 @@ environment variable, so that future services and logins no longer see it.
    `launchctl unsetenv <name>` via the command runner.
 3. WHEN the variable is present in `/etc/launchd.conf` THE SYSTEM SHALL
    rewrite the file with the matching `setenv` line removed.
-4. WHEN `name == "PATH"` and `/etc/paths.d/automojo` exists THE SYSTEM SHALL
+4. WHEN `name == "PATH"` and `/etc/paths.d/ccai` exists THE SYSTEM SHALL
    delete it via `IFileOperator.delete`.
 5. WHEN `dry_run=True` THE SYSTEM SHALL NOT invoke the runner or the file
    operator's mutating methods.

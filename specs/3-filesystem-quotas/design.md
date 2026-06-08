@@ -3,7 +3,7 @@
 ## Overview
 
 The filesystem-quotas feature is implemented as a single
-module, `automojo.sysman.macos.filesystemquotas`, exposing a
+module, `ccai.sysman.macos.filesystemquotas`, exposing a
 `MacosFilesystemQuotasManager` class that wraps the BSD
 `quota` family — `quotacheck`, `quotaon`, `quotaoff`,
 `setquota`, `quota`, `repquota` — through the `ICommandRunner`
@@ -37,12 +37,12 @@ macOS feature.
 | `get_quota_status` | Read | `MacosQuotaStatus` |
 
 **See Also:**
-- `automojo-sysman-common/specs/contracts/filesystem-quotas/contract.md`
+- `codecraftai-sysman-common/specs/contracts/filesystem-quotas/contract.md`
   — cross-OS contract this implementation satisfies.
-- `automojo-sysman-linux-redhat/specs/3-filesystem-quotas/`
+- `codecraftai-sysman-linux-redhat/specs/3-filesystem-quotas/`
   — canonical reference; covers the full quota surface
   including XFS / project quotas / grace-period verbs.
-- `automojo-sysman-linux-ubuntu/specs/3-filesystem-quotas/`
+- `codecraftai-sysman-linux-ubuntu/specs/3-filesystem-quotas/`
   — closest sibling pilot; shares the BSD `quota` tooling
   shape modulo the APFS gap.
 

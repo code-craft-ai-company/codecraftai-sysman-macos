@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work tracked for follow-up batches.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.identitymanagement` module.
+- [x] 1. Create the `ccai.sysman.macos.identitymanagement` module.
 
 - [x] 2. Define `MacosIdentityActionStatus` (SUCCESS / FAILED /
   SKIPPED / DRY_RUN).

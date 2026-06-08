@@ -3,10 +3,10 @@
 ## Introduction
 
 The precision-time-management feature provides the
-`automojo-sysman-macos` package with the ability to query and
+`codecraftai-sysman-macos` package with the ability to query and
 configure the host's NTP synchronisation surface on macOS.  This spec
 implements the precision-time-management contract defined at
-`automojo-sysman-common/specs/contracts/precision-time-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/precision-time-management/contract.md`
 for macOS using `systemsetup` (the canonical persistent surface for
 network-time configuration), `sntp` (the user-space SNTP client), and
 `defaults read /Library/Preferences/com.apple.timed timeServiceConfig`
@@ -18,7 +18,7 @@ feature does not decide *which* time sources should be active or
 *whether* clock sync should be on — it provides the capability to
 *manipulate the precision-time surface* reliably, idempotently, and
 with full auditability.  All system commands flow through the
-`automojo-interfaces` command-runner abstraction.  No file is opened
+`codecraftai-interfaces` command-runner abstraction.  No file is opened
 directly: legacy `/etc/ntp.conf` (where present) is read via `cat`
 through the runner.
 

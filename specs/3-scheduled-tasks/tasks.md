@@ -8,7 +8,7 @@ flagged in "Gaps".
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.scheduledtasks` module
+- [x] 1. Create the `ccai.sysman.macos.scheduledtasks` module
 
 - [x] 2. Define `MacosScheduledTaskActionStatus` and `MacosTaskOwner`
   enums
@@ -177,7 +177,7 @@ flagged in "Gaps".
   `KeepAlive` belongs in a subclassed spec or a dedicated
   `MacosPersistentTaskManager` companion.
 
-- [ ] 64. **automojo-* reuse check**: confirm no other feature in
-  `automojo-sysman-macos` authors plists or invokes `launchctl`
+- [ ] 64. **codecraftai-* reuse check**: confirm no other feature in
+  `codecraftai-sysman-macos` authors plists or invokes `launchctl`
   directly; all such work should go through
   `MacosScheduledTasksManager`.

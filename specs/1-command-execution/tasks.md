@@ -5,14 +5,14 @@ identify remaining work.
 
 ## Runners Subpackage (Layer 1, delivered batch 14/15)
 
-The runners subpackage at `automojo.sysman.macos.runners` is the canonical Layer 1
+The runners subpackage at `ccai.sysman.macos.runners` is the canonical Layer 1
 command-execution surface for macOS.  It mirrors the Ubuntu runners 1:1 with macOS
 prefixes; the higher-level `MacosCommandExecutor` shape described later in this
 file is a separate (future) Layer-2 facade and is not part of this batch.
 
 ### Models — Implemented
 
-- [x] R1. Create the `automojo.sysman.macos.runners` subpackage
+- [x] R1. Create the `ccai.sysman.macos.runners` subpackage
 - [x] R2. Define `MacosRunResult` dataclass (superset of cross-OS `RunResult`)
 - [x] R3. Define `MacosExecutionContext` dataclass for in-flight commands
 - [x] R4. Define `MacosRunRecord` dataclass for persistence sinks
@@ -49,7 +49,7 @@ file is a separate (future) Layer-2 facade and is not part of this batch.
 - [x] R21. `run()` supports dry-run; non-dry-run raises typed
   `NotImplementedError` describing the missing transport
 - [x] R22. Stub `_dispatch_remote` documented as the future wiring point for
-  `automojo-protocol-ssh` or `paramiko`
+  `codecraftai-protocol-ssh` or `paramiko`
 
 ### Aspects — Implemented
 
@@ -93,7 +93,7 @@ Layer 3 feature manager already shipped.
 
 ## Module and Models
 
-- [ ] 1. Create the `automojo.sysman.macos.commandexecution` module
+- [ ] 1. Create the `ccai.sysman.macos.commandexecution` module
 
 - [ ] 2. Define `MacosCommandExecutionStatus` enum (SUCCESS / FAILED / SKIPPED /
   DRY_RUN)
@@ -189,7 +189,7 @@ Layer 3 feature manager already shipped.
 - [ ] 37. **Cross-OS contract conformance review**: verify that
   `MacosCommandResult` / `MacosSequenceResult` / `MacosCommandSpec` field shapes match
   the cross-OS contract at
-  `automojo-sysman-common/specs/contracts/command-execution/contract.md` exactly,
+  `codecraftai-sysman-common/specs/contracts/command-execution/contract.md` exactly,
   including the macOS-specific `sudo -n -E` elevation path and the `/bin/bash` default
   shell behaviour.
 

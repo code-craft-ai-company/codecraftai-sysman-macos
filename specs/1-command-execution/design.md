@@ -3,12 +3,12 @@
 ## Overview
 
 The command-execution feature is implemented as a single module,
-`automojo.sysman.macos.commandexecution`, that exposes a `MacosCommandExecutor`
+`ccai.sysman.macos.commandexecution`, that exposes a `MacosCommandExecutor`
 class.  This spec implements the command-execution contract defined at
-`automojo-sysman-common/specs/contracts/command-execution/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/command-execution/contract.md` for macOS
 using `subprocess.run` (wrapped inside `MacosLocalCommandRunner`) for local execution
 and `paramiko` (wrapped inside `MacosSSHCommandRunner`, which lives in
-`automojo-protocol-ssh`) for remote execution.  The coordinator instantiates the
+`codecraftai-protocol-ssh`) for remote execution.  The coordinator instantiates the
 executor with a runner and a config, then calls `run`, `run_sequence`, or `run_script`
 to dispatch work.
 
@@ -48,7 +48,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosCommandExecutor                             │
-│  automojo.sysman.macos.commandexecution                     │
+│  ccai.sysman.macos.commandexecution                     │
 │                                                             │
 │  run()           run_sequence()                             │
 │  run_script()                                               │
@@ -86,7 +86,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 
 ### `MacosCommandExecutor`
 
-**Location:** `source/packages/automojo/sysman/macos/commandexecution.py`
+**Location:** `source/packages/ccai/sysman/macos/commandexecution.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -158,7 +158,7 @@ class MacosSequenceResult:
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -174,7 +174,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `RunResult` (from `automojo-interfaces`)
+### `RunResult` (from `codecraftai-interfaces`)
 
 ```python
 @dataclass
@@ -564,12 +564,12 @@ returned `success` equals `True`; `args`, `elevated`, and `dry_run` are preserve
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── commandexecution.py      ← MacosCommandExecutor, config, spec, results, enum
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_commandexecution.py
 ```
 
@@ -580,11 +580,11 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosLocalCommandRunner,
     MacosLocalRunnerConfig,
 )
-from automojo.sysman.macos.commandexecution import (
+from ccai.sysman.macos.commandexecution import (
     MacosCommandExecutor,
     MacosCommandExecutorConfig,
     MacosCommandSpec,
@@ -626,11 +626,11 @@ print(f"all_succeeded={seq_result.all_succeeded} failed_at={seq_result.failed_at
 ### SSH with Aspects
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosSSHCommandRunner,
     MacosSSHRunnerConfig,
 )
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     RetryAspect,
     TimeoutAspect,
@@ -638,7 +638,7 @@ from automojo.sysman.macos.aspects import (
     RetryAspectConfig,
     TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.storage import SQLiteStorage
 
 runner = MacosSSHCommandRunner(
     MacosSSHRunnerConfig(host="mac-build-01", username="ci"),

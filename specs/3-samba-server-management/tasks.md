@@ -4,7 +4,7 @@ All tasks are unchecked — new feature.
 
 ## Module and Models
 
-- [ ] 1. Create `source/packages/automojo/sysman/macos/sambaservermanagement.py`
+- [ ] 1. Create `source/packages/ccai/sysman/macos/sambaservermanagement.py`
 - [ ] 2. Define module-level constants (`_SHARING`, `_LAUNCHCTL`,
   `_DSCL`, `_PDBEDIT`, default service label, delegated-user
   message).

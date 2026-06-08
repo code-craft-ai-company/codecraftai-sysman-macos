@@ -2,18 +2,18 @@
 
 ## Introduction
 
-The configuration management feature provides the `automojo-sysman-macos` package
+The configuration management feature provides the `codecraftai-sysman-macos` package
 with the ability to read, write, diff, validate, back up, restore, and adjust
 permissions/ownership on macOS configuration artifacts.  This spec implements the
 configuration-management contract defined at
-`automojo-sysman-common/specs/contracts/configuration-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/configuration-management/contract.md`
 for macOS.
 
 A maintenance coordinator running in an external package drives all operations by
 calling into this feature's public interfaces.  The feature does not decide *what*
 configuration values to apply — it provides the capability to *do it* reliably,
 idempotently, and with full auditability.  All system commands are executed
-exclusively through the `automojo-interfaces` command-runner abstraction, and all
+exclusively through the `codecraftai-interfaces` command-runner abstraction, and all
 configuration file I/O is delegated to the `IFileOperator` abstraction.  No
 `subprocess`, no direct `open`, and no direct `pathlib` calls are made inside this
 module.
@@ -195,7 +195,7 @@ of a configuration source, so that I can recover from a bad change.
    not exist THE SYSTEM SHALL raise `MacosConfigFileNotFoundError`.
 2. WHEN `source` resolves to a plist domain THE SYSTEM SHALL invoke
    `defaults export <domain> <backup_path>` where `<backup_path>` is
-   `/var/backups/automojo/<domain>.<YYYYMMDDTHHMMSS>.plist`.
+   `/var/backups/ccai/<domain>.<YYYYMMDDTHHMMSS>.plist`.
 3. WHEN `source` resolves to a plain file THE SYSTEM SHALL invoke
    `cp -p <source> <backup_path>` where `<backup_path>` is
    `<source>.bak.<YYYYMMDDTHHMMSS>`.

@@ -3,7 +3,7 @@
 ## Source Module
 
 - [x] Create `aclmanagement.py` under
-      `source/packages/automojo/sysman/macos/`.
+      `source/packages/ccai/sysman/macos/`.
 - [x] Module docstring covering the verb catalogue, file-I/O
       policy, elevation policy, idempotency policy, and ACL-model
       commentary.
@@ -81,7 +81,7 @@
 ## Test Module
 
 - [x] Create `test_aclmanagement.py` under
-      `source/testroots/testbase/automojo/tests/sysman/macos/`.
+      `source/testroots/testbase/ccai/tests/sysman/macos/`.
 - [x] `_MockCommandRunner` recorder.
 - [x] `_ls_le_full_payload()` fixture (allow + deny + group ACEs).
 - [x] `_ls_le_minimal_payload()` fixture (no ACEs).

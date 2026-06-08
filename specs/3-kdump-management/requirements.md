@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The kdump-management feature provides the `automojo-sysman-macos`
+The kdump-management feature provides the `codecraftai-sysman-macos`
 package with a contract-conforming surface for the
 `kdump-management` cross-OS contract defined at
-`automojo-sysman-common/specs/contracts/kdump-management/contract.md`.
+`codecraftai-sysman-common/specs/contracts/kdump-management/contract.md`.
 
 **macOS has no kdump equivalent.** The Linux concept of pre-reserving
 memory for a capture kernel and arming `kexec` does not map onto
@@ -32,7 +32,7 @@ This spec is intentionally a contract-conforming **skeleton**:
 
 A maintenance coordinator running in an external package drives all
 operations through the public interface. Every command is dispatched
-through the `automojo-interfaces` command-runner abstraction.
+through the `codecraftai-interfaces` command-runner abstraction.
 
 ---
 

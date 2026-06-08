@@ -3,12 +3,12 @@
 ## Overview
 
 This spec implements the process-management contract defined at
-`automojo-sysman-common/specs/contracts/process-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/process-management/contract.md`
 for macOS using BSD `ps`, `kill`, `pkill`, `pgrep`, `renice`, and
 `nohup`.
 
 The process-management feature is implemented as a single module,
-`automojo.sysman.macos.processmanagement`, that exposes a
+`ccai.sysman.macos.processmanagement`, that exposes a
 `MacosProcessManager` class.  The coordinator instantiates
 `MacosProcessManager` and calls its read and write verbs to manage
 arbitrary user-space processes.  Every verb returns a typed `Macos*`
@@ -41,7 +41,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosProcessManager                              │
-│  automojo.sysman.macos.processmanagement                    │
+│  ccai.sysman.macos.processmanagement                    │
 │                                                             │
 │  list_processes()        get_process()                      │
 │  find_processes_by_name() wait_for_process()                │
@@ -80,7 +80,7 @@ configuration.
 
 ### `MacosProcessManager`
 
-**Location:** `source/packages/automojo/sysman/macos/processmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/processmanagement.py`
 
 | Method | Returns | Description |
 |---|---|---|
@@ -169,7 +169,7 @@ class MacosProcessQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -188,7 +188,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `RunResult` (from `automojo-interfaces`)
+### `RunResult` (from `codecraftai-interfaces`)
 
 ```python
 @dataclass
@@ -552,10 +552,10 @@ the injected runner and config.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 └── processmanagement.py            ← manager + dataclasses + parsers + exception
 
-source/testroots/testbase/automojo/tests/sysman/macos/
+source/testroots/testbase/ccai/tests/sysman/macos/
 └── test_processmanagement.py       ← unit tests using a MockCommandRunner
 ```
 
@@ -566,10 +566,10 @@ source/testroots/testbase/automojo/tests/sysman/macos/
 ### Local execution
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner, LocalRunnerConfig,
 )
-from automojo.sysman.macos.processmanagement import (
+from ccai.sysman.macos.processmanagement import (
     MacosProcessManager,
     MacosProcessManagerConfig,
     MacosProcessSpec,
@@ -607,10 +607,10 @@ assert result.command == ["kill", "-TERM", "4242"]
 ### SSH execution with aspects
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     SSHCommandRunner, SSHRunnerConfig,
 )
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, RetryAspect, TimeoutAspect,
     PersistenceAspectConfig, RetryAspectConfig, TimeoutAspectConfig,
 )
@@ -646,7 +646,7 @@ proc.kill_process_tree(pid=4242, signal="KILL")
 
 ### Test File
 
-`source/testroots/testbase/automojo/tests/sysman/macos/test_processmanagement.py`
+`source/testroots/testbase/ccai/tests/sysman/macos/test_processmanagement.py`
 
 ### Tests Implemented
 

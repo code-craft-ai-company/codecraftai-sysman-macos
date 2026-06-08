@@ -10,12 +10,12 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos import remotelogforwarding as rlf
-from automojo.sysman.macos.remotelogforwarding import (
+from ccai.sysman.macos import remotelogforwarding as rlf
+from ccai.sysman.macos.remotelogforwarding import (
     MacosForwarderActionStatus,
     MacosForwarderInfo,
     MacosForwarderManagerConfig,
@@ -134,7 +134,7 @@ def test_add_forwarder_invokes_tee():
     )
     body = tee_calls[0]["stdin"]
     testbase.assert_equal(
-        "# >>> automojo-fwd:collector1 >>>" in body, True,
+        "# >>> codecraftai-fwd:collector1 >>>" in body, True,
     )
     testbase.assert_equal(
         "*.* @logs.example.com:514" in body, True,
@@ -167,7 +167,7 @@ def test_add_forwarder_skipped_when_present():
         id="collector1", host="logs.example.com", port=514,
         protocol="udp", selector="*.*",
     )
-    block_body = _render_block(spec=spec, prefix="automojo-fwd")
+    block_body = _render_block(spec=spec, prefix="codecraftai-fwd")
     _seed_cat(runner, path="/etc/syslog.conf", body=block_body)
 
     manager = MacosRemoteLogForwardingManager(
@@ -257,7 +257,7 @@ def test_remove_forwarder_invokes_tee():
     )
     body = (
         "# operator-authored line\n"
-        + _render_block(spec=spec, prefix="automojo-fwd")
+        + _render_block(spec=spec, prefix="codecraftai-fwd")
         + "*.notice  /var/log/messages\n"
     )
     _seed_cat(runner, path="/etc/syslog.conf", body=body)
@@ -281,7 +281,7 @@ def test_remove_forwarder_invokes_tee():
     testbase.assert_equal(len(tee_calls), 1)
     body_after = tee_calls[0]["stdin"]
     testbase.assert_equal(
-        "automojo-fwd:collector1" in body_after, False,
+        "codecraftai-fwd:collector1" in body_after, False,
     )
     testbase.assert_equal(
         "operator-authored line" in body_after, True,
@@ -338,8 +338,8 @@ def test_list_forwarders_parses_syslog_conf_output():
     )
     body = (
         "# operator preamble\n"
-        + _render_block(spec=spec1, prefix="automojo-fwd")
-        + _render_block(spec=spec2, prefix="automojo-fwd")
+        + _render_block(spec=spec1, prefix="codecraftai-fwd")
+        + _render_block(spec=spec2, prefix="codecraftai-fwd")
     )
     _seed_cat(runner, path="/etc/syslog.conf", body=body)
 
@@ -404,7 +404,7 @@ def test_enable_forwarder_invokes_tee():
         id="collector1", host="logs.example.com", port=514,
         enabled=False,
     )
-    body = _render_block(spec=spec, prefix="automojo-fwd")
+    body = _render_block(spec=spec, prefix="codecraftai-fwd")
     _seed_cat(runner, path="/etc/syslog.conf", body=body)
     runner.default_result = RunResult(
         exit_code=0, stdout="", stderr="",
@@ -442,7 +442,7 @@ def test_enable_forwarder_skipped_when_enabled():
         id="collector1", host="logs.example.com", port=514,
         enabled=True,
     )
-    body = _render_block(spec=spec, prefix="automojo-fwd")
+    body = _render_block(spec=spec, prefix="codecraftai-fwd")
     _seed_cat(runner, path="/etc/syslog.conf", body=body)
 
     manager = MacosRemoteLogForwardingManager(
@@ -470,7 +470,7 @@ def test_disable_forwarder_invokes_tee():
         id="collector1", host="logs.example.com", port=514,
         enabled=True,
     )
-    body = _render_block(spec=spec, prefix="automojo-fwd")
+    body = _render_block(spec=spec, prefix="codecraftai-fwd")
     _seed_cat(runner, path="/etc/syslog.conf", body=body)
     runner.default_result = RunResult(
         exit_code=0, stdout="", stderr="",
@@ -502,7 +502,7 @@ def test_disable_forwarder_invokes_tee():
 
 def test_test_forwarder_invokes_logger():
     """
-        test_forwarder dispatches ``logger -t automojo-test
+        test_forwarder dispatches ``logger -t codecraftai-test
         <message>`` without elevation.
     """
     runner = _MockCommandRunner()
@@ -532,7 +532,7 @@ def test_test_forwarder_invokes_logger():
     testbase.assert_equal(len(logger_calls), 1)
     testbase.assert_equal(logger_calls[0]["args"][0], "logger")
     testbase.assert_equal(logger_calls[0]["args"][1], "-t")
-    testbase.assert_equal(logger_calls[0]["args"][2], "automojo-test")
+    testbase.assert_equal(logger_calls[0]["args"][2], "codecraftai-test")
     testbase.assert_equal(logger_calls[0]["elevated"], False)
     return
 
@@ -553,7 +553,7 @@ def test_get_forwarder_status_parses_output():
         id="collector1", host="logs.example.com", port=514,
         enabled=True,
     )
-    body = _render_block(spec=spec, prefix="automojo-fwd")
+    body = _render_block(spec=spec, prefix="codecraftai-fwd")
     _seed_cat(runner_active, path="/etc/syslog.conf", body=body)
     manager_active = MacosRemoteLogForwardingManager(
         runner=runner_active,

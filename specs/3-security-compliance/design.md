@@ -3,10 +3,10 @@
 ## Overview
 
 The security compliance feature is implemented as a single module,
-`automojo.sysman.macos.securitycompliance`, that exposes a
+`ccai.sysman.macos.securitycompliance`, that exposes a
 `MacosSecurityComplianceManager` class.  This spec implements the
 security-compliance contract defined at
-`automojo-sysman-common/specs/contracts/security-compliance/contract.md`
+`codecraftai-sysman-common/specs/contracts/security-compliance/contract.md`
 for macOS using Apple's open-source Security Configuration Framework
 (`macos_security` project / `baseline-automation/`) as the primary
 engine.
@@ -40,7 +40,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │           MacosSecurityComplianceManager                    │
-│  automojo.sysman.macos.securitycompliance                   │
+│  ccai.sysman.macos.securitycompliance                   │
 │                                                             │
 │  list_profiles()        get_profile()                       │
 │  run_compliance_profile()  remediate()                      │
@@ -77,7 +77,7 @@ configuration.
 
 ### `MacosSecurityComplianceManager`
 
-**Location:** `source/packages/automojo/sysman/macos/securitycompliance.py`
+**Location:** `source/packages/ccai/sysman/macos/securitycompliance.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -95,9 +95,9 @@ configuration.
 |---|---|---|---|
 | `dry_run` | `bool` | `False` | When `True`, no mutations dispatch |
 | `elevated` | `bool` | `False` | When `True`, remediations pass `elevated=True` |
-| `baselines_dir` | `str` | `"/usr/local/automojo/baseline-automation"` | Apple macos_security checkout |
-| `baseline_path` | `str` | `"/var/lib/automojo/compliance/current_baseline.json"` | Baseline JSON |
-| `results_dir` | `str` | `"/var/lib/automojo/compliance/results"` | JSON output directory |
+| `baselines_dir` | `str` | `"/usr/local/ccai/baseline-automation"` | Apple macos_security checkout |
+| `baseline_path` | `str` | `"/var/lib/ccai/compliance/current_baseline.json"` | Baseline JSON |
+| `results_dir` | `str` | `"/var/lib/ccai/compliance/results"` | JSON output directory |
 
 ---
 
@@ -189,7 +189,7 @@ class MacosSecurityComplianceError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -201,7 +201,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `IFileOperator` (from `automojo-interfaces`)
+### `IFileOperator` (from `codecraftai-interfaces`)
 
 ```python
 class IFileOperator(Protocol):
@@ -510,13 +510,13 @@ Per-check failures are captured inside the report (`compliant=False`,
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── securitycompliance.py      ← MacosSecurityComplianceManager, config,
                                   models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_securitycompliance.py
 ```
 
@@ -527,9 +527,9 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileops import LocalFileOperator, LocalFileOperatorConfig
-from automojo.sysman.macos.securitycompliance import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileops import LocalFileOperator, LocalFileOperatorConfig
+from ccai.sysman.macos.securitycompliance import (
     MacosSecurityComplianceManager,
     MacosSecurityComplianceManagerConfig,
     MacosBaselineSpec,
@@ -556,9 +556,9 @@ for r in results:
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.fileops import SSHFileOperator, SSHFileOperatorConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.fileops import SSHFileOperator, SSHFileOperatorConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     RetryAspect,
     TimeoutAspect,
@@ -566,8 +566,8 @@ from automojo.sysman.macos.aspects import (
     RetryAspectConfig,
     TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.securitycompliance import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.securitycompliance import (
     MacosSecurityComplianceManager,
     MacosSecurityComplianceManagerConfig,
     MacosBaselineSpec,
@@ -664,10 +664,10 @@ Property-based tests are tagged as
   `remediate/<id>.sh` scripts.  The manager treats each subdirectory
   as a compliance profile.
 - **Baseline persistence location.**  Baseline JSON lives at
-  `/var/lib/automojo/compliance/current_baseline.json`, managed via
+  `/var/lib/ccai/compliance/current_baseline.json`, managed via
   `IFileOperator`.
 - **Results directory.**  Each profile run writes a JSON result under
-  `/var/lib/automojo/compliance/results/` for auditability.
+  `/var/lib/ccai/compliance/results/` for auditability.
 
 ## Out of Scope
 

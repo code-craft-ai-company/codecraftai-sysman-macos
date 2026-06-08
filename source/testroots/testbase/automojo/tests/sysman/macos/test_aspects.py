@@ -6,9 +6,9 @@
     coverage will land alongside the SSH runner backend.
 """
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.sysman.macos.runners.aspects import (
+from ccai.sysman.macos.runners.aspects import (
     MacosPersistenceAspect,
     MacosPersistenceAspectConfig,
     MacosRetryAspect,
@@ -16,7 +16,7 @@ from automojo.sysman.macos.runners.aspects import (
     MacosTimeoutAspect,
     MacosTimeoutAspectConfig,
 )
-from automojo.sysman.macos.runners.models import (
+from ccai.sysman.macos.runners.models import (
     MacosExecutionContext,
     MacosRunResult,
 )

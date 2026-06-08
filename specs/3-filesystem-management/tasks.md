@@ -9,7 +9,7 @@ the manager does NOT consume an :class:`IFileOperator`.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.filesystemmanagement` module
+- [x] 1. Create the `ccai.sysman.macos.filesystemmanagement` module
 
 - [x] 2. Define `MacosFilesystemActionStatus` enum (SUCCESS / FAILED /
   SKIPPED / DRY_RUN) — re-exports `featurebase.ActionStatus`.
@@ -167,10 +167,10 @@ the manager does NOT consume an :class:`IFileOperator`.
 - [ ] 56. **Cross-OS contract conformance review**: verify this
   implementation's `MacosFilesystemActionResult` field shapes match
   the cross-OS contract at
-  `automojo-sysman-common/specs/contracts/filesystem-management/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/filesystem-management/contract.md`.
 
-- [ ] 57. **automojo-* reuse check**: confirm that no other feature in
-  `automojo-sysman-macos` invokes `mount` / `umount` / `chmod` /
+- [ ] 57. **codecraftai-* reuse check**: confirm that no other feature in
+  `codecraftai-sysman-macos` invokes `mount` / `umount` / `chmod` /
   `chown` / ``stat`` directly; all such calls should go through
   `MacosFilesystemManager`.
 

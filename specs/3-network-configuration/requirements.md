@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The network configuration feature provides the `automojo-sysman-macos` package with
+The network configuration feature provides the `codecraftai-sysman-macos` package with
 the ability to query and configure network services, routes, DNS servers, search
 domains, and the system hostname on macOS systems.  This spec implements the
 network-configuration contract defined at
-`automojo-sysman-common/specs/contracts/network-configuration/contract.md` for
+`codecraftai-sysman-common/specs/contracts/network-configuration/contract.md` for
 macOS using `networksetup` as the primary persistent surface (it writes to the
 System Configuration framework, which `configd` persists), `ifconfig` for runtime
 state of BSD interfaces, `route` for the routing table, and `scutil` for
@@ -16,7 +16,7 @@ A maintenance coordinator running in an external package drives all operations b
 calling into this feature's public interfaces.  The feature does not decide *which*
 services should be on or which IPs should be assigned — it provides the capability
 to *manipulate network state* reliably, idempotently, and with full auditability.
-All system commands are executed exclusively through the `automojo-interfaces`
+All system commands are executed exclusively through the `codecraftai-interfaces`
 command-runner abstraction.
 
 ---

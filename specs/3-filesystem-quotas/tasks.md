@@ -1,11 +1,11 @@
 # Implementation Plan — Filesystem Quotas (macOS)
 
 All tasks unchecked — this is a new feature with no existing
-implementation in `automojo-sysman-macos`.
+implementation in `codecraftai-sysman-macos`.
 
 ## Module and Models
 
-- [ ] 1. Create `source/packages/automojo/sysman/macos/filesystemquotas.py`
+- [ ] 1. Create `source/packages/ccai/sysman/macos/filesystemquotas.py`
   - _Requirements: All_
 
 - [ ] 2. Define `MacosQuotaActionStatus` (alias `ActionStatus`)

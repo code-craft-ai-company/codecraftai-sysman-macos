@@ -3,10 +3,10 @@
 ## Overview
 
 The scheduled-tasks feature is implemented as a single module,
-`automojo.sysman.macos.scheduledtasks`, that exposes a
+`ccai.sysman.macos.scheduledtasks`, that exposes a
 `MacosScheduledTaskManager` class.  This spec implements the
 scheduled-tasks contract defined at
-`automojo-sysman-common/specs/contracts/scheduled-tasks/contract.md`
+`codecraftai-sysman-common/specs/contracts/scheduled-tasks/contract.md`
 for macOS using launchd.  The coordinator instantiates the manager with
 a command runner, a file operator, and a config, then calls the
 contract's verbs.
@@ -41,7 +41,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │          MacosScheduledTaskManager                          │
-│  automojo.sysman.macos.scheduledtasks                       │
+│  ccai.sysman.macos.scheduledtasks                       │
 │                                                             │
 │  create_task()   delete_task()                              │
 │  enable_task()   disable_task()   run_task_now()            │
@@ -76,7 +76,7 @@ configuration.
 
 ### `MacosScheduledTaskManager`
 
-**Location:** `source/packages/automojo/sysman/macos/scheduledtasks.py`
+**Location:** `source/packages/ccai/sysman/macos/scheduledtasks.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -302,9 +302,9 @@ Wildcards (`*`) cause the key to be omitted from
 `launchctl print <domain>/<label>` emits a human-readable block like:
 
 ```
-com.automojo.backup = {
+com.ccai.backup = {
     active count = 1
-    path = /Library/LaunchDaemons/com.automojo.backup.plist
+    path = /Library/LaunchDaemons/com.ccai.backup.plist
     state = running
     last exit code = 0
     nextlaunch = 2026-04-25 02:00:00 UTC
@@ -543,12 +543,12 @@ runner's (or file-operator's) exit code, stdout, stderr, and a
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── scheduledtasks.py    ← MacosScheduledTaskManager, models, config, exception
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_scheduledtasks.py
 ```
 
@@ -559,11 +559,11 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosLocalCommandRunner, MacosLocalRunnerConfig,
     MacosLocalFileOperator, MacosLocalFileOperatorConfig,
 )
-from automojo.sysman.macos.scheduledtasks import (
+from ccai.sysman.macos.scheduledtasks import (
     MacosScheduledTaskManager,
     MacosScheduledTaskManagerConfig,
     MacosTaskSpec,
@@ -579,7 +579,7 @@ task_mgr = MacosScheduledTaskManager(
 )
 
 spec = MacosTaskSpec(
-    name="com.automojo.nightly-backup",
+    name="com.ccai.nightly-backup",
     schedule="daily",
     command="/usr/local/bin/backup.sh",
     owner=MacosTaskOwner.SYSTEM,
@@ -592,10 +592,10 @@ print(f"create_task: {result.status.value}")
 ### SSH Execution With Aspects
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosSSHCommandRunner, MacosSSHRunnerConfig,
 )
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     RetryAspect, RetryAspectConfig, TimeoutAspect, TimeoutAspectConfig,
 )
 
@@ -610,7 +610,7 @@ task_mgr = MacosScheduledTaskManager(
     config=MacosScheduledTaskManagerConfig(elevated=True),
 )
 task_mgr.disable_task(
-    name="com.automojo.stale-probe",
+    name="com.ccai.stale-probe",
     owner=MacosTaskOwner.SYSTEM,
 )
 ```
@@ -623,7 +623,7 @@ task_mgr = MacosScheduledTaskManager(
     runner=runner, file_operator=file_operator, config=config,
 )
 result = task_mgr.delete_task(
-    name="com.automojo.nightly-backup",
+    name="com.ccai.nightly-backup",
     owner=MacosTaskOwner.SYSTEM,
 )
 assert result.status.value == "dry_run"

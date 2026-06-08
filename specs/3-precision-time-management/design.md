@@ -4,7 +4,7 @@
 
 The precision-time-management feature is implemented as a single
 module,
-`automojo.sysman.macos.precisiontimemanagement`, exposing a
+`ccai.sysman.macos.precisiontimemanagement`, exposing a
 `MacosPrecisionTimeManager` class that wraps `systemsetup` (the
 canonical persistent surface for network-time configuration), `sntp`
 (the user-space SNTP client), and `defaults read
@@ -26,7 +26,7 @@ in this package:
 
 **See Also:**
 - `3-network-configuration` — companion infrastructure feature.
-- `automojo-sysman-linux-redhat/specs/3-precision-time-management/`
+- `codecraftai-sysman-linux-redhat/specs/3-precision-time-management/`
   — the RHEL reference, which targets the IEEE 1588 PTP surface and
   is not applicable to macOS.
 

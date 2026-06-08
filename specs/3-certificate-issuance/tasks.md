@@ -6,7 +6,7 @@ Unchecked items (`[ ]`) identify out-of-scope or follow-up work.
 ## Module and Models
 
 - [x] 1. Create the `certificateissuance` module under
-  `source/packages/automojo/sysman/macos/`.
+  `source/packages/ccai/sysman/macos/`.
 
 - [x] 2. Define `MacosCertIssuanceActionStatus` alias to the shared
   `ActionStatus` enum.
@@ -124,7 +124,7 @@ Unchecked items (`[ ]`) identify out-of-scope or follow-up work.
 
 - [ ] 42. Keychain unlock automation — `security unlock-keychain`
   is not invoked by the manager; callers handle prompts via
-  `automojo-credentials` outside this manager.
+  `codecraftai-credentials` outside this manager.
 
 ## Follow-ups
 

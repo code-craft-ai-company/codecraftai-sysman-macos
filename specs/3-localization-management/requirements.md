@@ -3,10 +3,10 @@
 ## Introduction
 
 The localization management feature provides the
-`automojo-sysman-macos` package with the ability to query and set
+`codecraftai-sysman-macos` package with the ability to query and set
 host-wide locale, keymap, and timezone settings on macOS hosts.
 This spec implements the localization-management contract defined at
-`automojo-sysman-common/specs/contracts/localization-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/localization-management/contract.md`
 for macOS using `defaults` (locale and input sources), `systemsetup`
 (timezone), `locale -a` (BSD locale enumerator), and a best-effort
 ``ls`` of ``/System/Library/Keyboard Layouts/`` for installed-layout
@@ -18,7 +18,7 @@ does not decide which locale, keymap, or timezone the host should
 carry — it provides the capability to apply, observe, and idempotently
 re-apply those values reliably and with full auditability. Every
 system command is executed exclusively through the
-`automojo-interfaces` command-runner abstraction; this module does
+`codecraftai-interfaces` command-runner abstraction; this module does
 not import `subprocess`, does not call `open`, and does not consume an
 `IFileOperator`.
 

@@ -3,7 +3,7 @@
 ## Introduction
 
 The resource-control-management feature provides the
-`automojo-sysman-macos` package with the ability to manage
+`codecraftai-sysman-macos` package with the ability to manage
 named, idempotent, auditable resource ceilings for groups of
 processes on macOS systems.  The implementation rides on
 **launchd** (per-daemon `ResourceLimits` keys + `launchctl
@@ -12,7 +12,7 @@ assignment), because macOS has no cgroup-equivalent kernel
 substrate for arbitrary per-group resource ceilings.
 
 This package satisfies the cross-OS
-[`resource-control-management` contract](../../../automojo-sysman-common/specs/contracts/resource-control-management/contract.md)
+[`resource-control-management` contract](../../../codecraftai-sysman-common/specs/contracts/resource-control-management/contract.md)
 **with documented limitations** — several verbs return
 ``status=FAILED`` with a typed `detail`/`message` token when the
 underlying tooling does not exist on macOS.  Those gaps are
@@ -22,14 +22,14 @@ The macOS manager covers:
 
 - Creating and deleting "logical" resource groups represented
   as launchd plists at
-  `/Library/LaunchDaemons/automojo-rc-<name>.plist`.
+  `/Library/LaunchDaemons/codecraftai-rc-<name>.plist`.
 - Setting per-group memory ceilings via the launchd
   `HardResourceLimits` dict (specifically `RLIMIT_AS`).
 - Best-effort per-PID CPU / IO QoS adjustment via
   `taskpolicy -p <pid>` for processes that have been
   attached to the group.
 - Listing all groups by enumerating plists with the
-  `automojo-rc-` prefix.
+  `codecraftai-rc-` prefix.
 - Aggregating per-PID `top` snapshots into a per-group
   usage summary.
 
@@ -55,13 +55,13 @@ that subsequently attached daemons inherit the ceiling.
 
 1. WHEN the coordinator calls `create_group(spec)` with
    `spec.name == "batch"` THE SYSTEM SHALL render a launchd
-   plist body whose `Label` is `"automojo-rc-batch"` and whose
+   plist body whose `Label` is `"codecraftai-rc-batch"` and whose
    `HardResourceLimits.RLIMIT_AS` is set to `spec.memory_bytes`
    when present.
 2. WHEN the on-disk plist does not exist THE SYSTEM SHALL write
-   `/Library/LaunchDaemons/automojo-rc-batch.plist` via `tee`
+   `/Library/LaunchDaemons/codecraftai-rc-batch.plist` via `tee`
    and dispatch
-   `launchctl bootstrap system /Library/LaunchDaemons/automojo-rc-batch.plist`.
+   `launchctl bootstrap system /Library/LaunchDaemons/codecraftai-rc-batch.plist`.
 3. WHEN the on-disk plist matches the rendered body
    byte-for-byte THE SYSTEM SHALL return `status=SKIPPED`
    without invoking `tee` or `launchctl bootstrap`.
@@ -78,9 +78,9 @@ previously created resource group's plist and unload it.
 #### Acceptance Criteria
 
 1. WHEN the coordinator calls `delete_group(name)` THE SYSTEM
-   SHALL invoke `launchctl bootout system/automojo-rc-<name>`
+   SHALL invoke `launchctl bootout system/codecraftai-rc-<name>`
    (best-effort) and `rm -f
-   /Library/LaunchDaemons/automojo-rc-<name>.plist`.
+   /Library/LaunchDaemons/codecraftai-rc-<name>.plist`.
 2. WHEN the plist file does not exist THE SYSTEM SHALL return
    `status=SKIPPED` without invoking the runner.
 3. WHEN `config.dry_run` is True THE SYSTEM SHALL return
@@ -206,7 +206,7 @@ enumerate every resource group the manager knows about.
 
 1. WHEN the coordinator calls `list_groups()` THE SYSTEM SHALL
    list `/Library/LaunchDaemons/` via `ls -1` and select every
-   entry matching `automojo-rc-*.plist`.
+   entry matching `codecraftai-rc-*.plist`.
 2. FOR each entry THE SYSTEM SHALL `cat` the plist, parse the
    embedded fields, and assemble a
    `MacosResourceGroupInfo` record.

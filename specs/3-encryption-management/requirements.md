@@ -3,13 +3,13 @@
 ## Introduction
 
 The encryption management feature provides the
-`automojo-sysman-macos` package with the ability to enable / disable
+`codecraftai-sysman-macos` package with the ability to enable / disable
 FileVault on the boot volume and APFS encryption on data volumes,
 query encryption status, list encrypted volumes, rotate the personal
 recovery key, back up the recovery key to a filesystem path, and
 unlock a locked APFS volume by passing a passphrase.  This spec
 implements the encryption-management contract defined at
-`automojo-sysman-common/specs/contracts/encryption-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/encryption-management/contract.md`
 for macOS by wrapping the `fdesetup` (boot / FileVault) and
 `diskutil apfs` (data / APFS encryption) toolchains.
 
@@ -21,7 +21,7 @@ should be archived to off-host storage — it provides the capability
 to *manipulate FileVault / APFS encryption state* reliably,
 idempotently, and with full auditability.  All `fdesetup` and
 `diskutil` commands are executed exclusively through the
-`automojo-interfaces` command-runner abstraction; passphrase bytes
+`codecraftai-interfaces` command-runner abstraction; passphrase bytes
 flow on runner `stdin` and never appear on argv.
 
 Disk partitioning, filesystem creation, mounting, and Spotlight

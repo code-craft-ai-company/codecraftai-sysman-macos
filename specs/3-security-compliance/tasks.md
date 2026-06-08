@@ -11,7 +11,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.securitycompliance` module
+- [x] 1. Create the `ccai.sysman.macos.securitycompliance` module
 
 - [x] 2. Define `MacosSecurityComplianceActionStatus` enum (aliased
   to the shared `ActionStatus`)
@@ -119,7 +119,7 @@ items (`[ ]`) identify remaining work.
   `MacosComplianceReport`, `MacosComplianceFinding`,
   `MacosBaselineInfo`, and `MacosSecurityComplianceActionResult`
   shapes match the abstract contract in
-  `automojo-sysman-common/specs/contracts/security-compliance/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/security-compliance/contract.md`.
   Several contract verbs (`get_compliance_history`,
   `compare_baselines`) are not implemented and should be either
   removed from the macOS contract row or added as follow-up tasks.
@@ -134,7 +134,7 @@ items (`[ ]`) identify remaining work.
   (e.g., a launchd-priority job that runs from Recovery on next
   reboot) that can apply settings the pilot's `remediate` stub
   rejects.  Out of scope for sysman; belongs in a sibling
-  `automojo-sysman-macos-recovery` package.
+  `codecraftai-sysman-macos-recovery` package.
 
 - [ ] 38. **Application Firewall coverage**: register a check that
   reads `socketfilterfw --getglobalstate` to surface the macOS

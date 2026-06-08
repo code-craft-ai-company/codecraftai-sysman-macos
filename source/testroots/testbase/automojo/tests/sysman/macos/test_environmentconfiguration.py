@@ -9,11 +9,11 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.environmentconfiguration import (
+from ccai.sysman.macos.environmentconfiguration import (
     MacosEnvActionStatus,
     MacosEnvironmentConfigurationManager,
     MacosEnvironmentConfigurationManagerConfig,
@@ -141,8 +141,8 @@ def test_set_system_env_invokes_launchctl_and_writes_zshenv():
     ]
     testbase.assert_equal(len(tee_calls), 1)
     payload = tee_calls[0]["stdin"]
-    testbase.assert_true("# --- automojo system env start ---" in payload)
-    testbase.assert_true("# --- automojo system env end ---" in payload)
+    testbase.assert_true("# --- ccai system env start ---" in payload)
+    testbase.assert_true("# --- ccai system env end ---" in payload)
     testbase.assert_true('export FOO="bar"' in payload)
     testbase.assert_equal(tee_calls[0]["elevated"], True)
     return
@@ -154,9 +154,9 @@ def test_set_system_env_skipped_when_both_sources_match():
         already report the desired value.
     """
     existing = (
-        "# --- automojo system env start ---\n"
+        "# --- ccai system env start ---\n"
         'export FOO="bar"\n'
-        "# --- automojo system env end ---\n"
+        "# --- ccai system env end ---\n"
     )
     runner = _MockCommandRunner()
     runner.results[("launchctl", "getenv", "FOO")] = RunResult(
@@ -247,10 +247,10 @@ def test_unset_system_env_invokes_launchctl_and_rewrites_zshenv():
         /etc/zshenv with the target line removed.
     """
     existing = (
-        "# --- automojo system env start ---\n"
+        "# --- ccai system env start ---\n"
         'export FOO="bar"\n'
         'export OTHER="keep"\n'
-        "# --- automojo system env end ---\n"
+        "# --- ccai system env end ---\n"
     )
     runner = _MockCommandRunner()
     runner.results[("launchctl", "getenv", "FOO")] = RunResult(
@@ -298,9 +298,9 @@ def test_unset_system_env_deletes_file_when_block_emptied():
         file behind.
     """
     existing = (
-        "# --- automojo system env start ---\n"
+        "# --- ccai system env start ---\n"
         'export FOO="bar"\n'
-        "# --- automojo system env end ---\n"
+        "# --- ccai system env end ---\n"
     )
     runner = _MockCommandRunner()
     runner.results[("launchctl", "getenv", "FOO")] = RunResult(
@@ -374,9 +374,9 @@ def test_get_system_env_falls_back_to_zshenv():
     runner.results[("cat", "/etc/zshenv")] = RunResult(
         exit_code=0,
         stdout=(
-            "# --- automojo system env start ---\n"
+            "# --- ccai system env start ---\n"
             'export FOO="from-file"\n'
-            "# --- automojo system env end ---\n"
+            "# --- ccai system env end ---\n"
         ),
         stderr="",
     )
@@ -400,10 +400,10 @@ def test_list_system_env_parses_block_only():
     """
     body = (
         'export OUTSIDE="ignored"\n'
-        "# --- automojo system env start ---\n"
+        "# --- ccai system env start ---\n"
         'export FOO="bar"\n'
         'export BAZ="qux"\n'
-        "# --- automojo system env end ---\n"
+        "# --- ccai system env end ---\n"
     )
     runner = _MockCommandRunner()
     runner.results[("cat", "/etc/zshenv")] = RunResult(

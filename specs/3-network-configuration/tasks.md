@@ -8,7 +8,7 @@ under "Gaps" with a follow-up note.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.networkconfiguration`
+- [x] 1. Create the `ccai.sysman.macos.networkconfiguration`
   module
 
 - [x] 2. Define `MacosNetworkActionStatus` enum (SUCCESS / FAILED /
@@ -196,7 +196,7 @@ under "Gaps" with a follow-up note.
   plist shape required to turn `add_route` into a persistent write,
   and decide the feature-flag name that gates it.
 
-- [ ] 68. **automojo-* reuse check**: confirm no other feature in
-  `automojo-sysman-macos` invokes `networksetup` / `ifconfig` /
+- [ ] 68. **codecraftai-* reuse check**: confirm no other feature in
+  `codecraftai-sysman-macos` invokes `networksetup` / `ifconfig` /
   `netstat` / `route` / `scutil` directly; all such calls should
   go through `MacosNetworkConfigurationManager`.

@@ -13,14 +13,14 @@ import subprocess
 
 from unittest import mock
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.sysman.macos.runners.aspects.base import IMacosExecutionAspect
-from automojo.sysman.macos.runners.local import (
+from ccai.sysman.macos.runners.aspects.base import IMacosExecutionAspect
+from ccai.sysman.macos.runners.local import (
     MacosLocalCommandRunner,
     MacosLocalRunnerConfig,
 )
-from automojo.sysman.macos.runners.models import (
+from ccai.sysman.macos.runners.models import (
     MacosExecutionContext,
     MacosRunResult,
 )

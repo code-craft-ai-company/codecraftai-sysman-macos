@@ -3,9 +3,9 @@
 ## Overview
 
 The log management feature is implemented as a single module,
-`automojo.sysman.macos.logmanagement`, that exposes a `MacosLogManager` class.  This
+`ccai.sysman.macos.logmanagement`, that exposes a `MacosLogManager` class.  This
 spec implements the log-management contract defined at
-`automojo-sysman-common/specs/contracts/log-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/log-management/contract.md` for macOS
 using Apple's unified-logging CLI (`log show`, `log stream`, `log config`),
 BSD-style rotation via `newsyslog` with drop-ins under `/etc/newsyslog.d/`, and
 plain-file truncation via the `IFileOperator`.
@@ -39,7 +39,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              MacosLogManager                                │
-│  automojo.sysman.macos.logmanagement                        │
+│  ccai.sysman.macos.logmanagement                        │
 │                                                             │
 │  get_log()              tail_log()                          │
 │  list_logs()            rotate_log()                        │
@@ -74,7 +74,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 
 ### `MacosLogManager`
 
-**Location:** `source/packages/automojo/sysman/macos/logmanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/logmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -162,7 +162,7 @@ class MacosLogQueryError(Exception):
 
 ### `ICommandRunner` and `IFileOperator`
 
-Both are imported from `automojo-interfaces` and used exactly as defined in the
+Both are imported from `codecraftai-interfaces` and used exactly as defined in the
 contract.  The manager holds one instance of each and delegates all I/O to them.
 
 ---
@@ -456,12 +456,12 @@ with `elevated=True`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── logmanagement.py          ← MacosLogManager, config, models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_logmanagement.py
 ```
 
@@ -472,9 +472,9 @@ source/testroots/testbase/
 ### Local Execution
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileoperators import LocalFileOperator
-from automojo.sysman.macos.logmanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileoperators import LocalFileOperator
+from ccai.sysman.macos.logmanagement import (
     MacosLogManager,
     MacosLogManagerConfig,
     MacosRotationPolicy,
@@ -508,15 +508,15 @@ print(f"Configure rotation: {result.status}")
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, PersistenceAspectConfig,
     RetryAspect, RetryAspectConfig,
     TimeoutAspect, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.fileoperators import SSHFileOperator
-from automojo.sysman.macos.logmanagement import MacosLogManager, MacosLogManagerConfig
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.fileoperators import SSHFileOperator
+from ccai.sysman.macos.logmanagement import MacosLogManager, MacosLogManagerConfig
 
 runner = SSHCommandRunner(SSHRunnerConfig(host="remote-mac", username="admin"))
 

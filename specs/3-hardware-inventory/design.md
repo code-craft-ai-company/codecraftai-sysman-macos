@@ -3,11 +3,11 @@
 ## Overview
 
 This spec implements the hardware-inventory contract defined at
-`automojo-sysman-common/specs/contracts/hardware-inventory/contract.md` for
+`codecraftai-sysman-common/specs/contracts/hardware-inventory/contract.md` for
 macOS using `system_profiler`, `sysctl`, `networksetup`, and `nvram`.
 
 The hardware-inventory feature is implemented as a single module,
-`automojo.sysman.macos.hardwareinventory`, that exposes a
+`ccai.sysman.macos.hardwareinventory`, that exposes a
 `MacosHardwareInventoryManager` class.  The coordinator instantiates
 `MacosHardwareInventoryManager` and calls its read verbs to query discrete
 hardware aspects.  Every verb returns a typed `Macos*` dataclass, or raises
@@ -45,7 +45,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │        MacosHardwareInventoryManager                        │
-│  automojo.sysman.macos.hardwareinventory                    │
+│  ccai.sysman.macos.hardwareinventory                    │
 │                                                             │
 │  get_system_info()       get_cpu_info()                     │
 │  get_memory_info()       list_storage_devices()             │
@@ -83,7 +83,7 @@ configuration.
 
 ### `MacosHardwareInventoryManager`
 
-**Location:** `source/packages/automojo/sysman/macos/hardwareinventory.py`
+**Location:** `source/packages/ccai/sysman/macos/hardwareinventory.py`
 
 The primary public class.  Constructed with an `ICommandRunner` and a
 `MacosHardwareInventoryManagerConfig`.
@@ -224,12 +224,12 @@ class MacosFirmwareInfo:
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 Same protocol as the rest of the package; see
-`automojo.interfaces.icommandrunner`.
+`ccai.interfaces.icommandrunner`.
 
-### `RunResult` (from `automojo-interfaces`)
+### `RunResult` (from `codecraftai-interfaces`)
 
 ```python
 @dataclass
@@ -546,10 +546,10 @@ sequence.  The feature ignores the `dry_run` flag entirely.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 └── hardwareinventory.py                ← manager + dataclasses + parsers + exception
 
-source/testroots/testbase/automojo/tests/sysman/macos/
+source/testroots/testbase/ccai/tests/sysman/macos/
 └── test_hardwareinventory.py           ← unit tests using a MockCommandRunner
 ```
 
@@ -560,10 +560,10 @@ source/testroots/testbase/automojo/tests/sysman/macos/
 ### Local execution
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner, LocalRunnerConfig,
 )
-from automojo.sysman.macos.hardwareinventory import (
+from ccai.sysman.macos.hardwareinventory import (
     MacosHardwareInventoryManager,
     MacosHardwareInventoryManagerConfig,
 )
@@ -585,10 +585,10 @@ firmware = inventory.get_firmware_info()
 ### SSH execution
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     SSHCommandRunner, SSHRunnerConfig,
 )
-from automojo.sysman.macos.hardwareinventory import (
+from ccai.sysman.macos.hardwareinventory import (
     MacosHardwareInventoryManager,
     MacosHardwareInventoryManagerConfig,
 )
@@ -606,11 +606,11 @@ storage = inventory.list_storage_devices()
 ### Aspect composition
 
 ```python
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, RetryAspect, TimeoutAspect,
     PersistenceAspectConfig, RetryAspectConfig, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.storage import SQLiteStorage
 
 runner = SSHCommandRunner(SSHRunnerConfig(host="remote-mac", username="admin"))
 runner.add_aspect(PersistenceAspect(PersistenceAspectConfig(
@@ -651,7 +651,7 @@ network = inventory.list_network_devices()
 
 ### Test File
 
-`source/testroots/testbase/automojo/tests/sysman/macos/test_hardwareinventory.py`
+`source/testroots/testbase/ccai/tests/sysman/macos/test_hardwareinventory.py`
 
 ### Tests Implemented
 

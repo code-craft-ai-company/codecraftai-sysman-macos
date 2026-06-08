@@ -3,10 +3,10 @@
 ## Overview
 
 The kernel parameters feature is implemented as a single module,
-`automojo.sysman.macos.kernelparameters`, that exposes a
+`ccai.sysman.macos.kernelparameters`, that exposes a
 `MacosKernelParameterManager` class.  This spec implements the kernel-parameters
 contract defined at
-`automojo-sysman-common/specs/contracts/kernel-parameters/contract.md` for
+`codecraftai-sysman-common/specs/contracts/kernel-parameters/contract.md` for
 macOS using `sysctl(8)` at runtime and the single flat `/etc/sysctl.conf` file
 for persistence.
 
@@ -40,7 +40,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │           MacosKernelParameterManager                       │
-│  automojo.sysman.macos.kernelparameters                     │
+│  ccai.sysman.macos.kernelparameters                     │
 │                                                             │
 │  get_parameter()             set_parameter()                │
 │  list_parameters()           reload_parameters()            │
@@ -76,7 +76,7 @@ configuration.
 
 ### `MacosKernelParameterManager`
 
-**Location:** `source/packages/automojo/sysman/macos/kernelparameters.py`
+**Location:** `source/packages/ccai/sysman/macos/kernelparameters.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -137,7 +137,7 @@ class MacosKernelParameterQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -150,7 +150,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `IFileOperator` (from `automojo-interfaces`)
+### `IFileOperator` (from `codecraftai-interfaces`)
 
 ```python
 class IFileOperator(Protocol):
@@ -389,7 +389,7 @@ All write failures are surfaced as `MacosKernelParameterActionResult` with
 
 ### Property 22: New File Header Comment
 
-*For any* newly created `/etc/sysctl.conf`, the first line should be `# managed by automojo-sysman-macos`.
+*For any* newly created `/etc/sysctl.conf`, the first line should be `# managed by codecraftai-sysman-macos`.
 
 **Validates: Requirements 7.3**
 
@@ -434,13 +434,13 @@ All write failures are surfaced as `MacosKernelParameterActionResult` with
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── kernelparameters.py         ← MacosKernelParameterManager, config,
                                    models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_kernelparameters.py
 ```
 
@@ -451,9 +451,9 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileops import LocalFileOperator, LocalFileOperatorConfig
-from automojo.sysman.macos.kernelparameters import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileops import LocalFileOperator, LocalFileOperatorConfig
+from ccai.sysman.macos.kernelparameters import (
     MacosKernelParameterManager,
     MacosKernelParameterManagerConfig,
 )
@@ -479,9 +479,9 @@ kp_mgr.reload_parameters()
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.fileops import SSHFileOperator, SSHFileOperatorConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.fileops import SSHFileOperator, SSHFileOperatorConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     RetryAspect,
     TimeoutAspect,
@@ -489,8 +489,8 @@ from automojo.sysman.macos.aspects import (
     RetryAspectConfig,
     TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.kernelparameters import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.kernelparameters import (
     MacosKernelParameterManager,
     MacosKernelParameterManagerConfig,
 )
@@ -587,7 +587,7 @@ Property-based tests are tagged as
   these return `FAILED` with `message="sip_read_only"` without invoking
   the runner — a fast-fail for misconfigurations.
 - **Header comment on new files.**  A newly created `/etc/sysctl.conf`
-  gets a `# managed by automojo-sysman-macos` header for auditing.
+  gets a `# managed by codecraftai-sysman-macos` header for auditing.
 - **IFileOperator usage.**  macOS uses `IFileOperator` for persistent-file
   rewrites (contract-permitted extension).
 

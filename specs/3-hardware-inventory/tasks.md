@@ -9,7 +9,7 @@ guards, no mutating operations.
 ## Module and Models
 
 - [x] 1. Create the `hardwareinventory` module under
-  `automojo.sysman.macos`.
+  `ccai.sysman.macos`.
 
 - [x] 2. Define `MacosHardwareInventoryActionStatus` with
   `SUCCESS`, `FAILED`, `SKIPPED` (no `DRY_RUN` per contract).
@@ -142,7 +142,7 @@ guards, no mutating operations.
   or fold the eight data types into a single call (`-detailLevel
   basic SPHardwareDataType SPMemoryDataType ...`).
 
-- [ ] 44. **automojo-* reuse check**: `automojo-interop` may
+- [ ] 44. **codecraftai-* reuse check**: `codecraftai-interop` may
   expose a generic `system_profiler` JSON walker that would
   shrink the parser surface here.
 

@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The user and group management feature provides the `automojo-sysman-macos` package with
+The user and group management feature provides the `codecraftai-sysman-macos` package with
 the ability to manage local users and local groups on macOS systems.  This spec
 implements the user-group-management contract defined at
-`automojo-sysman-common/specs/contracts/user-group-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/user-group-management/contract.md` for macOS
 using the native Directory Services tooling (`sysadminctl`, `dscl`, `dseditgroup`,
 `pwpolicy`) and the POSIX identity utility `id`.  It includes creating, deleting, and
 modifying users and groups, managing group membership, setting passwords, and locking
@@ -15,7 +15,7 @@ A maintenance coordinator running in an external package drives all operations b
 calling into this feature's public interfaces.  The feature does not decide *which*
 users or groups should exist — it provides the capability to *manipulate them* reliably,
 idempotently, and with full auditability.  All system commands are executed exclusively
-through the `automojo-interfaces` command-runner abstraction, enabling dry-run
+through the `codecraftai-interfaces` command-runner abstraction, enabling dry-run
 simulation, auditing, and test mocking without requiring a live system.  Passwords
 passed to `set_password` are forwarded to `sysadminctl` via argv only when required by
 the tool itself; the resulting `MacosUserGroupActionResult` argv is sanitised so the

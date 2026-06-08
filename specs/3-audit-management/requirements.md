@@ -3,11 +3,11 @@
 ## Introduction
 
 The audit management feature provides the
-`automojo-sysman-macos` package with the ability to enable,
+`codecraftai-sysman-macos` package with the ability to enable,
 disable, query, and rule-manage Apple's BSM-derived audit
 subsystem on macOS hosts.  This spec implements the
 audit-management contract defined at
-`automojo-sysman-common/specs/contracts/audit-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/audit-management/contract.md`
 for macOS using `audit` (control), `praudit` (decode), and
 `launchctl` (daemon lifecycle).  Rule storage is the
 `/etc/security/audit_control` file and (for per-user overrides)
@@ -19,7 +19,7 @@ feature does not decide *which* audit classes to enable — it
 provides the capability to install, remove, and observe them
 reliably, idempotently, and with full auditability.  Every system
 command is executed exclusively through the
-`automojo-interfaces` command-runner abstraction; rule-file I/O is
+`codecraftai-interfaces` command-runner abstraction; rule-file I/O is
 dispatched via `cat` / `tee` against that same runner.  No
 `subprocess`, no direct `open`, and no direct `pathlib` calls are
 made inside the module.

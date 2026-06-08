@@ -3,14 +3,14 @@
 ## Introduction
 
 The certificate-trust-management feature provides the
-`automojo-sysman-macos` package with the ability to manage the
+`codecraftai-sysman-macos` package with the ability to manage the
 host's CA trust posture on macOS systems by wrapping the
 `security` keychain CLI: installing and removing trust anchors,
 listing the current trust set, retrieving structured metadata for an
 individual certificate by SHA-256 fingerprint, and (no-op)
 "refreshing" the consolidated trust bundle.  This spec implements
 the certificate-trust-management contract defined at
-`automojo-sysman-common/specs/contracts/certificate-trust-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/certificate-trust-management/contract.md`
 for macOS.
 
 A maintenance coordinator drives all operations by calling into this
@@ -18,7 +18,7 @@ feature's public interfaces.  The feature does not decide *what*
 trust posture the host enforces — it provides the capability to
 *apply* posture reliably, idempotently, and with full auditability.
 All system commands (`security`, `openssl`, `cat`) are executed
-exclusively through the `automojo-interfaces` command-runner
+exclusively through the `codecraftai-interfaces` command-runner
 abstraction.  No `subprocess`, no direct `open`, and no direct
 `pathlib` calls are made inside this module.
 

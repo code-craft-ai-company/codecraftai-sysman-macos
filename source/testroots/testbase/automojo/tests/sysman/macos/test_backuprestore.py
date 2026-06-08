@@ -10,11 +10,11 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.backuprestore import (
+from ccai.sysman.macos.backuprestore import (
     MacosBackupActionStatus,
     MacosBackupJobSpec,
     MacosBackupKind,
@@ -25,7 +25,7 @@ from automojo.sysman.macos.backuprestore import (
 )
 
 
-_DEFAULT_JOB_DIR = "/var/db/automojo/backups/jobs"
+_DEFAULT_JOB_DIR = "/var/db/ccai/backups/jobs"
 
 
 @dataclass

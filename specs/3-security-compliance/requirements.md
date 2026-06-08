@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The security compliance feature provides the `automojo-sysman-macos`
+The security compliance feature provides the `codecraftai-sysman-macos`
 package with the ability to run compliance profiles, iterate their findings,
 and remediate individual findings on macOS systems.  This spec implements
 the security-compliance contract defined at
-`automojo-sysman-common/specs/contracts/security-compliance/contract.md`
+`codecraftai-sysman-common/specs/contracts/security-compliance/contract.md`
 for macOS using Apple's open-source **Security Configuration Framework**
 (a.k.a. the `macos_security` project — `baseline-automation/<profile>/`
 shell scripts) as the primary compliance engine, plus `csrutil`,
@@ -14,9 +14,9 @@ shell scripts) as the primary compliance engine, plus `csrutil`,
 
 A maintenance coordinator running in an external package drives all
 operations by calling into this feature's public interfaces.  All system
-commands are executed exclusively through the `automojo-interfaces`
+commands are executed exclusively through the `codecraftai-interfaces`
 command-runner abstraction, and all baseline-metadata mutations are
-executed through the `automojo-interfaces` file-operator abstraction.
+executed through the `codecraftai-interfaces` file-operator abstraction.
 
 Unlike firewall / package / service management where the verb set maps
 cleanly, security-compliance is intrinsically **advisory** — the verb set
@@ -45,7 +45,7 @@ evaluate.
 #### Acceptance Criteria
 
 1. WHEN the coordinator calls `list_profiles()` THE SYSTEM SHALL scan
-   `<baselines_dir>` (default `/usr/local/automojo/baseline-automation/`)
+   `<baselines_dir>` (default `/usr/local/ccai/baseline-automation/`)
    via the `IFileOperator` and enumerate every subdirectory that
    contains both `run_compliance.sh` and a `checks/` subdirectory.
 2. WHEN the directory is enumerated THE SYSTEM SHALL return a
@@ -182,7 +182,7 @@ policy.
 #### Acceptance Criteria
 
 1. WHEN the coordinator calls `get_baseline()` THE SYSTEM SHALL invoke
-   `IFileOperator.read_text('/var/lib/automojo/compliance/current_baseline.json')`.
+   `IFileOperator.read_text('/var/lib/ccai/compliance/current_baseline.json')`.
 2. WHEN the file does not exist THE SYSTEM SHALL return a
    `MacosBaselineInfo` with empty `name`, empty `settings`, and
    `source=None`.
@@ -213,7 +213,7 @@ baseline and apply it, so that a known policy is enforced and recorded.
    return `FAILED` with a `message` identifying the failing step,
    AND SHALL NOT write the baseline file.
 4. WHEN the baseline write succeeds THE SYSTEM SHALL return
-   `SUCCESS` with `target=/var/lib/automojo/compliance/current_baseline.json`.
+   `SUCCESS` with `target=/var/lib/ccai/compliance/current_baseline.json`.
 5. WHEN dry-run mode is active THE SYSTEM SHALL NOT invoke any
    mutation and SHALL return `DRY_RUN`.
 
@@ -253,8 +253,8 @@ baseline scripts.
    `run_compliance_profile`, `remediate`, and `set_baseline`.
 2. WHEN invoking `list_profiles` / `get_profile` / `get_baseline` THE
    SYSTEM SHALL NOT pass `elevated=True` — those reads target
-   `/usr/local/automojo/baseline-automation/` and
-   `/var/lib/automojo/compliance/` which are readable without
+   `/usr/local/ccai/baseline-automation/` and
+   `/var/lib/ccai/compliance/` which are readable without
    elevation when configured correctly.
 3. WHEN the system is running as root THE SYSTEM SHALL NOT pass
    `elevated=True`.

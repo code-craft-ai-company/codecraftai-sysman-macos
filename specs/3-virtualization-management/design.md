@@ -54,7 +54,7 @@ verb so coordinators get a clear typed signal.
 
 The virtualization-management feature is implemented as a single
 module,
-`automojo.sysman.macos.virtualizationmanagement`, that exposes a
+`ccai.sysman.macos.virtualizationmanagement`, that exposes a
 `MacosVirtualizationManager` class.  The coordinator instantiates
 `MacosVirtualizationManager` and calls its methods to perform
 discrete VM-lifecycle, disk, and snapshot actions.
@@ -89,7 +89,7 @@ The feature works identically whether commands execute locally (via
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │        MacosVirtualizationManager                           │
-│  automojo.sysman.macos.virtualizationmanagement             │
+│  ccai.sysman.macos.virtualizationmanagement             │
 │                                                             │
 │  list_vms()              get_vm_info()                      │
 │  create_vm()             delete_vm()                        │
@@ -118,7 +118,7 @@ The feature works identically whether commands execute locally (via
 ### `MacosVirtualizationManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/virtualizationmanagement.py`
+`source/packages/ccai/sysman/macos/virtualizationmanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|

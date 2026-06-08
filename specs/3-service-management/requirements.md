@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The service-management feature provides the `automojo-sysman-macos` package with the
+The service-management feature provides the `codecraftai-sysman-macos` package with the
 ability to manage launchd system and user services on macOS.  This spec implements the
 service-management contract defined at
-`automojo-sysman-common/specs/contracts/service-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/service-management/contract.md` for macOS
 using `launchctl`.  It covers start/stop/restart/reload, enable/disable, a fallback
 for mask/unmask (launchd has no direct equivalent), status queries, service listing,
 and a no-op `reload_daemon`, with full idempotency and dry-run support.

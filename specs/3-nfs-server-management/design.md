@@ -3,7 +3,7 @@
 ## Overview
 
 The macOS nfs-server-management feature is implemented as a single
-module, ``automojo.sysman.macos.nfsservermanagement``, exposing a
+module, ``ccai.sysman.macos.nfsservermanagement``, exposing a
 ``MacosNfsServerManager`` class that wraps macOS's ``nfsd`` server
 surface (``nfsd update``, ``showmount``, the on-disk ``/etc/exports``
 file in Darwin syntax) through the ``ICommandRunner`` abstraction.
@@ -12,9 +12,9 @@ Follows the standard manager pattern; delegates daemon lifecycle to
 ``3-service-management``.
 
 **See Also:**
-- ``automojo-sysman-common/specs/contracts/nfs-server-management/contract.md``
+- ``codecraftai-sysman-common/specs/contracts/nfs-server-management/contract.md``
   — the cross-OS abstract contract.
-- ``automojo-sysman-linux-ubuntu/specs/3-nfs-server-management/``
+- ``codecraftai-sysman-linux-ubuntu/specs/3-nfs-server-management/``
   — Ubuntu's implementation, which uses the Linux-canonical export
   syntax that Darwin is **not** wire-compatible with.
 - ``3-service-management`` — ``com.apple.nfsd`` LaunchDaemon

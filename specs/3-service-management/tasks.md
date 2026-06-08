@@ -5,7 +5,7 @@ identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.servicemanagement` module
+- [x] 1. Create the `ccai.sysman.macos.servicemanagement` module
 
 - [x] 2. Define `MacosServiceActionStatus` and `MacosServiceScope` enums
 

@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The ACL management feature provides the `automojo-sysman-macos`
+The ACL management feature provides the `codecraftai-sysman-macos`
 package with the ability to query and mutate macOS extended Access
 Control Lists (ACLs) on individual filesystem paths.  This spec
 implements the ACL-management contract defined at
-`automojo-sysman-common/specs/contracts/acl-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/acl-management/contract.md`
 for macOS using the BSD ``chmod`` extended-ACL surface (`chmod +a`,
 `chmod -a`, `chmod -N`) for writes and `ls -le` for reads — the
 canonical NFSv4-style ACL toolchain shipped with macOS.
@@ -16,7 +16,7 @@ operations by calling into this feature's public verbs.  The feature
 does not decide which ACL a path should carry — it provides the
 capability to apply, observe, and idempotently re-apply ACLs reliably
 and with full auditability.  Every system command is executed
-exclusively through the `automojo-interfaces` command-runner
+exclusively through the `codecraftai-interfaces` command-runner
 abstraction; this module does not import `subprocess`, does not call
 `open`, and does not consume an `IFileOperator`.  Persistence is
 owned by `chmod` itself (the kernel-level NFSv4-style ACL stored

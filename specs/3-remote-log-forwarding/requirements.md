@@ -3,7 +3,7 @@
 ## Introduction
 
 The remote-log-forwarding feature provides the
-`automojo-sysman-macos` package with the ability to ship syslog
+`codecraftai-sysman-macos` package with the ability to ship syslog
 traffic off-host through the legacy `/etc/syslog.conf` mechanism
 that `syslogd(8)` still honours on modern macOS releases.  It is
 the cross-OS counterpart to the local log-shaping surface owned
@@ -22,13 +22,13 @@ design document discusses this gap explicitly.
 
 All system commands (`launchctl kickstart -k system/com.apple.syslogd`,
 `logger`, `tee`, `cat`, `test -e`, `mv`, `rm`) are dispatched
-through the `automojo-interfaces` `ICommandRunner` abstraction.
+through the `codecraftai-interfaces` `ICommandRunner` abstraction.
 All mutating operations honour dry-run mode and config-driven
 elevation.
 
 The reference implementation for shape, idempotency, dry-run, and
 result mapping lives in
-`automojo-sysman-linux-redhat/specs/3-remote-log-forwarding/`.
+`codecraftai-sysman-linux-redhat/specs/3-remote-log-forwarding/`.
 
 ---
 
@@ -132,7 +132,7 @@ collector.
 
 1. WHEN the coordinator calls `test_forwarder(id)` THE SYSTEM
    SHALL dispatch
-   `logger -t automojo-test 'forwarder-test-<timestamp>'`
+   `logger -t codecraftai-test 'forwarder-test-<timestamp>'`
    through the runner.
 2. THE SYSTEM SHALL return a `MacosForwarderTestResult` with
    `forwarder_id` populated and `test_message_id` set to the

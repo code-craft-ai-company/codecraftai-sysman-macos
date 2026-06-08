@@ -6,7 +6,7 @@ Unchecked items (`[ ]`) identify out-of-scope or follow-up work.
 ## Module and Models
 
 - [x] 1. Create the `certificatetrustmanagement` module under
-  `source/packages/automojo/sysman/macos/`.
+  `source/packages/ccai/sysman/macos/`.
 
 - [x] 2. Define `MacosCertTrustActionStatus` alias to the shared
   `ActionStatus` enum.
@@ -122,7 +122,7 @@ Unchecked items (`[ ]`) identify out-of-scope or follow-up work.
   enable / disable toggle.
 
 - [ ] 34. `verify_certificate` — overlaps with
-  `automojo-credentials`; defer per RHEL spec's task 21 follow-up.
+  `codecraftai-credentials`; defer per RHEL spec's task 21 follow-up.
 
 - [ ] 35. `TrustPurpose` enum — defaulting to root-anchor trust
   (`-r trustRoot`).  Per-purpose policy

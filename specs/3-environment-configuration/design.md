@@ -3,16 +3,16 @@
 ## Overview
 
 The environment configuration feature is implemented as a single module,
-`automojo.sysman.macos.environmentconfiguration`, that exposes a
+`ccai.sysman.macos.environmentconfiguration`, that exposes a
 `MacosEnvironmentConfigurator` class.  This spec implements the
 environment-configuration contract defined at
-`automojo-sysman-common/specs/contracts/environment-configuration/contract.md`
+`codecraftai-sysman-common/specs/contracts/environment-configuration/contract.md`
 for macOS.
 
 All runtime operations go through the `ICommandRunner` (via `launchctl setenv`,
 `launchctl unsetenv`, `launchctl getenv`, `launchctl export`, `launchctl
 asuser`), and all persistent file I/O goes through the `IFileOperator`
-(`/etc/launchd.conf`, `/etc/paths.d/automojo`, `~<user>/.zshenv`).  Maintaining
+(`/etc/launchd.conf`, `/etc/paths.d/ccai`, `~<user>/.zshenv`).  Maintaining
 a dual-abstraction dependency (runner + file operator) is an extension over
 the contract — the contract explicitly permits `ICommandRunner` alongside
 `IFileOperator` where the OS requires a CLI (`launchctl`).
@@ -40,7 +40,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │        MacosEnvironmentConfigurator                         │
-│  automojo.sysman.macos.environmentconfiguration             │
+│  ccai.sysman.macos.environmentconfiguration             │
 │                                                             │
 │  set_system_env()    unset_system_env()                     │
 │  get_system_env()    list_system_env()                      │
@@ -76,11 +76,11 @@ configuration.
 
 ### `MacosEnvironmentConfigurator`
 
-**Location:** `source/packages/automojo/sysman/macos/environmentconfiguration.py`
+**Location:** `source/packages/ccai/sysman/macos/environmentconfiguration.py`
 
 | Method | Signature | Description |
 |---|---|---|
-| `set_system_env` | `(name, value) → MacosEnvActionResult` | `launchctl setenv` + `/etc/launchd.conf` + `/etc/paths.d/automojo` when PATH |
+| `set_system_env` | `(name, value) → MacosEnvActionResult` | `launchctl setenv` + `/etc/launchd.conf` + `/etc/paths.d/ccai` when PATH |
 | `unset_system_env` | `(name) → MacosEnvActionResult` | `launchctl unsetenv` + rewrite `/etc/launchd.conf` + delete PATH drop-in |
 | `get_system_env` | `(name) → MacosEnvValue \| None` | `launchctl getenv` first, fallback to file parse |
 | `list_system_env` | `() → dict[str, str]` | `launchctl export` merged with file parse |
@@ -138,7 +138,7 @@ class MacosEnvConfigError(Exception):
 
 ### `ICommandRunner` and `IFileOperator`
 
-Both are imported from `automojo-interfaces`.  The configurator takes one of
+Both are imported from `codecraftai-interfaces`.  The configurator takes one of
 each in its constructor.
 
 ---
@@ -149,7 +149,7 @@ each in its constructor.
 |---|---|
 | `SYSTEM` runtime | `launchctl setenv/unsetenv/getenv` (system domain) |
 | `SYSTEM` persistent | `/etc/launchd.conf` (`setenv NAME "value"` lines) |
-| `SYSTEM` persistent (PATH only) | `/etc/paths.d/automojo` (one entry per line) |
+| `SYSTEM` persistent (PATH only) | `/etc/paths.d/ccai` (one entry per line) |
 | `USER` runtime | `launchctl asuser <uid> launchctl setenv/unsetenv/getenv` (user domain) |
 | `USER` persistent | `~<user>/.zshenv` (`export NAME="value"` lines) |
 
@@ -162,7 +162,7 @@ each in its constructor.
 Each managed variable is `setenv NAME "value"` on its own line.  Values
 containing `"` are escaped as `\"`.  Empty final newline preserved.
 
-### `/etc/paths.d/automojo`
+### `/etc/paths.d/ccai`
 
 One absolute path per line.  No shebang, no `export`.  When the `PATH`
 variable is unset at system scope this drop-in file is deleted.
@@ -264,7 +264,7 @@ valid executions of the system.*
 
 ### Property 2: `set_system_env` PATH Drop-In
 *For any* `(name="PATH", value)`, `set_system_env` should additionally write
-the value (one path per line) to `/etc/paths.d/automojo`.
+the value (one path per line) to `/etc/paths.d/ccai`.
 **Validates: Requirements 1.2**
 
 ### Property 3: `set_system_env` Idempotency
@@ -304,7 +304,7 @@ rewrite the file with the matching line removed.
 **Validates: Requirements 2.3**
 
 ### Property 10: `unset_system_env` PATH Drop-In Delete
-*For any* unset of `PATH` where `/etc/paths.d/automojo` exists,
+*For any* unset of `PATH` where `/etc/paths.d/ccai` exists,
 `unset_system_env` should delete the drop-in via
 `IFileOperator.delete`.
 **Validates: Requirements 2.4**
@@ -419,13 +419,13 @@ distinguish `SKIPPED` from `DRY_RUN`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── environmentconfiguration.py   ← MacosEnvironmentConfigurator, config,
                                      models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_environmentconfiguration.py
 ```
 
@@ -436,9 +436,9 @@ source/testroots/testbase/
 ### Local Execution
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.fileoperators import LocalFileOperator
-from automojo.sysman.macos.environmentconfiguration import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.fileoperators import LocalFileOperator
+from ccai.sysman.macos.environmentconfiguration import (
     MacosEnvironmentConfigurator,
     MacosEnvironmentConfiguratorConfig,
 )
@@ -462,15 +462,15 @@ print(f"Set user env: {result.status}")
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect, PersistenceAspectConfig,
     RetryAspect, RetryAspectConfig,
     TimeoutAspect, TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.fileoperators import SSHFileOperator
-from automojo.sysman.macos.environmentconfiguration import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.fileoperators import SSHFileOperator
+from ccai.sysman.macos.environmentconfiguration import (
     MacosEnvironmentConfigurator, MacosEnvironmentConfiguratorConfig,
 )
 
@@ -512,7 +512,7 @@ assert result.status == MacosEnvActionStatus.DRY_RUN
    representative multi-line outputs including blank lines, comments, and
    embedded quotes.
 3. `_resolve_user` is tested by monkey-patching `pwd.getpwnam`.
-4. PATH drop-in tests assert that `/etc/paths.d/automojo` is written when
+4. PATH drop-in tests assert that `/etc/paths.d/ccai` is written when
    setting `PATH` and deleted when unsetting.
 5. Runtime-first read tests prove that `launchctl getenv` is consulted before
    the persistent file; persistent-fallback tests use a non-zero `getenv`
@@ -536,7 +536,7 @@ assert result.status == MacosEnvActionStatus.DRY_RUN
 | Abstract | macOS |
 |---|---|
 | `SYSTEM` runtime | `launchctl setenv/unsetenv/getenv` (system domain) |
-| `SYSTEM` persistent | `/etc/launchd.conf` + `/etc/paths.d/automojo` for `PATH` |
+| `SYSTEM` persistent | `/etc/launchd.conf` + `/etc/paths.d/ccai` for `PATH` |
 | `USER` runtime | `launchctl asuser <uid> launchctl setenv/unsetenv/getenv` |
 | `USER` persistent | `~<user>/.zshenv` |
 
@@ -550,7 +550,7 @@ assert result.status == MacosEnvActionStatus.DRY_RUN
 - **Dual-source SYSTEM scope.**  Writes to both `launchctl` (runtime) and
   `/etc/launchd.conf` (persistence) so the value survives a reboot even on
   systems where `/etc/launchd.conf` is no longer consulted at every boot.
-- **PATH-specific drop-in.**  Maintains `/etc/paths.d/automojo` in lock-step
+- **PATH-specific drop-in.**  Maintains `/etc/paths.d/ccai` in lock-step
   with `launchctl setenv PATH`.
 - **Same-user elevation suppression.**  Writes targeting the current user
   never pass `elevated=True`, even when the config says so.

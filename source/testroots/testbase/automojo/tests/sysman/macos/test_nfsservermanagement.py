@@ -10,11 +10,11 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.nfsservermanagement import (
+from ccai.sysman.macos.nfsservermanagement import (
     MacosNfsActionStatus,
     MacosNfsClientSpec,
     MacosNfsExportInfo,

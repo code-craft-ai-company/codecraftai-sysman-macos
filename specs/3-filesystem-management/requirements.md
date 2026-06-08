@@ -2,12 +2,12 @@
 
 ## Introduction
 
-The filesystem management feature provides the `automojo-sysman-macos` package with
+The filesystem management feature provides the `codecraftai-sysman-macos` package with
 the ability to mount and unmount devices, manage persistent mount-table entries,
 create and remove directories and symbolic links, change ownership and permissions,
 and inspect file / disk metadata on macOS systems.  This spec implements the
 filesystem-management contract defined at
-`automojo-sysman-common/specs/contracts/filesystem-management/contract.md` for
+`codecraftai-sysman-common/specs/contracts/filesystem-management/contract.md` for
 macOS using the BSD toolchain (`mount`, `umount`, `diskutil`, `stat -f`, `df`,
 `mkdir`, `rm`, `ln`, `chmod`, `chown`) together with an `IFileOperator` for
 transactional edits to `/etc/fstab`.
@@ -17,7 +17,7 @@ calling into this feature's public interfaces.  The feature does not decide *whi
 paths should be mounted or which permissions are correct — it provides the
 capability to *manipulate filesystem state* reliably, idempotently, and with full
 auditability.  All system commands are executed exclusively through the
-`automojo-interfaces` command-runner abstraction; all file reads and writes against
+`codecraftai-interfaces` command-runner abstraction; all file reads and writes against
 `/etc/fstab` flow through an `IFileOperator` so that dry-run simulation and test
 mocking do not require a live system.  macOS's `/etc/fstab` is advisory — the boot
 mount set is primarily driven by `diskutil` / Disk Arbitration — so the spec also

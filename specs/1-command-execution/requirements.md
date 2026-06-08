@@ -2,12 +2,12 @@
 
 ## Introduction
 
-The command-execution feature provides the `automojo-sysman-macos` package with the
+The command-execution feature provides the `codecraftai-sysman-macos` package with the
 ability to dispatch OS-level commands, ordered sequences, and short inline shell scripts
 through an `ICommandRunner` abstraction.  This spec implements the command-execution
-contract defined at `automojo-sysman-common/specs/contracts/command-execution/contract.md`
+contract defined at `codecraftai-sysman-common/specs/contracts/command-execution/contract.md`
 for macOS using `subprocess.run` (wrapped by `MacosLocalCommandRunner`) and `paramiko`
-SSH (wrapped by `MacosSSHCommandRunner` in `automojo-protocol-ssh`).  It covers single
+SSH (wrapped by `MacosSSHCommandRunner` in `codecraftai-protocol-ssh`).  It covers single
 command execution, ordered command sequences with a stop-on-failure policy, and
 temp-file-backed script execution via `/bin/bash`.
 

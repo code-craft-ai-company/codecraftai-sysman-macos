@@ -3,9 +3,9 @@
 ## Overview
 
 The service-management feature is implemented as a single module,
-`automojo.sysman.macos.servicemanagement`, that exposes a `MacosServiceManager`
+`ccai.sysman.macos.servicemanagement`, that exposes a `MacosServiceManager`
 class.  This spec implements the service-management contract defined at
-`automojo-sysman-common/specs/contracts/service-management/contract.md` for macOS
+`codecraftai-sysman-common/specs/contracts/service-management/contract.md` for macOS
 using `launchctl`.  The coordinator instantiates `MacosServiceManager` with a
 command runner, an optional file operator (used only by the mask fallback), and a
 config, then calls its verbs.
@@ -37,7 +37,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │            MacosServiceManager                              │
-│  automojo.sysman.macos.servicemanagement                    │
+│  ccai.sysman.macos.servicemanagement                    │
 │                                                             │
 │  start_service()  stop_service()  restart_service()         │
 │  reload_service() enable_service()  disable_service()       │
@@ -55,7 +55,7 @@ details on local/SSH execution, reliability tracking, and aspect configuration.
 
 ### `MacosServiceManager`
 
-**Location:** `source/packages/automojo/sysman/macos/servicemanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/servicemanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -139,7 +139,7 @@ class MacosServiceQueryError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -531,12 +531,12 @@ NOT invoked and the result has `status=DRY_RUN`.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── servicemanagement.py       ← MacosServiceManager, config, models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_servicemanagement.py
 ```
 
@@ -548,13 +548,13 @@ source/testroots/testbase/
 
 ```python
 import os
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosLocalCommandRunner, MacosLocalRunnerConfig,
 )
-from automojo.sysman.macos.fileoperators import (
+from ccai.sysman.macos.fileoperators import (
     MacosLocalFileOperator, MacosLocalFileOperatorConfig,
 )
-from automojo.sysman.macos.servicemanagement import (
+from ccai.sysman.macos.servicemanagement import (
     MacosServiceManager, MacosServiceManagerConfig, MacosServiceScope,
 )
 
@@ -573,10 +573,10 @@ print(f"restart: {result.status.value}")
 ### User Scope via SSH with Aspects
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosSSHCommandRunner, MacosSSHRunnerConfig,
 )
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.aspects import (
     RetryAspect, RetryAspectConfig,
 )
 

@@ -3,10 +3,10 @@
 ## Overview
 
 The package-management feature is implemented as a single module,
-`automojo.sysman.macos.packagemanagement`, that exposes a
+`ccai.sysman.macos.packagemanagement`, that exposes a
 `MacosPackageManager` class.  This spec implements the package-management
 contract defined at
-`automojo-sysman-common/specs/contracts/package-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/package-management/contract.md`
 for macOS using Homebrew (`brew`) as the primary package manager.  The
 coordinator instantiates the manager with a command runner and a config,
 then calls install / remove / upgrade verbs plus a read-only query
@@ -48,7 +48,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              MacosPackageManager                            │
-│  automojo.sysman.macos.packagemanagement                    │
+│  ccai.sysman.macos.packagemanagement                    │
 │                                                             │
 │  install_package()  remove_package()  upgrade_package()     │
 │  upgrade_all()      is_installed()                          │
@@ -69,7 +69,7 @@ configuration.
 
 ### `MacosPackageManager`
 
-**Location:** `source/packages/automojo/sysman/macos/packagemanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/packagemanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -150,7 +150,7 @@ class MacosPackageFileNotFoundError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -491,12 +491,12 @@ All write failures surface as
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── packagemanagement.py       ← MacosPackageManager, config, models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_packagemanagement.py
 ```
 
@@ -507,10 +507,10 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosLocalCommandRunner, MacosLocalRunnerConfig,
 )
-from automojo.sysman.macos.packagemanagement import (
+from ccai.sysman.macos.packagemanagement import (
     MacosPackageManager, MacosPackageManagerConfig,
 )
 
@@ -528,7 +528,7 @@ print(f"install wget: {result.status.value} version={result.version}")
 ### SSH Execution (Running As Root, With brew_user)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     MacosSSHCommandRunner, MacosSSHRunnerConfig,
 )
 

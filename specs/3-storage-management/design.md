@@ -32,7 +32,7 @@ the call.  See § "APFS Shared Sizing" below.
 ## Overview
 
 The storage-management feature is implemented as a single module,
-`automojo.sysman.macos.storagemanagement`, that exposes a
+`ccai.sysman.macos.storagemanagement`, that exposes a
 `MacosStorageManager` class.  The coordinator instantiates
 `MacosStorageManager` and calls its methods to perform discrete
 block-level storage actions: disk enumeration, APFS volume create /
@@ -78,7 +78,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │              MacosStorageManager                            │
-│   automojo.sysman.macos.storagemanagement                   │
+│   ccai.sysman.macos.storagemanagement                   │
 │                                                             │
 │  list_disks()           list_volumes()                      │
 │  get_disk_info()        get_volume_info()                   │
@@ -101,7 +101,7 @@ configuration.
 ### `MacosStorageManager`
 
 **Location:**
-`source/packages/automojo/sysman/macos/storagemanagement.py`
+`source/packages/ccai/sysman/macos/storagemanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -553,13 +553,13 @@ runner's exit code and stderr.
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 ├── featurebase.py
 ├── filesystemmanagement.py
 └── storagemanagement.py        ← MacosStorageManager + types
 
-source/testroots/testbase/automojo/tests/sysman/macos/
+source/testroots/testbase/ccai/tests/sysman/macos/
 └── test_storagemanagement.py
 ```
 
@@ -570,10 +570,10 @@ source/testroots/testbase/automojo/tests/sysman/macos/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner, LocalRunnerConfig,
 )
-from automojo.sysman.macos.storagemanagement import (
+from ccai.sysman.macos.storagemanagement import (
     MacosPoolSpec,
     MacosStorageManager,
     MacosStorageManagerConfig,
@@ -624,7 +624,7 @@ print(result.command)
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     SSHCommandRunner, SSHRunnerConfig,
 )
 

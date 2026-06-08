@@ -3,12 +3,12 @@
 ## Introduction
 
 The container management feature provides the
-`automojo-sysman-macos` package with the ability to pull / remove
+`codecraftai-sysman-macos` package with the ability to pull / remove
 images, create / start / stop / remove containers, list and inspect
 containers, retrieve container logs, and execute commands inside
 running containers on macOS systems.  This spec implements the
 container-management contract defined at
-`automojo-sysman-common/specs/contracts/container-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/container-management/contract.md`
 for macOS using either the `docker` CLI (default — provided by Docker
 Desktop or colima) or the `podman` CLI (Podman Desktop / Homebrew),
 selected at construction time via
@@ -21,7 +21,7 @@ images should be pulled, or *what* environment / volume / port
 configuration a container should have — it provides the capability to
 *manipulate container engine state* reliably, idempotently, and with
 full auditability.  All container engine commands are executed
-exclusively through the `automojo-interfaces` command-runner
+exclusively through the `codecraftai-interfaces` command-runner
 abstraction.
 
 macOS does not have a native Linux container runtime; both Docker

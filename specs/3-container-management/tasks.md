@@ -5,7 +5,7 @@ items (`[ ]`) identify remaining work.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.containermanagement`
+- [x] 1. Create the `ccai.sysman.macos.containermanagement`
   module.
 
 - [x] 2. Define `MacosContainerActionStatus` (aliased to the shared
@@ -132,10 +132,10 @@ items (`[ ]`) identify remaining work.
 ## Follow-ups
 
 - [ ] 52. **Cross-OS contract conformance review** against
-  `automojo-sysman-common/specs/contracts/container-management/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/container-management/contract.md`.
 
-- [ ] 53. **automojo-* reuse check**: confirm no other feature in
-  `automojo-sysman-macos` invokes `docker` / `podman` directly.
+- [ ] 53. **codecraftai-* reuse check**: confirm no other feature in
+  `codecraftai-sysman-macos` invokes `docker` / `podman` directly.
 
 ## Spec deviations from this implementation
 

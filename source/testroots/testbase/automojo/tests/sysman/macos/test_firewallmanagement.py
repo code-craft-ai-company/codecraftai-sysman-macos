@@ -9,11 +9,11 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from automojo import testbase
+from ccai import testbase
 
-from automojo.interfaces.icommandrunner import RunResult
+from ccai.interfaces.icommandrunner import RunResult
 
-from automojo.sysman.macos.firewallmanagement import (
+from ccai.sysman.macos.firewallmanagement import (
     MacosFirewallActionStatus,
     MacosFirewallManager,
     MacosFirewallManagerConfig,
@@ -67,7 +67,7 @@ class _MockCommandRunner:
 
 
 def _anchor_path(zone: str) -> str:
-    rtnval = "/etc/pf.anchors/automojo.{}".format(zone)
+    rtnval = "/etc/pf.anchors/ccai.{}".format(zone)
     return rtnval
 
 
@@ -122,13 +122,13 @@ def test_add_service_writes_pass_rule_and_reloads_anchor():
 
     reload_calls = [
         c for c in runner.calls
-        if c["args"][:3] == ["pfctl", "-a", "automojo.trusted"]
+        if c["args"][:3] == ["pfctl", "-a", "ccai.trusted"]
     ]
     testbase.assert_equal(len(reload_calls), 1)
     testbase.assert_equal(
         reload_calls[0]["args"],
         [
-            "pfctl", "-a", "automojo.trusted",
+            "pfctl", "-a", "ccai.trusted",
             "-f", _anchor_path("trusted"),
         ],
     )
@@ -393,7 +393,7 @@ def test_rich_rule_idempotency_uses_normalised_match():
 def test_set_default_zone_rewrites_pf_conf_and_reloads():
     """
         set_default_zone ensures pf.conf declares the zone's anchor
-        as the first automojo anchor, rewrites the file, and reloads
+        as the first ccai anchor, rewrites the file, and reloads
         pf.
     """
     runner = _MockCommandRunner()
@@ -420,9 +420,9 @@ def test_set_default_zone_rewrites_pf_conf_and_reloads():
     ]
     testbase.assert_equal(len(tee_calls), 1)
     written = tee_calls[0]["stdin"]
-    testbase.assert_true('anchor "automojo.trusted"' in written)
+    testbase.assert_true('anchor "ccai.trusted"' in written)
     testbase.assert_true(
-        'load anchor "automojo.trusted" from "/etc/pf.anchors/automojo.trusted"'
+        'load anchor "ccai.trusted" from "/etc/pf.anchors/ccai.trusted"'
         in written,
     )
 
@@ -441,8 +441,8 @@ def test_set_default_zone_skipped_when_already_first():
     """
     existing_body = (
         "# pf.conf\n"
-        'anchor "automojo.trusted"\n'
-        'load anchor "automojo.trusted" from "/etc/pf.anchors/automojo.trusted"\n'
+        'anchor "ccai.trusted"\n'
+        'load anchor "ccai.trusted" from "/etc/pf.anchors/ccai.trusted"\n'
     )
     runner = _MockCommandRunner()
     runner.results[("cat", "/etc/pf.conf")] = RunResult(
@@ -497,7 +497,7 @@ def test_query_zone_parses_pass_rules_and_back_resolves_services():
         "block in quick from 10.0.0.5\n"
     )
     runner = _MockCommandRunner()
-    runner.results[("pfctl", "-a", "automojo.trusted", "-sr")] = RunResult(
+    runner.results[("pfctl", "-a", "ccai.trusted", "-sr")] = RunResult(
         exit_code=0, stdout=rules_stdout, stderr="",
     )
     runner.results[("cat", "/etc/pf.conf")] = RunResult(
@@ -522,7 +522,7 @@ def test_query_zone_raises_query_error_on_failure():
         ``pfctl`` exits non-zero with non-empty stderr.
     """
     runner = _MockCommandRunner()
-    runner.results[("pfctl", "-a", "automojo.trusted", "-sr")] = RunResult(
+    runner.results[("pfctl", "-a", "ccai.trusted", "-sr")] = RunResult(
         exit_code=1, stdout="", stderr="permission denied",
     )
     manager = MacosFirewallManager(
@@ -537,27 +537,27 @@ def test_query_zone_raises_query_error_on_failure():
     return
 
 
-def test_query_all_zones_filters_to_automojo_anchors():
+def test_query_all_zones_filters_to_ccai_anchors():
     """
         query_all_zones reads ``pfctl -sA``, filters to
-        ``automojo.*`` anchors, and parses each.
+        ``ccai.*`` anchors, and parses each.
     """
     list_stdout = (
         "  com.apple/something\n"
-        "  automojo.trusted\n"
-        "  automojo.public\n"
+        "  ccai.trusted\n"
+        "  ccai.public\n"
         "  other-thing\n"
     )
     runner = _MockCommandRunner()
     runner.results[("pfctl", "-sA")] = RunResult(
         exit_code=0, stdout=list_stdout, stderr="",
     )
-    runner.results[("pfctl", "-a", "automojo.trusted", "-sr")] = RunResult(
+    runner.results[("pfctl", "-a", "ccai.trusted", "-sr")] = RunResult(
         exit_code=0,
         stdout="pass in quick proto tcp from any to any port 22\n",
         stderr="",
     )
-    runner.results[("pfctl", "-a", "automojo.public", "-sr")] = RunResult(
+    runner.results[("pfctl", "-a", "ccai.public", "-sr")] = RunResult(
         exit_code=0, stdout="", stderr="",
     )
     runner.results[("cat", "/etc/pf.conf")] = RunResult(
@@ -587,7 +587,7 @@ def test_query_state_reports_running_when_pfctl_si_enabled():
     )
     runner.results[("cat", "/etc/pf.conf")] = RunResult(
         exit_code=0,
-        stdout='anchor "automojo.trusted"\n',
+        stdout='anchor "ccai.trusted"\n',
         stderr="",
     )
     manager = MacosFirewallManager(

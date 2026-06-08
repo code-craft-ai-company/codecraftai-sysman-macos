@@ -3,13 +3,13 @@
 ## Introduction
 
 The nfs-server-management feature provides the
-`automojo-sysman-macos` package with the ability to manage a local
+`codecraftai-sysman-macos` package with the ability to manage a local
 NFS server on macOS hosts.  macOS ships its own ``nfsd`` daemon as
 part of the base operating system, exposed under launchd as
 ``com.apple.nfsd`` (LaunchDaemon plist at
 ``/System/Library/LaunchDaemons/com.apple.nfsd.plist``).  This spec
 implements the cross-OS nfs-server-management contract defined at
-``automojo-sysman-common/specs/contracts/nfs-server-management/contract.md``
+``codecraftai-sysman-common/specs/contracts/nfs-server-management/contract.md``
 for macOS, scoped to ``nfsd`` and the on-disk ``/etc/exports`` file
 in its Darwin-specific syntax.
 
@@ -19,7 +19,7 @@ feature does not decide *what* exports policy the server enforces —
 it provides the capability to *apply* policy reliably, idempotently,
 and with full auditability.  All system commands (``nfsd``,
 ``showmount``, ``cat``, ``tee``) are executed exclusively through the
-``automojo-interfaces`` command-runner abstraction.  No
+``codecraftai-interfaces`` command-runner abstraction.  No
 ``subprocess``, no direct ``open``, and no direct ``pathlib`` calls
 are made inside this module.
 

@@ -3,10 +3,10 @@
 ## Overview
 
 The repository management feature is implemented as a single module,
-`automojo.sysman.macos.repositorymanagement`, that exposes a
+`ccai.sysman.macos.repositorymanagement`, that exposes a
 `MacosRepositoryManager` class.  This spec implements the
 repository-management contract defined at
-`automojo-sysman-common/specs/contracts/repository-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/repository-management/contract.md`
 for macOS using Homebrew taps (`brew tap`, `brew untap`, `brew
 update`, `brew tap-info`).
 
@@ -43,7 +43,7 @@ configuration.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │           MacosRepositoryManager                            │
-│  automojo.sysman.macos.repositorymanagement                 │
+│  ccai.sysman.macos.repositorymanagement                 │
 │                                                             │
 │  add_repository()       remove_repository()                 │
 │  enable_repository()    disable_repository()                │
@@ -80,7 +80,7 @@ configuration.
 
 ### `MacosRepositoryManager`
 
-**Location:** `source/packages/automojo/sysman/macos/repositorymanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/repositorymanagement.py`
 
 | Method | Signature | Description |
 |---|---|---|
@@ -165,7 +165,7 @@ class MacosRepositoryKeyFileNotFoundError(Exception):
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 ```python
 class ICommandRunner(Protocol):
@@ -459,13 +459,13 @@ All other write failures are surfaced as
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 ├── __init__.py
 └── repositorymanagement.py    ← MacosRepositoryManager, config,
                                   models, exceptions
 
 source/testroots/testbase/
-└── automojo/tests/sysman/macos/
+└── ccai/tests/sysman/macos/
     └── test_repositorymanagement.py
 ```
 
@@ -476,8 +476,8 @@ source/testroots/testbase/
 ### Local Execution (Default)
 
 ```python
-from automojo.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
-from automojo.sysman.macos.repositorymanagement import (
+from ccai.sysman.macos.runners import LocalCommandRunner, LocalRunnerConfig
+from ccai.sysman.macos.repositorymanagement import (
     MacosRepositoryManager,
     MacosRepositoryManagerConfig,
     MacosRepositorySpec,
@@ -527,8 +527,8 @@ for info in repo_mgr.list_repositories():
 ### SSH Execution with Aspects
 
 ```python
-from automojo.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
-from automojo.sysman.macos.aspects import (
+from ccai.sysman.macos.runners import SSHCommandRunner, SSHRunnerConfig
+from ccai.sysman.macos.aspects import (
     PersistenceAspect,
     RetryAspect,
     TimeoutAspect,
@@ -536,8 +536,8 @@ from automojo.sysman.macos.aspects import (
     RetryAspectConfig,
     TimeoutAspectConfig,
 )
-from automojo.sysman.macos.storage import SQLiteStorage
-from automojo.sysman.macos.repositorymanagement import (
+from ccai.sysman.macos.storage import SQLiteStorage
+from ccai.sysman.macos.repositorymanagement import (
     MacosRepositoryManager,
     MacosRepositoryManagerConfig,
 )

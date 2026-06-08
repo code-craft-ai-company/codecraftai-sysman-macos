@@ -3,7 +3,7 @@
 ## Overview
 
 The bootloader-management feature on macOS is implemented as a
-single module, `automojo.sysman.macos.bootloadermanagement`, that
+single module, `ccai.sysman.macos.bootloadermanagement`, that
 exposes a `MacosBootloaderManager` class.  The class is a contract-
 conforming implementation of the cross-OS bootloader-management
 contract, but the macOS surface diverges from the Linux primaries in
@@ -13,7 +13,7 @@ and `add_entry` accepts only one entry kind.
 
 The maintenance coordinator instantiates `MacosBootloaderManager`
 with a command runner and calls its methods.  All system commands
-(`bless`, `nvram`) are executed through the `automojo-interfaces`
+(`bless`, `nvram`) are executed through the `codecraftai-interfaces`
 command-runner abstraction.  The manager never calls `subprocess`,
 `os.path`, or `open()` directly; it only constructs argument lists
 and passes them to the injected runner.
@@ -133,7 +133,7 @@ drop a configuration request.
                        v
 +-------------------------------------------------------------+
 |                MacosBootloaderManager                       |
-|  automojo.sysman.macos.bootloadermanagement                 |
+|  ccai.sysman.macos.bootloadermanagement                 |
 |                                                             |
 |  list_entries()           get_default_entry()               |
 |  set_default_entry(id)    add_entry(spec)                   |
@@ -162,7 +162,7 @@ drop a configuration request.
 
 ### `MacosBootloaderManager`
 
-**Location:** `source/packages/automojo/sysman/macos/bootloadermanagement.py`
+**Location:** `source/packages/ccai/sysman/macos/bootloadermanagement.py`
 
 The primary public class.  Constructed with an `ICommandRunner` and
 a `MacosBootloaderManagerConfig`.
@@ -372,7 +372,7 @@ code.
 
 ## Interfaces
 
-### `ICommandRunner` (from `automojo-interfaces`)
+### `ICommandRunner` (from `codecraftai-interfaces`)
 
 `MacosBootloaderManager` depends on this interface, injected at
 construction time.
@@ -387,7 +387,7 @@ class ICommandRunner(Protocol):
     ) -> RunResult: ...
 ```
 
-### `RunResult` (from `automojo-interfaces`)
+### `RunResult` (from `codecraftai-interfaces`)
 
 ```python
 @dataclass
@@ -472,11 +472,11 @@ sealed, or absent volume.  This module:
 ## Module Layout
 
 ```
-source/packages/automojo/sysman/macos/
+source/packages/ccai/sysman/macos/
 +-- __init__.py
 +-- bootloadermanagement.py          (this feature)
 
-source/testroots/testbase/automojo/tests/sysman/macos/
+source/testroots/testbase/ccai/tests/sysman/macos/
 +-- test_bootloadermanagement.py
 ```
 
@@ -515,10 +515,10 @@ failed-command stderr passthrough.
 ### Local Execution (Set Default Boot Volume)
 
 ```python
-from automojo.sysman.macos.runners import (
+from ccai.sysman.macos.runners import (
     LocalCommandRunner, LocalRunnerConfig,
 )
-from automojo.sysman.macos.bootloadermanagement import (
+from ccai.sysman.macos.bootloadermanagement import (
     MacosBootloaderManager,
     MacosBootloaderManagerConfig,
 )
@@ -538,7 +538,7 @@ print("set boot device: {} (reboot: {})".format(
 ### Bless an Alternate Volume
 
 ```python
-from automojo.sysman.macos.bootloadermanagement import (
+from ccai.sysman.macos.bootloadermanagement import (
     MacosBootEntryKind,
     MacosBootEntrySpec,
     MacosBootloaderManager,

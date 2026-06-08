@@ -2,10 +2,10 @@
 
 ## Introduction
 
-The kernel parameters feature provides the `automojo-sysman-macos` package with
+The kernel parameters feature provides the `codecraftai-sysman-macos` package with
 the ability to read, write, and persist `sysctl` kernel tunables on macOS
 systems.  This spec implements the kernel-parameters contract defined at
-`automojo-sysman-common/specs/contracts/kernel-parameters/contract.md` for
+`codecraftai-sysman-common/specs/contracts/kernel-parameters/contract.md` for
 macOS using `sysctl` at runtime and the single flat `/etc/sysctl.conf` file for
 persistence.  It includes querying a single parameter, listing all parameters,
 writing parameters either at runtime, persistently, or both, reloading
@@ -16,8 +16,8 @@ A maintenance coordinator running in an external package drives all operations
 by calling into this feature's public interfaces.  The feature does not decide
 *which* parameters to apply — it provides the capability to *do it* reliably,
 idempotently, and with full auditability.  All system commands are executed
-exclusively through the `automojo-interfaces` command-runner abstraction and
-all persistent-file mutations are executed through the `automojo-interfaces`
+exclusively through the `codecraftai-interfaces` command-runner abstraction and
+all persistent-file mutations are executed through the `codecraftai-interfaces`
 file-operator abstraction, enabling dry-run simulation, auditing, and test
 mocking without requiring a live system.
 
@@ -209,7 +209,7 @@ consumes them correctly on reboot.
    only the target line (or append if absent), and write the merged content
    back — existing unrelated lines and comments MUST be preserved verbatim.
 3. WHEN the file does not exist the system SHALL create it with a header
-   `# managed by automojo-sysman-macos` on line 1 and the target line on
+   `# managed by codecraftai-sysman-macos` on line 1 and the target line on
    line 2.
 
 ---

@@ -8,7 +8,7 @@ mock.
 
 ## Module and Models
 
-- [x] 1. Create the `automojo.sysman.macos.usergroupmanagement` module
+- [x] 1. Create the `ccai.sysman.macos.usergroupmanagement` module
 
 - [x] 2. Define `MacosUserGroupActionStatus` enum (SUCCESS / FAILED /
   SKIPPED / DRY_RUN) — re-exports `featurebase.ActionStatus`.
@@ -172,10 +172,10 @@ mock.
 - [ ] 53. **Cross-OS contract conformance review**: verify this
   implementation's `MacosUserGroupActionResult` field shapes match the
   cross-OS contract at
-  `automojo-sysman-common/specs/contracts/user-group-management/contract.md`.
+  `codecraftai-sysman-common/specs/contracts/user-group-management/contract.md`.
 
-- [ ] 54. **automojo-* reuse check**: confirm that no other feature in
-  `automojo-sysman-macos` invokes `sysadminctl` / `dscl` /
+- [ ] 54. **codecraftai-* reuse check**: confirm that no other feature in
+  `codecraftai-sysman-macos` invokes `sysadminctl` / `dscl` /
   `dseditgroup` directly; all such calls should go through
   `MacosUserGroupManager`.
 

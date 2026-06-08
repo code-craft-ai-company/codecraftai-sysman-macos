@@ -3,21 +3,21 @@
 ## Introduction
 
 The mail-transport-management feature provides the
-`automojo-sysman-macos` package with the ability to manage the local
+`codecraftai-sysman-macos` package with the ability to manage the local
 mail transport agent (MTA) on macOS hosts.  macOS ships **Postfix**
 as part of the base operating system; the configuration files live
 at the same paths as Linux (`/etc/postfix/main.cf`, `/etc/aliases`)
 and the command suite (`postconf`, `postqueue`, `mailq`,
 `newaliases`, `sendmail`) is available out of the box.  This spec
 implements the mail-transport-management contract defined at
-`automojo-sysman-common/specs/contracts/mail-transport-management/contract.md`
+`codecraftai-sysman-common/specs/contracts/mail-transport-management/contract.md`
 for macOS, scoped to the system-shipped Postfix daemon exclusively.
 
 A maintenance coordinator running in an external package drives all
 operations by calling into this feature's public interfaces.  All
 system commands (`postconf`, `postqueue`, `mailq`, `newaliases`,
 `sendmail`, `cat`, `tee`, `launchctl`) are executed exclusively
-through the `automojo-interfaces` command-runner abstraction.  No
+through the `codecraftai-interfaces` command-runner abstraction.  No
 `subprocess`, no direct `open`, and no direct `pathlib` calls are
 made inside this module.
 

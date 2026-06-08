@@ -3,11 +3,11 @@
 ## Overview
 
 The macOS backup-restore feature is implemented as a single module,
-`automojo.sysman.macos.backuprestore`, exposing a `MacosBackupRestoreManager`
+`ccai.sysman.macos.backuprestore`, exposing a `MacosBackupRestoreManager`
 class and its associated dataclasses and enum. The manager wraps three
 backend tools — `tmutil` (Time Machine, default), `rsync`, and `restic` —
 behind a single verb surface defined by the cross-OS contract at
-`automojo-sysman-common/specs/contracts/backup-restore/contract.md`.
+`codecraftai-sysman-common/specs/contracts/backup-restore/contract.md`.
 
 macOS ships a first-party backup framework (Time Machine, driven by
 `tmutil`) that is the default for every backup workflow on the platform.
@@ -52,7 +52,7 @@ composition (persistence, retry, timeout) is transparent to the manager.
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │             MacosBackupRestoreManager                       │
-│  automojo.sysman.macos.backuprestore                        │
+│  ccai.sysman.macos.backuprestore                        │
 │                                                             │
 │  create_backup_job()      run_backup_now()                  │
 │  delete_backup_job()      restore_from_backup()             │
@@ -122,7 +122,7 @@ For `TIME_MACHINE`:
 * `verify_backup` → `tmutil compare` (best-effort).
 
 For `RSYNC` and `RESTIC` the dispatch is identical to the Ubuntu manager;
-see `../../automojo-sysman-linux-ubuntu/specs/3-backup-restore/design.md`
+see `../../codecraftai-sysman-linux-ubuntu/specs/3-backup-restore/design.md`
 for the rationale.
 
 ---
@@ -167,7 +167,7 @@ operator pre-encrypts the destination volume.
 ## Job Persistence
 
 Backup-job specs are persisted as JSON files at
-`/var/db/automojo/backups/jobs/<job_id>.json`. macOS uses `/var/db/` rather
+`/var/db/ccai/backups/jobs/<job_id>.json`. macOS uses `/var/db/` rather
 than `/var/lib/` for system-level state, matching the convention used by
 `launchd`, `cups`, and other platform daemons.
 
@@ -178,7 +178,7 @@ serialisation, and returning `SKIPPED` when they match.
 The job directory itself is created lazily by the first `create_backup_job`
 call's `tee` invocation — `tee` will fail if the parent directory does
 not exist. The manager does NOT pre-create the directory; instead, it
-documents that operators MUST `mkdir -p /var/db/automojo/backups/jobs` once
+documents that operators MUST `mkdir -p /var/db/ccai/backups/jobs` once
 at host provisioning time.
 
 ---
@@ -280,7 +280,7 @@ verification (e.g. an archive header that cannot be parsed at all).
 ## Test Strategy
 
 The test suite at
-`source/testroots/testbase/automojo/tests/sysman/macos/test_backuprestore.py`
+`source/testroots/testbase/ccai/tests/sysman/macos/test_backuprestore.py`
 covers, at minimum, the following surface:
 
 * Command construction: one test per write verb per backend.
@@ -305,7 +305,7 @@ returns pre-seeded `RunResult` values keyed by argv tuple.
 | Concept                | macOS                                          | Ubuntu                                    | Windows                                                |
 |------------------------|------------------------------------------------|-------------------------------------------|--------------------------------------------------------|
 | Default backup tool    | Time Machine via `tmutil`                      | `rsync` (selected via enum)               | `wbadmin` (Windows Server) / Robocopy (client SKUs)    |
-| Job persistence        | JSON spec at `/var/db/automojo/backups/`       | JSON spec at `/var/lib/automojo/backups/` | JSON spec at `%ProgramData%\Automojo\backup\`          |
+| Job persistence        | JSON spec at `/var/db/ccai/backups/`       | JSON spec at `/var/lib/ccai/backups/` | JSON spec at `%ProgramData%\CodeCraftAI\backup\`          |
 | Repository layout      | TM volume + `Backups.backupdb`                 | tool-specific                             | `wbadmin` catalogue on a backup volume                 |
 | Encryption native?     | Volume-level (FileVault on destination)        | only for `restic`                         | none (relies on volume-level)                          |
 | Snapshot model         | block-level (HFS+/APFS hard-link snapshot)     | none                                      | block-level VHDX                                       |
