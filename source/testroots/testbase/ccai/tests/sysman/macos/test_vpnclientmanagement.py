@@ -12,7 +12,8 @@ import json
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
-from hypothesis import given, settings, strategies as st
+from ccai.testbase.properties import given
+from ccai.testbase.properties import strategies as st
 
 from ccai import testbase
 
@@ -1070,8 +1071,8 @@ _install_source_strategy = st.sampled_from(
 )
 
 
-@settings(max_examples=25, deadline=None)
 @given(
+    constraints={"max_examples": 25},
     version=_version_strategy,
     channel=_channel_strategy,
     install_source=_install_source_strategy,
@@ -1124,8 +1125,7 @@ def test_property_install_tailscale_idempotent(
     return
 
 
-@settings(max_examples=15, deadline=None)
-@given(provider=st.sampled_from([VPNProvider.TAILSCALE, VPNProvider.TWINGATE]))
+@given(provider=st.sampled_from([VPNProvider.TAILSCALE, VPNProvider.TWINGATE]), constraints={"max_examples": 15})
 def test_property_uninstall_idempotent(provider):
     """
         A second ``uninstall`` after the package has been removed
@@ -1146,8 +1146,8 @@ def test_property_uninstall_idempotent(provider):
     return
 
 
-@settings(max_examples=15, deadline=None)
-@given(hostname=st.text(
+@given(
+    constraints={"max_examples": 15},hostname=st.text(
     alphabet=st.characters(min_codepoint=ord("a"), max_codepoint=ord("z")),
     min_size=1,
     max_size=10,
@@ -1176,8 +1176,8 @@ def test_property_bring_up_idempotent_on_matching_state(hostname):
     return
 
 
-@settings(max_examples=20, deadline=None)
 @given(
+    constraints={"max_examples": 20},
     version=_version_strategy,
     install_source=_install_source_strategy,
     purge=st.booleans(),
