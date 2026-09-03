@@ -660,14 +660,14 @@ reference = "codecraftai"
 
 [[package]]
 name = "codecraftai-sysman-common"
-version = "1.0.1"
+version = "1.0.2"
 description = "Code Craft AI - System Management Common Foundation"
 optional = false
 python-versions = ">=3.10,<4.0"
 groups = ["main"]
 files = [
-    {file = "codecraftai_sysman_common-1.0.1-py3-none-any.whl", hash = "sha256:af6fc0dab43be1b131b5c7612e02c097e74f9ca262b19bbdc7c710d280442f7d"},
-    {file = "codecraftai_sysman_common-1.0.1.tar.gz", hash = "sha256:205baafbbe5335e364ed080934ad369aa8e84b013d1bd0c836c7d7dc5a4c245a"},
+    {file = "codecraftai_sysman_common-1.0.2-py3-none-any.whl", hash = "sha256:e9f120af4172d386ba62e492f55d4e0ff039c609b03725da29e38209cb2416fd"},
+    {file = "codecraftai_sysman_common-1.0.2.tar.gz", hash = "sha256:7d483e42326f0cfc9c7e42b91e8ead1630e239c171a7d330853b82125ab155ba"},
 ]
 
 [package.dependencies]
