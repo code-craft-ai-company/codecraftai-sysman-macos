@@ -18,7 +18,10 @@ from ccai import testbase
 
 from ccai.interfaces.icommandrunner import RunResult
 
-from ccai.sysman.common.pythonenvironmentlayout import PosixPythonEnvironmentLayout
+from ccai.sysman.common.pythonenvironmentlayout import (
+    BsdPythonEnvironmentLayout,
+    PosixPythonEnvironmentLayout,
+)
 from ccai.sysman.common.pythonenvironmentmanagementbase import PythonEnvManagerConfig
 
 from ccai.sysman.macos.packagemanagement import MacosPackageActionStatus
@@ -87,14 +90,43 @@ def _pip_argv(*pip_args: str) -> list:
     return rtnval
 
 
-def test_layout_is_posix():
+def test_layout_is_the_bsd_flavour_of_posix():
     """
-        The macOS manager selects the POSIX layout.
+        The macOS manager selects the BSD flavour of the POSIX layout.
+
+        Paths, launcher and directory probes are the POSIX ones; only the
+        owner probe differs, because macOS ships BSD ``stat`` rather than
+        GNU ``stat``.  Asserting the concrete class matters: a plain POSIX
+        layout would emit ``stat -c``, which macOS does not accept.
     """
     manager = MacosPythonEnvironmentManager(runner=_MockCommandRunner())
+    testbase.assert_true(isinstance(manager.layout, BsdPythonEnvironmentLayout))
     testbase.assert_true(isinstance(manager.layout, PosixPythonEnvironmentLayout))
     testbase.assert_equal(manager.layout.venv_python_path(path=_VENV), _VENV_PYTHON)
     testbase.assert_equal(manager.layout.default_interpreter_argv(), ["python3"])
+    testbase.assert_equal(manager.layout.build_query_owner_argv(path=_VENV),
+                          ["stat", "-f", "%Su:%Sg", _VENV])
+    return
+
+
+def test_set_owner_uses_bsd_stat_then_chown():
+    """
+        The macOS ownership hand-over probes with BSD stat and chowns.
+    """
+    runner = _MockCommandRunner()
+    runner.results[("stat", "-f", "%Su:%Sg", _VENV)] = RunResult(
+        exit_code=0, stdout="root:wheel\n", stderr="",
+    )
+    manager = MacosPythonEnvironmentManager(
+        runner=runner, config=MacosPythonEnvManagerConfig(elevated=True),
+    )
+
+    result = manager.set_owner(path=_VENV, owner="ops")
+
+    testbase.assert_equal(result.status, MacosPythonEnvActionStatus.SUCCESS)
+    chowns = [c for c in runner.calls if c["args"][:1] == ["chown"]]
+    testbase.assert_equal([c["args"] for c in chowns], [["chown", "-R", "ops", _VENV]])
+    testbase.assert_equal(chowns[0]["elevated"], True)
     return
 
 

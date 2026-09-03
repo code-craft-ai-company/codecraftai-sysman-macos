@@ -38,7 +38,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from ccai.sysman.common.pythonenvironmentlayout import (
-    PosixPythonEnvironmentLayout,
+    BsdPythonEnvironmentLayout,
     PythonEnvironmentLayout,
 )
 from ccai.sysman.common.pythonenvironmentmanagementbase import (
@@ -100,9 +100,12 @@ class MacosPythonEnvironmentManager(PythonEnvironmentManagementBase):
 
     def _build_layout(self) -> PythonEnvironmentLayout:
         """
-            :returns: The POSIX layout.
+            :returns: The BSD flavour of the POSIX layout.  Paths, launcher
+                      and directory probes are identical to Linux; only the
+                      owner probe differs, because macOS ships BSD ``stat``
+                      (``-f "%Su:%Sg"``) rather than GNU ``stat -c``.
         """
-        rtnval = PosixPythonEnvironmentLayout()
+        rtnval = BsdPythonEnvironmentLayout()
         return rtnval
 
     def ensure_prerequisites(
