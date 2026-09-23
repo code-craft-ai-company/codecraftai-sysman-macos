@@ -16,14 +16,11 @@ from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.resourcecontrolmanagement import (
     MacosIoLimitSpec,
-    MacosResourceControlActionResult,
     MacosResourceControlActionStatus,
     MacosResourceControlManager,
     MacosResourceControlManagerConfig,
     MacosResourceControlQueryError,
-    MacosResourceGroupInfo,
     MacosResourceGroupSpec,
-    MacosResourceGroupUsage,
     _parse_plist_attached_pids,
     _parse_plist_memory_bytes,
     _parse_top_output,

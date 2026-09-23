@@ -15,7 +15,6 @@ from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.repositorymanagement import (
     MacosRepositoryActionStatus,
-    MacosRepositoryInfo,
     MacosRepositoryManager,
     MacosRepositoryManagerConfig,
     MacosRepositoryQueryError,

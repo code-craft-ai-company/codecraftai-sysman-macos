@@ -78,7 +78,6 @@
         guard applies to keep cross-OS behaviour uniform.
 """
 
-import json
 import os
 import plistlib
 

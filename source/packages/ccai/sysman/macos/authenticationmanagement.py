@@ -74,7 +74,6 @@ from ccai.sysman.common.featurebase import (
 
 _CAT = "cat"
 _TEE = "tee"
-_LS = "ls"
 
 _DEFAULT_PAM_DIR = "/etc/pam.d"
 _DEFAULT_AUTHZ_PATH = "/etc/authorization"
@@ -84,7 +83,6 @@ _AUTH_KIND_SUDO = "SUDO"
 _AUTH_KIND_SU = "SU"
 _AUTH_KIND_SSH = "SSH"
 _AUTH_KIND_CRON = "CRON"
-_AUTH_KIND_OTHER = "OTHER"
 
 _VALID_MODULE_TYPES = (
     "auth",

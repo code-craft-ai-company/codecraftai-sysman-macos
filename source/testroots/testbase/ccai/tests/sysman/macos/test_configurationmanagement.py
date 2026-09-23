@@ -18,7 +18,6 @@ from ccai.sysman.macos.configurationmanagement import (
     MacosConfigManagerConfig,
     MacosConfigQueryError,
     MacosConfigurationManager,
-    MacosSettingValue,
 )
 
 

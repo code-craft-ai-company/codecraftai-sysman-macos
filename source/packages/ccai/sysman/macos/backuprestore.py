@@ -92,7 +92,6 @@ from ccai.sysman.common.featurebase import (
 _TMUTIL = "tmutil"
 _RSYNC = "rsync"
 _RESTIC = "restic"
-_TAR = "tar"
 _TEE = "tee"
 _CAT = "cat"
 _RM = "rm"

@@ -19,11 +19,9 @@ from ccai.interfaces.icommandrunner import RunResult
 from ccai.sysman.macos.mailtransportmanagement import (
     MacosMailTransportManager,
     MacosMtaActionStatus,
-    MacosMtaAliasInfo,
     MacosMtaConfig,
     MacosMtaManagerConfig,
     MacosMtaQueryError,
-    MacosMtaQueueStatus,
     _parse_aliases_file,
     _parse_mailq_output,
     _parse_postconf_n_output,

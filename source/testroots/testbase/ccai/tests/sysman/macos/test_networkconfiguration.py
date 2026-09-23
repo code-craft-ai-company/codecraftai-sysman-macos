@@ -15,12 +15,10 @@ from ccai import testbase
 from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.networkconfiguration import (
-    MacosInterfaceInfo,
     MacosNetworkActionStatus,
     MacosNetworkConfigurationManager,
     MacosNetworkConfigurationManagerConfig,
     MacosNetworkQueryError,
-    MacosRouteInfo,
     _hex_netmask_to_prefix,
     _parse_getdnsservers,
     _parse_getinfo,

@@ -87,7 +87,6 @@ _DEFAULT_LOG_WINDOW = "1h"
 # Source kinds reported on :class:`MacosLogInfo`.
 _SOURCE_UNIFIED = "unified"
 _SOURCE_NEWSYSLOG = "newsyslog"
-_SOURCE_FILE = "file"
 
 
 MacosLogActionStatus = ActionStatus

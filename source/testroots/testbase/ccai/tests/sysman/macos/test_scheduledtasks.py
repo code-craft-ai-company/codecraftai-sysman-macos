@@ -18,7 +18,6 @@ from ccai.sysman.macos.scheduledtasks import (
     MacosScheduledTaskQueryError,
     MacosScheduledTasksManager,
     MacosScheduledTasksManagerConfig,
-    MacosTaskInfo,
     MacosTaskOwner,
     MacosTaskSpec,
     _extract_program_arguments_from_plist,

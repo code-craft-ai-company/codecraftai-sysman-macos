@@ -15,12 +15,10 @@ from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.servicemanagement import (
     MacosServiceActionStatus,
-    MacosServiceInfo,
     MacosServiceManager,
     MacosServiceManagerConfig,
     MacosServiceQueryError,
     MacosServiceScope,
-    MacosServiceStatus,
 )
 
 

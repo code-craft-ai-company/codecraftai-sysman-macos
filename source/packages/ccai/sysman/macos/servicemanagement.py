@@ -1097,7 +1097,6 @@ class MacosServiceManager(BaseFeatureManager):
             try:
                 last_value = int(last_raw)
             except ValueError:
-                last_value = 0
                 rtnval = None
                 return rtnval
             rtnval = last_value

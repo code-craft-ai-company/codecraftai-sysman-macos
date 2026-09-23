@@ -104,7 +104,6 @@ from ccai.sysman.common.featurebase import (
 # ----------------------------------------------------------------------
 
 _CAT = "cat"
-_TEE = "tee"
 _CMP = "cmp"
 _SECURITY = "security"
 _OPENSSL = "openssl"
@@ -1265,7 +1264,9 @@ def _parse_openssl_x509_text(*, stdout: str) -> dict:
                 try:
                     parsed_length = int("".join(digits))
                     rtnval["key_length"] = parsed_length
-                except (ValueError, Exception):
+                except ValueError:
+                    # A key size that cannot be parsed leaves 'key_length' unset; the remaining
+                    # certificate fields are still reported.
                     pass
             continue
 

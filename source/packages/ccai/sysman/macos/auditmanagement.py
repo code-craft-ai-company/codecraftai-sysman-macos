@@ -58,7 +58,7 @@
 
 import os
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 from ccai.sysman.common.featurebase import (
@@ -80,8 +80,6 @@ _DEFAULT_AUDITD_PLIST = (
     "/System/Library/LaunchDaemons/com.apple.auditd.plist"
 )
 _DEFAULT_AUDITD_LABEL = "system/com.apple.auditd"
-
-_FLAGS_KEY = "flags"
 
 # Documented audit-class abbreviations from audit_control(5).  The
 # manager does not gate on this list (callers may pass any token),

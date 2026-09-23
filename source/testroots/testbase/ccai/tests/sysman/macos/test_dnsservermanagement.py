@@ -17,7 +17,6 @@ from ccai.sysman.macos.dnsservermanagement import (
     MacosDnsActionStatus,
     MacosDnsManagerConfig,
     MacosDnsQueryError,
-    MacosDnsRecordInfo,
     MacosDnsRecordSpec,
     MacosDnsServerManager,
     MacosDnsZoneInfo,

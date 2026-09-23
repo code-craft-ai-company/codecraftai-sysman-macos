@@ -19,18 +19,13 @@ from ccai import testbase
 from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.storagemanagement import (
-    MacosDiskInfo,
     MacosPoolSpec,
     MacosStorageActionStatus,
     MacosStorageManager,
     MacosStorageManagerConfig,
-    MacosVolumeInfo,
     MacosVolumeSpec,
     _container_in_apfs_payload,
     _disk_in_apfs_container,
-    _first_container_for_any_disk,
-    _parse_diskutil_apfs_list,
-    _parse_diskutil_list_output,
     _strip_partition_suffix,
 )
 

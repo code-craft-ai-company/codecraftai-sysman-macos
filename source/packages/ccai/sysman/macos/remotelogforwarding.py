@@ -79,7 +79,6 @@ from ccai.sysman.common.featurebase import (
 
 _TEE = "tee"
 _CAT = "cat"
-_TEST = "test"
 _LOGGER = "logger"
 _LAUNCHCTL = "launchctl"
 

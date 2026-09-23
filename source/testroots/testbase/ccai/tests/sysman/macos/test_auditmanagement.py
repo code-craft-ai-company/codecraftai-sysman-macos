@@ -15,12 +15,9 @@ from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.auditmanagement import (
     MacosAuditActionStatus,
-    MacosAuditEvent,
     MacosAuditEventQuery,
     MacosAuditManager,
     MacosAuditManagerConfig,
-    MacosAuditQueryError,
-    MacosAuditRuleInfo,
     MacosAuditRuleSpec,
     MacosAuditStatus,
     _add_class_to_flags,

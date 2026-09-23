@@ -80,8 +80,6 @@ _BLOCK_BYTES = 1024
 
 _APFS_DETAIL = "apfs_no_quota_support"
 
-_APFS_FSTYPE = "apfs"
-
 
 MacosQuotaActionStatus = ActionStatus
 

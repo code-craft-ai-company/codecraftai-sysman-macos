@@ -44,7 +44,7 @@
 import os
 import re
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -307,7 +307,6 @@ class MacosScheduledTasksManager(BaseFeatureManager):
         plist_body = _render_plist_body(
             spec=spec, schedule_dict=schedule_dict,
         )
-        target = "{}/{}".format(domain, spec.name)
         bootstrap_command = [
             _LAUNCHCTL, "bootstrap", domain, plist_path,
         ]
@@ -862,7 +861,9 @@ class MacosScheduledTasksManager(BaseFeatureManager):
                                                   being absent.
         """
         plist_dir = self._plist_dir(owner=owner)
-        domain = self._domain_for(owner=owner)
+        # Resolve the launchd domain up front so a USER scope without a
+        # configured 'target_uid' fails before any listing is attempted.
+        self._domain_for(owner=owner)
         ls_command = ["ls", "-1", plist_dir]
         ls_run = self._runner.run(list(ls_command), elevated=False)
 

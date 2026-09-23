@@ -108,12 +108,6 @@ _LOCALE = "locale"
 _LS = "ls"
 
 _GLOBAL_DOMAIN = "NSGlobalDomain"
-_HITOOLBOX_DOMAIN = (
-    "/Users/Shared/.GlobalPreferences"
-    # NOTE: actual per-user HIToolbox lives under ~/Library/Preferences
-    # but the relative form ``-currentHost com.apple.HIToolbox`` is the
-    # canonical addressing.  The default is below.
-)
 
 # The standard input-source plist domain for the current user.  When
 # the manager is configured to operate against a different user, the

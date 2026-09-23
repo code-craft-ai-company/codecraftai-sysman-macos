@@ -18,7 +18,6 @@ from ccai.sysman.macos.kernelparameters import (
     MacosKernelParameterManager,
     MacosKernelParameterManagerConfig,
     MacosKernelParameterQueryError,
-    MacosParameterValue,
 )
 
 

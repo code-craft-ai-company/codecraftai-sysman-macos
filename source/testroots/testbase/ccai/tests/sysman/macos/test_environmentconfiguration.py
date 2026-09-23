@@ -18,7 +18,6 @@ from ccai.sysman.macos.environmentconfiguration import (
     MacosEnvironmentConfigurationManager,
     MacosEnvironmentConfigurationManagerConfig,
     MacosEnvScope,
-    MacosEnvValue,
 )
 
 

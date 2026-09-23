@@ -17,12 +17,10 @@ from ccai import testbase
 from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.encryptionmanagement import (
-    MacosEncryptedVolumeInfo,
     MacosEncryptionActionStatus,
     MacosEncryptionManager,
     MacosEncryptionManagerConfig,
     MacosEncryptionSpec,
-    MacosEncryptionVolumeKind,
     _DESTRUCTIVE_GUARD_DETAIL,
     _parse_apfs_list_plist,
     _parse_fdesetup_status,

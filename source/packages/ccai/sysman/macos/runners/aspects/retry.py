@@ -209,7 +209,6 @@ class MacosRetryAspect:
                       attempt.
         """
         current_attempt = 0
-        last_result: Optional[MacosRunResult] = None
         while True:
             attempt_result = runner.run(  # type: ignore[attr-defined]
                 args,
@@ -219,7 +218,6 @@ class MacosRetryAspect:
                 timeout=timeout,
             )
             attempt_result.retry_count = current_attempt
-            last_result = attempt_result
 
             decision = self.should_retry(result=attempt_result, attempt=current_attempt)
             if decision.should_retry is False:

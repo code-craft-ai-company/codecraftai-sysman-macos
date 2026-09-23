@@ -103,10 +103,6 @@ _PROFILE_CATALOGUE = {
     },
 }
 
-_VALID_RESULT_STATES = frozenset({
-    "pass", "fail", "notapplicable", "error", "unknown",
-})
-
 
 MacosSecurityComplianceActionStatus = ActionStatus
 
