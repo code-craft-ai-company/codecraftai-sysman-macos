@@ -14,17 +14,20 @@ from ccai import testbase
 from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.auditmanagement import (
+    KNOWN_AUDIT_CLASSES,
     MacosAuditActionStatus,
     MacosAuditEventQuery,
     MacosAuditManager,
     MacosAuditManagerConfig,
     MacosAuditRuleSpec,
     MacosAuditStatus,
+    _KNOWN_CLASSES,
     _add_class_to_flags,
     _parse_audit_control_flags,
     _parse_audit_status,
     _parse_praudit_lines,
     _remove_class_from_flags,
+    is_known_audit_class,
 )
 
 
@@ -270,6 +273,186 @@ def test_remove_rule_skipped_when_absent():
         c for c in runner.calls if c["args"][:1] == ["tee"]
     ]
     testbase.assert_equal(tee_calls, [])
+    return
+
+
+# ----------------------------------------------------------------------
+# Audit-class validation
+# ----------------------------------------------------------------------
+
+
+def test_known_audit_classes_lists_documented_classes():
+    """
+        KNOWN_AUDIT_CLASSES is the public table of the audit_control(5)
+        class abbreviations.
+    """
+    for abbreviation in ("fr", "fw", "fa", "pc", "ad", "lo", "aa", "all"):
+        testbase.assert_true(abbreviation in KNOWN_AUDIT_CLASSES)
+    return
+
+
+def test_known_classes_private_alias_is_public_table():
+    """
+        The previously documented private name ``_KNOWN_CLASSES`` still
+        resolves to the public table.
+    """
+    testbase.assert_true(_KNOWN_CLASSES is KNOWN_AUDIT_CLASSES)
+    return
+
+
+def test_is_known_audit_class_accepts_documented_class():
+    """
+        is_known_audit_class() accepts a bare documented abbreviation.
+    """
+    testbase.assert_true(is_known_audit_class("lo"))
+    return
+
+
+def test_is_known_audit_class_accepts_prefixed_class():
+    """
+        is_known_audit_class() accepts the audit_control(5) prefixes
+        ``+``, ``-``, ``^``, ``^+`` and ``^-``.
+    """
+    for token in ("+lo", "-fr", "^ad", "^+fa", "^-fc"):
+        testbase.assert_true(is_known_audit_class(token))
+    return
+
+
+def test_is_known_audit_class_rejects_unknown_class():
+    """
+        is_known_audit_class() rejects undocumented, empty, doubly
+        prefixed and non-string tokens.
+    """
+    for token in ("zz", "", "--lo", "LO", None):
+        testbase.assert_equal(is_known_audit_class(token), False)
+    return
+
+
+def test_add_rule_validation_rejects_unknown_class():
+    """
+        With validate_event_class=True, add_rule returns FAILED for an
+        unknown class without reading or writing audit_control.
+    """
+    runner = _MockCommandRunner()
+    _seed_audit_control(runner=runner, flags_value="lo,aa")
+
+    manager = MacosAuditManager(
+        runner=runner,
+        config=MacosAuditManagerConfig(validate_event_class=True),
+    )
+    spec = MacosAuditRuleSpec(name="typo", event_class="zz")
+    result = manager.add_rule(spec=spec)
+
+    testbase.assert_equal(result.status, MacosAuditActionStatus.FAILED)
+    testbase.assert_equal(result.rule_key, "zz")
+    testbase.assert_true("Unknown audit class 'zz'" in result.message)
+    testbase.assert_equal(len(runner.calls), 0)
+    return
+
+
+def test_add_rule_validation_precedes_dry_run():
+    """
+        With validate_event_class=True, an unknown class is reported as
+        FAILED even when dry_run=True.
+    """
+    runner = _MockCommandRunner()
+    manager = MacosAuditManager(
+        runner=runner,
+        config=MacosAuditManagerConfig(
+            dry_run=True, validate_event_class=True,
+        ),
+    )
+    spec = MacosAuditRuleSpec(name="typo", event_class="zz")
+    result = manager.add_rule(spec=spec)
+
+    testbase.assert_equal(result.status, MacosAuditActionStatus.FAILED)
+    testbase.assert_equal(len(runner.calls), 0)
+    return
+
+
+def test_add_rule_validation_accepts_known_prefixed_class():
+    """
+        With validate_event_class=True, add_rule applies a known class
+        carrying an audit_control(5) prefix.
+    """
+    runner = _MockCommandRunner()
+    _seed_audit_control(runner=runner, flags_value="lo,aa")
+    runner.default_result = RunResult(exit_code=0, stdout="", stderr="")
+
+    manager = MacosAuditManager(
+        runner=runner,
+        config=MacosAuditManagerConfig(validate_event_class=True),
+    )
+    spec = MacosAuditRuleSpec(name="failed_reads", event_class="-fr")
+    result = manager.add_rule(spec=spec)
+
+    testbase.assert_equal(result.status, MacosAuditActionStatus.SUCCESS)
+    tee_calls = [
+        c for c in runner.calls if c["args"][:1] == ["tee"]
+    ]
+    testbase.assert_true("flags:lo,aa,-fr" in tee_calls[0]["stdin"])
+    return
+
+
+def test_add_rule_without_validation_accepts_unknown_class():
+    """
+        By default (validate_event_class=False) add_rule passes any
+        token through, so site-specific classes still work.
+    """
+    runner = _MockCommandRunner()
+    _seed_audit_control(runner=runner, flags_value="lo,aa")
+    runner.default_result = RunResult(exit_code=0, stdout="", stderr="")
+
+    manager = MacosAuditManager(
+        runner=runner, config=MacosAuditManagerConfig(),
+    )
+    spec = MacosAuditRuleSpec(name="site_class", event_class="zz")
+    result = manager.add_rule(spec=spec)
+
+    testbase.assert_equal(result.status, MacosAuditActionStatus.SUCCESS)
+    tee_calls = [
+        c for c in runner.calls if c["args"][:1] == ["tee"]
+    ]
+    testbase.assert_true("flags:lo,aa,zz" in tee_calls[0]["stdin"])
+    return
+
+
+def test_remove_rule_validation_rejects_unknown_class():
+    """
+        With validate_event_class=True, remove_rule returns FAILED for
+        an unknown class without reading or writing audit_control.
+    """
+    runner = _MockCommandRunner()
+    _seed_audit_control(runner=runner, flags_value="lo,aa,zz")
+
+    manager = MacosAuditManager(
+        runner=runner,
+        config=MacosAuditManagerConfig(validate_event_class=True),
+    )
+    result = manager.remove_rule(rule_id="zz")
+
+    testbase.assert_equal(result.status, MacosAuditActionStatus.FAILED)
+    testbase.assert_equal(result.rule_id, "zz")
+    testbase.assert_true("Unknown audit class 'zz'" in result.message)
+    testbase.assert_equal(len(runner.calls), 0)
+    return
+
+
+def test_remove_rule_validation_accepts_known_class():
+    """
+        With validate_event_class=True, remove_rule drops a known class.
+    """
+    runner = _MockCommandRunner()
+    _seed_audit_control(runner=runner, flags_value="lo,aa,fa")
+    runner.default_result = RunResult(exit_code=0, stdout="", stderr="")
+
+    manager = MacosAuditManager(
+        runner=runner,
+        config=MacosAuditManagerConfig(validate_event_class=True),
+    )
+    result = manager.remove_rule(rule_id="fa")
+
+    testbase.assert_equal(result.status, MacosAuditActionStatus.SUCCESS)
     return
 
 

@@ -32,6 +32,17 @@
         ``config.elevated``.  Reads (``list_rules``,
         ``get_audit_status``, ``search_events``) never elevate.
 
+    Audit-class validation:
+        :data:`KNOWN_AUDIT_CLASSES` is the public table of the audit-class
+        abbreviations documented in ``audit_control(5)`` and
+        :func:`is_known_audit_class` checks a token against it (accepting
+        an ``audit_control(5)`` ``+`` / ``-`` / ``^`` / ``^+`` / ``^-``
+        prefix).  Tools use them to validate input.  ``add_rule`` and
+        ``remove_rule`` gate their class token on the table only when
+        ``MacosAuditManagerConfig.validate_event_class`` is True; by
+        default any token is passed through, because hosts may define
+        site-specific classes in ``/etc/security/audit_class``.
+
     Surface choices:
         * ``add_rule(spec)`` rewrites the ``flags`` line of
           ``/etc/security/audit_control`` so that ``spec.event_class``
@@ -82,9 +93,11 @@ _DEFAULT_AUDITD_PLIST = (
 _DEFAULT_AUDITD_LABEL = "system/com.apple.auditd"
 
 # Documented audit-class abbreviations from audit_control(5).  The
-# manager does not gate on this list (callers may pass any token),
-# but it is surfaced so tools can validate input.
-_KNOWN_CLASSES = (
+# table is public so tools can validate input (see
+# is_known_audit_class()).  The manager gates add_rule / remove_rule
+# on it only when MacosAuditManagerConfig.validate_event_class is True;
+# by default callers may pass any token.
+KNOWN_AUDIT_CLASSES = (
     "fr",  # file read
     "fw",  # file write
     "fa",  # file attribute access
@@ -106,6 +119,14 @@ _KNOWN_CLASSES = (
     "all",  # all classes
     "no",  # invalid class
 )
+
+# Backward-compatible alias for the private name under which the table
+# was documented before it was made public.
+_KNOWN_CLASSES = KNOWN_AUDIT_CLASSES
+
+# Prefixes audit_control(5) accepts in front of a class abbreviation in
+# a flags list.  Longest first so "^+" / "^-" are stripped before "^".
+_AUDIT_CLASS_PREFIXES = ("^+", "^-", "^", "+", "-")
 
 
 MacosAuditActionStatus = ActionStatus
@@ -132,12 +153,24 @@ class MacosAuditManagerConfig(FeatureConfig):
                              stock system path.
         :param auditd_label: launchctl label of the auditd service.
                              Defaults to ``system/com.apple.auditd``.
+        :param validate_event_class: When True, ``add_rule`` and
+                                     ``remove_rule`` return ``FAILED``
+                                     without reading or writing
+                                     ``audit_control`` when their class
+                                     token is not in
+                                     :data:`KNOWN_AUDIT_CLASSES` (see
+                                     :func:`is_known_audit_class`).
+                                     Defaults to False: any token is
+                                     accepted, including site-specific
+                                     classes defined in
+                                     ``/etc/security/audit_class``.
     """
     audit_control: str = _DEFAULT_AUDIT_CONTROL
     audit_user: str = _DEFAULT_AUDIT_USER
     audit_log_dir: str = _DEFAULT_AUDIT_LOG_DIR
     auditd_plist: str = _DEFAULT_AUDITD_PLIST
     auditd_label: str = _DEFAULT_AUDITD_LABEL
+    validate_event_class: bool = False
 
 
 @dataclass
@@ -489,11 +522,31 @@ class MacosAuditManager(BaseFeatureManager):
             ``flags`` line, the verb returns ``SKIPPED`` without
             invoking the writer.
 
+            Validation: when ``config.validate_event_class`` is True and
+            ``spec.event_class`` is not a known audit class (see
+            :func:`is_known_audit_class`), the verb returns ``FAILED``
+            without reading or writing ``audit_control``.
+
             :param spec: The :class:`MacosAuditRuleSpec`.
 
             :returns: The :class:`MacosAuditActionResult`.
         """
         write_command = ["tee", self._config.audit_control]
+
+        if self._config.validate_event_class:
+            validation_failure = _validate_event_class(
+                event_class=spec.event_class,
+            )
+            if validation_failure is not None:
+                failed = self._build_result(
+                    status=MacosAuditActionStatus.FAILED,
+                    rule_id=spec.name,
+                    rule_key=spec.event_class,
+                    command=write_command,
+                    message=validation_failure,
+                    stderr=validation_failure,
+                )
+                return failed
 
         if self._config.dry_run:
             dry = self._build_result(
@@ -579,12 +632,30 @@ class MacosAuditManager(BaseFeatureManager):
             ``flags`` line, writes the modified file via ``tee``,
             and dispatches ``audit -s`` to reload.
 
+            Validation: when ``config.validate_event_class`` is True and
+            ``rule_id`` is not a known audit class (see
+            :func:`is_known_audit_class`), the verb returns ``FAILED``
+            without reading or writing ``audit_control``.
+
             :param rule_id: The audit-class abbreviation to remove
                             (e.g. ``"lo"``).
 
             :returns: The :class:`MacosAuditActionResult`.
         """
         write_command = ["tee", self._config.audit_control]
+
+        if self._config.validate_event_class:
+            validation_failure = _validate_event_class(event_class=rule_id)
+            if validation_failure is not None:
+                failed = self._build_result(
+                    status=MacosAuditActionStatus.FAILED,
+                    rule_id=rule_id,
+                    rule_key=rule_id,
+                    command=write_command,
+                    message=validation_failure,
+                    stderr=validation_failure,
+                )
+                return failed
 
         if self._config.dry_run:
             dry = self._build_result(
@@ -888,6 +959,68 @@ class MacosAuditManager(BaseFeatureManager):
             stderr=stderr,
         )
         return rtnval
+
+
+# ----------------------------------------------------------------------
+# Audit-class validation
+# ----------------------------------------------------------------------
+
+
+def is_known_audit_class(event_class: str) -> bool:
+    """
+        Check whether ``event_class`` names one of the audit classes in
+        :data:`KNOWN_AUDIT_CLASSES`.
+
+        One ``audit_control(5)`` prefix (``+``, ``-``, ``^``, ``^+`` or
+        ``^-``) is accepted in front of the class abbreviation, so the
+        tokens that :meth:`MacosAuditManager.list_rules` reports for a
+        ``flags`` line validate as they are.
+
+        :param event_class: The audit-class token to check (for example
+                            ``"lo"`` or ``"-fr"``).
+
+        :returns: True when the token names a known audit class,
+                  otherwise False.
+    """
+    if not isinstance(event_class, str):
+        rtnval = False
+        return rtnval
+
+    abbreviation = event_class
+    for prefix in _AUDIT_CLASS_PREFIXES:
+        if abbreviation.startswith(prefix):
+            abbreviation = abbreviation[len(prefix):]
+            break
+
+    rtnval = abbreviation in KNOWN_AUDIT_CLASSES
+    return rtnval
+
+
+def _validate_event_class(*, event_class: str) -> Optional[str]:
+    """
+        Validate an audit-class token against
+        :data:`KNOWN_AUDIT_CLASSES`.
+
+        :param event_class: The audit-class token to validate.
+
+        :returns: ``None`` when the token names a known audit class;
+                  an error message string when it does not.
+    """
+    if is_known_audit_class(event_class):
+        rtnval: Optional[str] = None
+        return rtnval
+
+    err_msg_lines = [
+        "Unknown audit class {!r}.".format(event_class),
+        "    KNOWN: {}".format(", ".join(KNOWN_AUDIT_CLASSES)),
+        "    PREFIXES: {} (optional, from audit_control(5))".format(
+            ", ".join(_AUDIT_CLASS_PREFIXES),
+        ),
+        "    Set MacosAuditManagerConfig.validate_event_class=False to "
+        "pass site-specific classes defined in /etc/security/audit_class.",
+    ]
+    rtnval = os.linesep.join(err_msg_lines)
+    return rtnval
 
 
 # ----------------------------------------------------------------------

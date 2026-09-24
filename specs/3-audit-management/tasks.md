@@ -13,7 +13,7 @@ Unchecked items (`[ ]`) identify remaining work.
 
 - [x] 3. Define `MacosAuditManagerConfig` dataclass (`dry_run`,
   `elevated`, `audit_control`, `audit_user`, `audit_log_dir`,
-  `auditd_plist`, `auditd_label`).
+  `auditd_plist`, `auditd_label`, `validate_event_class`).
 
 - [x] 4. Define `MacosAuditActionResult` dataclass (subclass of
   `FeatureActionResult`; adds `rule_id`, `rule_key`, `message`).

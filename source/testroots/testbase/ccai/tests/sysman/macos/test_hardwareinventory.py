@@ -17,9 +17,11 @@ from ccai import testbase
 from ccai.interfaces.icommandrunner import RunResult
 
 from ccai.sysman.macos.hardwareinventory import (
+    MacosFirmwareInfo,
     MacosHardwareInventoryManager,
     MacosHardwareInventoryManagerConfig,
     MacosHardwareInventoryQueryError,
+    _merge_nvram_p,
 )
 
 
@@ -481,6 +483,109 @@ def test_get_firmware_info_parses_system_profiler_output():
     testbase.assert_equal(info.vendor, "Apple")
     testbase.assert_equal(info.version, "8419.40.111.0.1")
     testbase.assert_equal(info.uefi, True)
+    return
+
+
+def test_get_firmware_info_boot_args_leave_release_date_none():
+    """
+        get_firmware_info() consumes ``boot-args`` from ``nvram -p`` as
+        informational glue only: ``release_date`` and ``secure_boot``
+        stay ``None`` even when the host carries boot arguments.
+    """
+    sp_payload = json.dumps({
+        "SPHardwareDataType": [
+            {
+                "_name": "hardware_overview",
+                "boot_rom_version": "8419.40.111.0.1",
+            }
+        ]
+    })
+    nvram_payload = "boot-args\t-v debug=0x144\n"
+    runner = _MockCommandRunner()
+    runner.results[(
+        "system_profiler", "SPHardwareDataType", "-json",
+    )] = _ok(stdout=sp_payload)
+    runner.results[("nvram", "-p")] = _ok(stdout=nvram_payload)
+
+    manager = MacosHardwareInventoryManager(
+        runner, MacosHardwareInventoryManagerConfig(),
+    )
+    info = manager.get_firmware_info()
+
+    testbase.assert_equal(info.release_date, None)
+    testbase.assert_equal(info.secure_boot, None)
+    return
+
+
+def test_merge_nvram_p_returns_tab_separated_boot_args():
+    """
+        _merge_nvram_p() returns the ``boot-args`` value of a
+        ``KEY\\tVALUE`` row.
+    """
+    info = MacosFirmwareInfo(vendor="Apple", uefi=True)
+    nvram_payload = (
+        "SystemAudioVolume\t%80\n"
+        "boot-args\t-v debug=0x144\n"
+    )
+
+    boot_args = _merge_nvram_p(info=info, stdout=nvram_payload)
+
+    testbase.assert_equal(boot_args, "-v debug=0x144")
+    return
+
+
+def test_merge_nvram_p_returns_whitespace_separated_boot_args():
+    """
+        _merge_nvram_p() returns the ``boot-args`` value of a row that
+        separates key and value with spaces instead of a tab.
+    """
+    info = MacosFirmwareInfo(vendor="Apple", uefi=True)
+    nvram_payload = "boot-args   -v keepsyms=1\n"
+
+    boot_args = _merge_nvram_p(info=info, stdout=nvram_payload)
+
+    testbase.assert_equal(boot_args, "-v keepsyms=1")
+    return
+
+
+def test_merge_nvram_p_returns_none_without_boot_args():
+    """
+        _merge_nvram_p() returns ``None`` when ``nvram -p`` carries no
+        ``boot-args`` row.
+    """
+    info = MacosFirmwareInfo(vendor="Apple", uefi=True)
+    nvram_payload = "SystemAudioVolume\t%80\n"
+
+    boot_args = _merge_nvram_p(info=info, stdout=nvram_payload)
+
+    testbase.assert_equal(boot_args, None)
+    return
+
+
+def test_merge_nvram_p_leaves_firmware_fields_untouched():
+    """
+        _merge_nvram_p() sets no field of the firmware record from
+        ``boot-args``; a populated ``release_date`` is not overwritten.
+    """
+    info = MacosFirmwareInfo(
+        vendor="Apple",
+        version="8419.40.111.0.1",
+        release_date="2024-01-01",
+        secure_boot=True,
+        uefi=True,
+    )
+    expected = MacosFirmwareInfo(
+        vendor="Apple",
+        version="8419.40.111.0.1",
+        release_date="2024-01-01",
+        secure_boot=True,
+        uefi=True,
+    )
+    nvram_payload = "boot-args\t-v debug=0x144\n"
+
+    _merge_nvram_p(info=info, stdout=nvram_payload)
+
+    testbase.assert_equal(info, expected)
     return
 
 

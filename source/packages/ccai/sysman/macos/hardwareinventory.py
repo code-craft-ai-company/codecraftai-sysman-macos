@@ -505,6 +505,9 @@ class MacosHardwareInventoryManager(BaseFeatureManager):
         info = _parse_system_profiler_firmware(
             stdout=sp_result.stdout, command=sp_command,
         )
+
+        # boot-args is informational glue only (specs/3-hardware-inventory
+        # Requirement 8.5): it is consumed but sets no field of ``info``.
         _merge_nvram_p(info=info, stdout=nvram_result.stdout)
 
         return info
@@ -650,17 +653,32 @@ def _parse_system_profiler_firmware(
     return info
 
 
-def _merge_nvram_p(*, info: MacosFirmwareInfo, stdout: str) -> None:
+def _merge_nvram_p(*, info: MacosFirmwareInfo, stdout: str) -> Optional[str]:
     """
-        Merge ``nvram -p`` output onto an existing
+        Consume ``nvram -p`` output alongside an existing
         :class:`MacosFirmwareInfo`.
 
         ``nvram -p`` emits one ``KEY\\tVALUE`` row per variable.
-        ``boot-args`` is the only variable consumed by this pilot; when
-        present, it is appended to ``info.release_date`` as descriptive
-        text so that the field is non-None when the host actually
-        carries boot arguments.  Other variables are ignored.
+        ``boot-args`` is the only variable consumed by this pilot and it
+        is informational glue only: no field of ``info`` is set from it
+        (``specs/3-hardware-inventory`` Requirement 8, criteria 4 and 5).
+        In particular ``info.release_date`` is left untouched: it is the
+        firmware release date (as on the Linux and Windows siblings,
+        which fill it from SMBIOS / ``Win32_BIOS``), macOS does not
+        surface one, and :class:`MacosFirmwareInfo` has no boot-args
+        field.  The ``boot-args`` value is returned instead so that a
+        caller, or a future field, can use it without re-parsing.
+        Other variables are ignored.
+
+        :param info: The :class:`MacosFirmwareInfo` built from
+                     ``system_profiler``.  It is not modified.
+        :param stdout: Raw stdout from ``nvram -p``.
+
+        :returns: The ``boot-args`` value, or ``None`` when the host
+                  carries no boot arguments.
     """
+    boot_args: Optional[str] = None
+
     for raw_line in stdout.splitlines():
         line = raw_line.rstrip()
         if len(line) == 0:
@@ -675,10 +693,10 @@ def _merge_nvram_p(*, info: MacosFirmwareInfo, stdout: str) -> None:
             value = tokens[1]
 
         if key == "boot-args":
-            info.release_date = None
-            # boot-args is informational; leave fields untouched.
+            # boot-args is informational; no field of info is set from it.
+            boot_args = value.strip()
 
-    return
+    return boot_args
 
 
 def _parse_sysctl_machdep_cpu(*, stdout: str) -> MacosCpuInfo:

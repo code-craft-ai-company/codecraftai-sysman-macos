@@ -80,9 +80,17 @@ The set of recognised abbreviations (per `audit_control(5)`):
 | `all` | all classes |
 | `no` | invalid class (sentinel) |
 
-The manager does not gate input on this list (callers may pass
-any token), but the table is exposed via the module's
-`_KNOWN_CLASSES` constant for tools that want to validate.
+The table is exposed via the module's public `KNOWN_AUDIT_CLASSES`
+constant (the earlier private name `_KNOWN_CLASSES` remains as an
+alias) for tools that want to validate, together with
+`is_known_audit_class(event_class)`, which accepts one
+`audit_control(5)` prefix (`+`, `-`, `^`, `^+`, `^-`) in front of
+the abbreviation.  By default the manager does not gate input on
+this list (callers may pass any token, including site-specific
+classes defined in `/etc/security/audit_class`); setting
+`MacosAuditManagerConfig.validate_event_class=True` makes
+`add_rule` / `remove_rule` return `FAILED` for a token that is not
+a known class.
 
 ---
 
@@ -157,6 +165,7 @@ any token), but the table is exposed via the module's
 | `audit_log_dir` | `str` | `/var/audit` | Directory holding rotated audit logs. |
 | `auditd_plist` | `str` | `/System/Library/LaunchDaemons/com.apple.auditd.plist` | LaunchDaemon plist. |
 | `auditd_label` | `str` | `system/com.apple.auditd` | launchctl label. |
+| `validate_event_class` | `bool` | `False` | When `True`, `add_rule` / `remove_rule` return `FAILED` for a class token that is not in `KNOWN_AUDIT_CLASSES`. |
 
 ---
 
@@ -248,6 +257,10 @@ Inherits from `FeatureActionResult` and adds `rule_id`,
 
 ### `add_rule(spec)`
 
+0. **Class guard:** when `config.validate_event_class` is True and
+   `spec.event_class` is not a known class
+   (`is_known_audit_class`), return `FAILED` with a descriptive
+   message without reading or writing `audit_control`.
 1. **Dry-run guard:** when `config.dry_run` is True, return
    `DRY_RUN`.
 2. **Disabled-spec guard:** when `spec.enabled` is False, return
@@ -264,6 +277,7 @@ Inherits from `FeatureActionResult` and adds `rule_id`,
 
 ### `remove_rule(rule_id)`
 
+0. **Class guard** (as for `add_rule`, applied to `rule_id`).
 1. **Dry-run guard.**
 2. Read `audit_control`.  When the file is missing, return
    `SKIPPED`.
