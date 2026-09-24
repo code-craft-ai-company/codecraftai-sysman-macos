@@ -11,7 +11,7 @@ design documents.
       with the module docstring describing the verb-to-tool mapping, the
       Time-Machine constraint notes, and the schedule-delegation note.
 - [ ] T2. Add the module-level constants for the backend tool names
-      (`_TMUTIL`, `_RSYNC`, `_RESTIC`, `_TAR`), the helper tools
+      (`_TMUTIL`, `_RSYNC`, `_RESTIC`), the helper tools
       (`_TEE`, `_CAT`, `_RM`, `_LS`, `_TEST`), and the default job
       directory path (`_DEFAULT_JOB_DIR = "/var/db/ccai/backups/jobs"`).
 - [ ] T3. Add the `MacosBackupActionStatus = ActionStatus` re-export.

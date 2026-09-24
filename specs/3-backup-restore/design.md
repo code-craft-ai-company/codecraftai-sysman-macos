@@ -188,7 +188,7 @@ at host provisioning time.
 ```
 backuprestore.py
 ├── module-level constants
-│   ├── _TMUTIL, _RSYNC, _RESTIC, _TAR, _TEE, _CAT, _RM, _LS
+│   ├── _TMUTIL, _RSYNC, _RESTIC, _TEE, _CAT, _RM, _LS, _TEST
 │   └── _DEFAULT_JOB_DIR
 ├── enums
 │   └── MacosBackupKind (TIME_MACHINE, RSYNC, RESTIC)
