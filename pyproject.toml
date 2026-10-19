@@ -3,7 +3,7 @@ name = "codecraftai-sysman-macos"
 version = "1.3.0"
 description = "Code Craft AI - System Management MacOS"
 readme = "README.rst"
-license = "LicenseRef-CodeCraftAI-Dual-License"
+license = "LicenseRef-CodeCraftAI-Source-Available"
 authors = [{name = "Myron Walker", email = "myron.walker@gmail.com"}]
 keywords = [
     "python"
